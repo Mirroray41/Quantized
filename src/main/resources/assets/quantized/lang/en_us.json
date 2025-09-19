@@ -1,0 +1,13 @@
+{
+  "itemGroup.quantized": "Example Mod Tab",
+  "block.quantized.example_block": "Example Block",
+  "item.quantized.example_item": "Example Item",
+
+  "quantized.configuration.title": "Quantized Configs",
+  "quantized.configuration.section.quantized.common.toml": "Quantized Configs",
+  "quantized.configuration.section.quantized.common.toml.title": "Quantized Configs",
+  "quantized.configuration.items": "Item List",
+  "quantized.configuration.logDirtBlock": "Log Dirt Block",
+  "quantized.configuration.magicNumberIntroduction": "Magic Number Text",
+  "quantized.configuration.magicNumber": "Magic Number"
+}
