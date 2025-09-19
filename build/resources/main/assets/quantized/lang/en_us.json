@@ -1,7 +1,7 @@
 {
-  "itemGroup.quantized": "Example Mod Tab",
-  "block.quantized.example_block": "Example Block",
-  "item.quantized.example_item": "Example Item",
+  "creativetab.quantized.misc": "Quantized",
+  "block.quantized.quantum_matter_block": "Quantum Matter Block",
+  "item.quantized.quantum_matter": "Quantum Matter",
 
   "quantized.configuration.title": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml": "Quantized Configs",

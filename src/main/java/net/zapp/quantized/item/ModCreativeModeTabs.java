@@ -17,7 +17,7 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> QUANTIZED_TAB = CREATIVE_MODE_TAB.register("quantized_tab",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.QUANTUM_MATTER.get()))
-                    .title(Component.translatable("creativetab.quantized.quantized_tab"))
+                    .title(Component.translatable("creativetab.quantized.misc"))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.QUANTUM_MATTER);
                         output.accept(ModBlocks.QUANTUM_MATTER_BLOCK);

@@ -1,35 +1,35 @@
-[19zář2025 18:22:22.051] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, neoforgeclientdev, --version, 21.8.47, --assetIndex, 26, --assetsDir, /home/portable/.gradle/caches/neoformruntime/assets, --fml.fmlVersion, 9.0.18, --fml.mcVersion, 1.21.8, --fml.neoForgeVersion, 21.8.47, --fml.neoFormVersion, 20250717.133445]
-[19zář2025 18:22:22.057] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as JetBrains s.r.o. OpenJDK 64-Bit Server VM 21.0.8+9-b1038.68
-[19zář2025 18:22:22.059] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 9.0 starting: java version 21.0.8 by JetBrains s.r.o.; OS Linux arch amd64 version 6.16.7-200.fc42.x86_64
-[19zář2025 18:22:22.258] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
-[19zář2025 18:22:22.857] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/portable/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23145!/ Service=ModLauncher Env=CLIENT
-[19zář2025 18:22:23.183] [fml-loadingscreen/INFO] [net.neoforged.fml.earlydisplay.render.LoadingScreenRenderer/]: GL info: AMD Radeon 760M Graphics (radeonsi, phoenix, LLVM 21.1.0, DRM 3.64, 6.16.7-200.fc42.x86_64) GL version 4.6 (Core Profile) Mesa 25.2.1 (git-d6e3b017b2), AMD
-[19zář2025 18:22:23.360] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
-[19zář2025 18:22:23.363] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+[19zář2025 19:47:09.872] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, neoforgeclientdev, --version, 21.8.47, --assetIndex, 26, --assetsDir, /home/portable/.gradle/caches/neoformruntime/assets, --fml.fmlVersion, 9.0.18, --fml.mcVersion, 1.21.8, --fml.neoForgeVersion, 21.8.47, --fml.neoFormVersion, 20250717.133445]
+[19zář2025 19:47:09.879] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as JetBrains s.r.o. OpenJDK 64-Bit Server VM 21.0.8+9-b1038.68
+[19zář2025 19:47:09.883] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 9.0 starting: java version 21.0.8 by JetBrains s.r.o.; OS Linux arch amd64 version 6.16.7-200.fc42.x86_64
+[19zář2025 19:47:10.107] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[19zář2025 19:47:10.724] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/portable/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23145!/ Service=ModLauncher Env=CLIENT
+[19zář2025 19:47:11.073] [fml-loadingscreen/INFO] [net.neoforged.fml.earlydisplay.render.LoadingScreenRenderer/]: GL info: AMD Radeon 760M Graphics (radeonsi, phoenix, LLVM 21.1.0, DRM 3.64, 6.16.7-200.fc42.x86_64) GL version 4.6 (Core Profile) Mesa 25.2.1 (git-d6e3b017b2), AMD
+[19zář2025 19:47:11.239] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[19zář2025 19:47:11.242] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
      Mod List:
 		Name Version (Mod Id)
 
 		Minecraft 1.21.8 (minecraft)
 		NeoForge 21.8.47 (neoforge)
 		Quantized 1.0.0 (quantized)
-[19zář2025 18:22:24.176] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
-[19zář2025 18:22:24.192] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'neoforgeclientdev' with arguments [--version, 21.8.47, --assetsDir, /home/portable/.gradle/caches/neoformruntime/assets, --assetIndex, 26]
-[19zář2025 18:22:25.937] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 272 Datafixer optimizations took 362 milliseconds
-[19zář2025 18:22:25.975] [pool-6-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
-[19zář2025 18:22:30.844] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[19zář2025 18:22:30.846] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[19zář2025 18:22:30.849] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[19zář2025 18:22:30.849] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[19zář2025 18:22:30.850] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[19zář2025 18:22:30.852] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [waypoint, modify, waypoint, color, reset] and [waypoint, modify, waypoint, color, color] with inputs: [reset]
-[19zář2025 18:22:30.918] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.8.47, for MC 1.21.8
-[19zář2025 18:22:31.331] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/portable/Dokumenty/GitHub/Quantized/build/moddev/artifacts/neoforge-21.8.47.jar%23200!/assets/.mcassetsroot' uses unexpected schema
-[19zář2025 18:22:31.332] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/portable/Dokumenty/GitHub/Quantized/build/moddev/artifacts/neoforge-21.8.47.jar%23200!/data/.mcassetsroot' uses unexpected schema
-[19zář2025 18:22:31.354] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[19zář2025 18:22:31.362] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[19zář2025 18:22:31.466] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
-[19zář2025 18:22:31.556] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
-[19zář2025 18:22:32.148] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+[19zář2025 19:47:11.993] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[19zář2025 19:47:12.006] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'neoforgeclientdev' with arguments [--version, 21.8.47, --assetsDir, /home/portable/.gradle/caches/neoformruntime/assets, --assetIndex, 26]
+[19zář2025 19:47:13.963] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 272 Datafixer optimizations took 376 milliseconds
+[19zář2025 19:47:13.994] [pool-6-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[19zář2025 19:47:19.078] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19zář2025 19:47:19.079] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19zář2025 19:47:19.081] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19zář2025 19:47:19.082] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19zář2025 19:47:19.083] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19zář2025 19:47:19.084] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [waypoint, modify, waypoint, color, reset] and [waypoint, modify, waypoint, color, color] with inputs: [reset]
+[19zář2025 19:47:19.167] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.8.47, for MC 1.21.8
+[19zář2025 19:47:19.576] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/portable/Dokumenty/GitHub/Quantized/build/moddev/artifacts/neoforge-21.8.47.jar%23200!/assets/.mcassetsroot' uses unexpected schema
+[19zář2025 19:47:19.577] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/portable/Dokumenty/GitHub/Quantized/build/moddev/artifacts/neoforge-21.8.47.jar%23200!/data/.mcassetsroot' uses unexpected schema
+[19zář2025 19:47:19.599] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[19zář2025 19:47:19.616] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[19zář2025 19:47:19.723] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
+[19zář2025 19:47:19.816] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
+[19zář2025 19:47:20.457] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
 com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
 	at MC-BOOTSTRAP/text2speech@1.18.11/com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:81) ~[text2speech-1.18.11.jar%23126!/:?]
 	at MC-BOOTSTRAP/text2speech@1.18.11/com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.18.11.jar%23126!/:?]
@@ -151,70 +151,65 @@ Native library (linux-x86-64/libflite.so) not found in resource path (/home/port
 		at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
 		at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
 		at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?]
-[19zář2025 18:22:32.178] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/quantized, mod/neoforge
-[19zář2025 18:22:32.221] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_pua-16.0.03.hex, loading
-[19zář2025 18:22:32.223] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-16.0.03.hex, loading
-[19zář2025 18:22:32.620] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-16.0.03.hex, loading
-[19zář2025 18:22:33.169] [resourceLoad/WARN] [net.minecraft.client.resources.model.ModelManager/]: Missing model for variant: 'Block{quantized:quantum_matter_block}'
-[19zář2025 18:22:33.417] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device Family 17h/19h/1ah HD Audio Controller Speaker
-[19zář2025 18:22:33.418] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[19zář2025 18:22:33.526] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
-[19zář2025 18:22:33.557] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[19zář2025 18:22:33.558] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[19zář2025 18:22:33.559] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[19zář2025 18:22:33.561] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[19zář2025 18:22:33.569] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[19zář2025 18:22:33.570] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[19zář2025 18:22:33.570] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[19zář2025 18:22:33.571] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[19zář2025 18:22:33.574] [Render thread/WARN] [net.minecraft.client.resources.model.ModelManager/]: No model loaded for default item model ID quantized:quantum_matter of quantized:quantum_matter
-[19zář2025 18:22:33.574] [Render thread/WARN] [net.minecraft.client.resources.model.ModelManager/]: No model loaded for default item model ID quantized:quantum_matter_block of quantized:quantum_matter_block
-[19zář2025 18:22:33.575] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
-[19zář2025 18:22:33.577] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
-[19zář2025 18:22:33.749] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
-[19zář2025 18:22:33.752] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
-[19zář2025 18:22:33.753] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
-[19zář2025 18:22:37.676] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
-[19zář2025 18:22:39.458] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1407 recipes
-[19zář2025 18:22:39.481] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1520 advancements
-[19zář2025 18:22:39.485] [Render thread/INFO] [net.neoforged.neoforge.common.crafting.RecipePriorityManager/]: Loaded 0 recipe priority overrides
-[19zář2025 18:22:39.787] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.21.8
-[19zář2025 18:22:39.787] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[19zář2025 18:22:40.541] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[19zář2025 18:22:42.524] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[19zář2025 18:22:42.525] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[19zář2025 18:22:42.525] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[19zář2025 18:22:42.526] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[19zář2025 18:22:42.576] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[19zář2025 18:22:42.886] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
-[19zář2025 18:22:42.897] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2336 ms
-[19zář2025 18:22:42.989] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
-[19zář2025 18:22:42.990] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
-[19zář2025 18:22:43.691] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:3b883b8c] logged in with entity id 133 at (8.5, 68.0, 9.5)
-[19zář2025 18:22:43.735] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
-[19zář2025 18:22:43.815] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 2 advancements
-[19zář2025 18:22:43.962] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
-[19zář2025 18:22:44.104] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
-[19zář2025 18:22:44.144] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
-[19zář2025 18:22:44.210] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 32 reached during a single frame. New capacity will be 64.
-[19zář2025 18:22:44.322] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 64 reached during a single frame. New capacity will be 128.
-[19zář2025 18:22:44.453] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 128 reached during a single frame. New capacity will be 256.
-[19zář2025 18:22:44.710] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 256 reached during a single frame. New capacity will be 512.
-[19zář2025 18:22:45.282] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 512 reached during a single frame. New capacity will be 1024.
-[19zář2025 18:40:01.818] [IO-Worker-33/INFO] [net.minecraft.client.sounds.SoundEngine/]: System default audio device has changed!
-[19zář2025 18:40:01.891] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device CMF Buds 2 Plus
-[19zář2025 18:40:01.892] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[19zář2025 18:47:14.959] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
-[19zář2025 18:47:14.998] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
-[19zář2025 18:47:14.999] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
-[19zář2025 18:47:15.006] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
-[19zář2025 18:47:15.054] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
-[19zář2025 18:47:15.055] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
-[19zář2025 18:47:15.055] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
-[19zář2025 18:47:16.163] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[19zář2025 18:47:16.214] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
-[19zář2025 18:47:16.217] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[19zář2025 18:47:16.222] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
-[19zář2025 18:47:16.222] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[19zář2025 18:47:16.222] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[19zář2025 18:47:16.222] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[19zář2025 19:47:20.491] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/quantized, mod/neoforge
+[19zář2025 19:47:20.538] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_pua-16.0.03.hex, loading
+[19zář2025 19:47:20.541] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-16.0.03.hex, loading
+[19zář2025 19:47:20.943] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-16.0.03.hex, loading
+[19zář2025 19:47:21.726] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device Family 17h/19h/1ah HD Audio Controller Speaker
+[19zář2025 19:47:21.727] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[19zář2025 19:47:21.829] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[19zář2025 19:47:21.861] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[19zář2025 19:47:21.862] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[19zář2025 19:47:21.864] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[19zář2025 19:47:21.865] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[19zář2025 19:47:21.877] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[19zář2025 19:47:21.877] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[19zář2025 19:47:21.878] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[19zář2025 19:47:21.880] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[19zář2025 19:47:21.883] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[19zář2025 19:47:21.886] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
+[19zář2025 19:47:22.107] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[19zář2025 19:47:22.110] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[19zář2025 19:47:22.111] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[19zář2025 19:47:28.333] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1409 recipes
+[19zář2025 19:47:28.354] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1522 advancements
+[19zář2025 19:47:28.358] [Render thread/INFO] [net.neoforged.neoforge.common.crafting.RecipePriorityManager/]: Loaded 0 recipe priority overrides
+[19zář2025 19:47:28.676] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.21.8
+[19zář2025 19:47:28.676] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[19zář2025 19:47:29.479] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[19zář2025 19:47:30.743] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[19zář2025 19:47:30.744] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[19zář2025 19:47:30.744] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[19zář2025 19:47:30.982] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[19zář2025 19:47:30.988] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1504 ms
+[19zář2025 19:47:31.056] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 8, from 10
+[19zář2025 19:47:31.056] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 5, from 0
+[19zář2025 19:47:31.864] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:d8042645] logged in with entity id 98 at (7.128360222620156, 68.0, 13.62621393242289)
+[19zář2025 19:47:31.912] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[19zář2025 19:47:31.992] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 4 advancements
+[19zář2025 19:47:32.108] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[19zář2025 19:47:32.179] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[19zář2025 19:47:32.339] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[19zář2025 19:47:32.343] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[19zář2025 19:47:32.434] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[19zář2025 19:47:32.461] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[19zář2025 19:47:33.742] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[19zář2025 19:47:40.850] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 256 reached during a single frame. New capacity will be 512.
+[19zář2025 19:47:42.835] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[19zář2025 19:47:42.866] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[19zář2025 19:47:42.905] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[19zář2025 19:47:42.905] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[19zář2025 19:47:44.109] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[19zář2025 19:47:44.144] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
+[19zář2025 19:47:44.145] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
+[19zář2025 19:47:44.167] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[19zář2025 19:47:44.218] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[19zář2025 19:47:44.219] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[19zář2025 19:47:44.219] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[19zář2025 19:47:44.311] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[19zář2025 19:47:44.391] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[19zář2025 19:47:44.393] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[19zář2025 19:47:44.400] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
+[19zář2025 19:47:44.400] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[19zář2025 19:47:44.400] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[19zář2025 19:47:44.400] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
