@@ -21,6 +21,10 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.QUANTUM_MATTER);
                         output.accept(ModBlocks.QUANTUM_MATTER_BLOCK);
+                        output.accept(ModItems.STEEL_INGOT);
+                        output.accept(ModBlocks.STEEL_BLOCK);
+                        output.accept(ModItems.STEEL_NUGGET);
+                        output.accept(ModItems.STEEL_GEAR);
                     }).build());
 
 

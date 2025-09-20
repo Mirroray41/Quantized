@@ -3,6 +3,11 @@
   "block.quantized.quantum_matter_block": "Quantum Matter Block",
   "item.quantized.quantum_matter": "Quantum Matter",
 
+  "block.quantized.steel_block": "Steel Block",
+  "item.quantized.steel_ingot": "Steel Ingot",
+  "item.quantized.steel_nugget": "Steel Nugget",
+  "item.quantized.steel_gear": "Steel Gear",
+
   "quantized.configuration.title": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml.title": "Quantized Configs",

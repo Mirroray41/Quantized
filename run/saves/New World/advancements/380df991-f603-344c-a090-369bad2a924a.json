@@ -7,19 +7,258 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:forest": "2025-09-19 22:11:53 +0200",
+      "minecraft:taiga": "2025-09-19 22:12:35 +0200",
+      "minecraft:river": "2025-09-19 22:11:45 +0200",
+      "minecraft:meadow": "2025-09-19 22:11:57 +0200",
+      "minecraft:dripstone_caves": "2025-09-19 22:12:40 +0200",
       "minecraft:plains": "2025-09-19 17:21:08 +0200"
     },
     "done": false
   },
+  "minecraft:story/root": {
+    "criteria": {
+      "crafting_table": "2025-09-19 22:11:00 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/campfire": {
+    "criteria": {
+      "has_coal": "2025-09-20 11:22:21 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/coal_block": {
+    "criteria": {
+      "has_coal": "2025-09-20 11:22:21 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/iron_sword": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/iron_pickaxe": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/iron_leggings": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/shield": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/hopper": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_ingot_from_blasting_iron_ingot": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/iron_bars": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/iron_boots": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/iron_chestplate": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/lantern": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/iron_nugget": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/bucket": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/iron_helmet": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/minecart": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/iron_hoe": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/iron_shovel": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:story/smelt_iron": {
+    "criteria": {
+      "iron": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/shears": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/iron_trapdoor": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chain": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/iron_block": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/iron_axe": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/crossbow": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/smithing_table": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/lodestone": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/iron_door": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/heavy_weighted_pressure_plate": {
+    "criteria": {
+      "has_iron_ingot": "2025-09-20 11:22:26 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/iron_ingot_from_iron_block": {
+    "criteria": {
+      "has_iron_block": "2025-09-20 11:23:36 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/anvil": {
+    "criteria": {
+      "has_iron_block": "2025-09-20 11:23:36 +0200"
+    },
+    "done": true
+  },
   "quantized:recipes/misc/quantum_matter": {
     "criteria": {
-      "has_bismuth_block": "2025-09-19 19:43:08 +0200"
+      "has_quantum_matter_block": "2025-09-20 14:55:08 +0200"
     },
     "done": true
   },
   "quantized:recipes/misc/quantum_matter_block": {
     "criteria": {
-      "has_bismuth": "2025-09-19 19:43:45 +0200"
+      "has_quantum_matter": "2025-09-20 14:55:08 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_ingot": {
+    "criteria": {
+      "has_steel_block": "2025-09-20 14:55:08 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_block": {
+    "criteria": {
+      "has_steel_ingot": "2025-09-20 14:55:08 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_nugget": {
+    "criteria": {
+      "has_steel_ingot": "2025-09-20 14:55:08 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_ingot_from_steel_nugget": {
+    "criteria": {
+      "has_steel_nugget": "2025-09-20 14:56:25 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2025-09-20 14:56:25 +0200"
+    },
+    "done": true
+  },
+  "quantized:recipes/misc/steel_gear": {
+    "criteria": {
+      "has_steel_nugget": "2025-09-20 14:56:25 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/glow_item_frame": {
+    "criteria": {
+      "has_item_frame": "2025-09-20 15:13:46 +0200"
     },
     "done": true
   },

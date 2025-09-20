@@ -20,6 +20,10 @@ public class ModBlocks {
             (properties) -> new Block(properties
                     .strength(4f).requiresCorrectToolForDrops().sound(SoundType.AMETHYST)));
 
+    public static final DeferredBlock<Block> STEEL_BLOCK = registerBlock("steel_block",
+            (properties) -> new Block(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);

@@ -31,9 +31,13 @@ public class ModModelProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.QUANTUM_MATTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STEEL_INGOT.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STEEL_NUGGET.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STEEL_GEAR.get(), ModelTemplates.FLAT_ITEM);
 
         /* BLOCKS */
         blockModels.createTrivialCube(ModBlocks.QUANTUM_MATTER_BLOCK.get());
+        blockModels.createTrivialCube(ModBlocks.STEEL_BLOCK.get());
     }
 
     @Override

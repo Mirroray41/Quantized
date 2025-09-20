@@ -9,6 +9,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.zapp.quantized.Quantized;
@@ -48,12 +49,43 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("BBB")
                 .pattern("BBB")
                 .define('B', ModItems.QUANTUM_MATTER.get())
-                .unlockedBy("has_bismuth", has(ModItems.QUANTUM_MATTER)).save(output);
+                .unlockedBy("has_quantum_matter", has(ModItems.QUANTUM_MATTER)).save(output);
 
         shapeless(RecipeCategory.MISC, ModItems.QUANTUM_MATTER.get(), 9)
                 .requires(ModBlocks.QUANTUM_MATTER_BLOCK)
-                .unlockedBy("has_bismuth_block", has(ModBlocks.QUANTUM_MATTER_BLOCK)).save(output);
+                .unlockedBy("has_quantum_matter_block", has(ModBlocks.QUANTUM_MATTER_BLOCK)).save(output);
 
+        shaped(RecipeCategory.MISC, ModBlocks.STEEL_BLOCK.get())
+                .pattern("BBB")
+                .pattern("BBB")
+                .pattern("BBB")
+                .define('B', ModItems.STEEL_INGOT.get())
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+
+        shapeless(RecipeCategory.MISC, ModItems.STEEL_INGOT.get(), 9)
+                .requires(ModBlocks.STEEL_BLOCK)
+                .unlockedBy("has_steel_block", has(ModBlocks.STEEL_BLOCK)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.STEEL_INGOT.get())
+                .pattern("BBB")
+                .pattern("BBB")
+                .pattern("BBB")
+                .define('B', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_steel_nugget", has(ModItems.STEEL_NUGGET)).save(output, Quantized.MOD_ID + ":" + getItemName(ModItems.STEEL_INGOT) + "_from_" + getItemName(ModItems.STEEL_NUGGET));
+
+        shapeless(RecipeCategory.MISC, ModItems.STEEL_NUGGET.get(), 9)
+                .requires(ModItems.STEEL_INGOT)
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.STEEL_GEAR.get())
+                .pattern(" B ")
+                .pattern("BIB")
+                .pattern(" B ")
+                .define('B', ModItems.STEEL_INGOT.get())
+                .define('I', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_steel_nugget", has(ModItems.STEEL_NUGGET)).save(output);
+
+        oreBlasting(output, List.of(Items.IRON_INGOT), RecipeCategory.MISC, ModItems.STEEL_INGOT.get(), 0.25f, 300, "steel");
         // Throws error
         // trimSmithing(ModItems.KAUPEN_SMITHING_TEMPLATE.get(), ResourceKey.create(Registries.TRIM_PATTERN, ResourceLocation.fromNamespaceAndPath(TutorialMod.MOD_ID, "kaupen")),
         //         ResourceKey.create(Registries.RECIPE, ResourceLocation.fromNamespaceAndPath(TutorialMod.MOD_ID, "kaupen")));
