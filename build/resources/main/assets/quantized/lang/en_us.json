@@ -3,10 +3,22 @@
   "block.quantized.quantum_matter_block": "Quantum Matter Block",
   "item.quantized.quantum_matter": "Quantum Matter",
 
+  "item.quantized.q_bit": "Q-Bit",
+  "item.quantized.q_byte": "Q-Byte",
+
+
   "block.quantized.steel_block": "Steel Block",
   "item.quantized.steel_ingot": "Steel Ingot",
   "item.quantized.steel_nugget": "Steel Nugget",
   "item.quantized.steel_gear": "Steel Gear",
+  "item.quantized.steel_plate": "Steel Plate",
+  "item.quantized.steel_rod": "Steel Rod",
+
+  "item.quantized.copper_wire": "Copper Wire",
+  "item.quantized.inductor": "Inductor",
+
+  "item.quantized.mallet": "Mallet",
+  "item.quantized.wire_cutters": "Wire Cutters",
 
   "quantized.configuration.title": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml": "Quantized Configs",

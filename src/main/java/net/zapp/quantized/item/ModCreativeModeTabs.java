@@ -25,6 +25,14 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.STEEL_BLOCK);
                         output.accept(ModItems.STEEL_NUGGET);
                         output.accept(ModItems.STEEL_GEAR);
+                        output.accept(ModItems.STEEL_PLATE);
+                        output.accept(ModItems.STEEL_ROD);
+                        output.accept(ModItems.Q_BIT);
+                        output.accept(ModItems.Q_BYTE);
+                        output.accept(ModItems.MALLET);
+                        output.accept(ModItems.WIRE_CUTTERS);
+                        output.accept(ModItems.COPPER_WIRE);
+                        output.accept(ModItems.INDUCTOR);
                     }).build());
 
 

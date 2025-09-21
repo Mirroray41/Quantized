@@ -9,6 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.block.custom.machine_block.MachineBlock;
 import net.zapp.quantized.item.ModItems;
 
 import java.util.function.Function;
@@ -22,6 +23,10 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> STEEL_BLOCK = registerBlock("steel_block",
             (properties) -> new Block(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+
+    public static final DeferredBlock<Block> MACHINE_BLOCK = registerBlock("machine_block",
+            (properties) -> new MachineBlock(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
 
 

@@ -3,7 +3,10 @@ package net.zapp.quantized;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.zapp.quantized.block.ModBlockEntities;
 import net.zapp.quantized.block.ModBlocks;
+import net.zapp.quantized.block.ModMenuTypes;
+import net.zapp.quantized.block.ModRecipes;
 import net.zapp.quantized.item.ModCreativeModeTabs;
 import net.zapp.quantized.item.ModItems;
 import org.slf4j.Logger;
@@ -43,6 +46,10 @@ public class Quantized {
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
+        ModRecipes.register(modEventBus);
+
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

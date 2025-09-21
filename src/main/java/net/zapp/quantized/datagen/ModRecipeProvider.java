@@ -55,6 +55,17 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModBlocks.QUANTUM_MATTER_BLOCK)
                 .unlockedBy("has_quantum_matter_block", has(ModBlocks.QUANTUM_MATTER_BLOCK)).save(output);
 
+        shaped(RecipeCategory.MISC, ModItems.Q_BYTE.get())
+                .pattern("BBB")
+                .pattern("B B")
+                .pattern("BBB")
+                .define('B', ModItems.Q_BIT.get())
+                .unlockedBy("has_q_bit", has(ModItems.Q_BIT)).save(output);
+
+        shapeless(RecipeCategory.MISC, ModItems.Q_BIT.get(), 8)
+                .requires(ModItems.Q_BYTE)
+                .unlockedBy("has_q_byte", has(ModItems.Q_BYTE)).save(output);
+
         shaped(RecipeCategory.MISC, ModBlocks.STEEL_BLOCK.get())
                 .pattern("BBB")
                 .pattern("BBB")
@@ -84,6 +95,49 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', ModItems.STEEL_INGOT.get())
                 .define('I', ModItems.STEEL_NUGGET.get())
                 .unlockedBy("has_steel_nugget", has(ModItems.STEEL_NUGGET)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.MALLET.get())
+                .pattern(" I ")
+                .pattern(" SI")
+                .pattern("S  ")
+                .define('I', ModItems.STEEL_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+
+        shapeless(RecipeCategory.MISC, ModItems.STEEL_PLATE.get(), 2)
+                .requires(ModItems.STEEL_INGOT)
+                .requires(ModItems.MALLET)
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.STEEL_ROD.get())
+                .pattern("B")
+                .pattern("B")
+                .define('B', ModItems.STEEL_PLATE.get())
+                .unlockedBy("has_steel_plate", has(ModItems.STEEL_PLATE)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.WIRE_CUTTERS.get())
+                .pattern(" S ")
+                .pattern("TNS")
+                .pattern(" T ")
+                .define('S', ModItems.STEEL_PLATE.get())
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .define('T', Items.BLUE_TERRACOTTA)
+                .unlockedBy("has_steel_plate", has(ModItems.STEEL_PLATE)).save(output);
+
+        shapeless(RecipeCategory.MISC, ModItems.COPPER_WIRE.get(), 3)
+                .requires(Items.COPPER_INGOT)
+                .requires(ModItems.WIRE_CUTTERS)
+                .unlockedBy("has_wire_cutters", has(ModItems.WIRE_CUTTERS)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.INDUCTOR.get())
+                .pattern("WRW")
+                .pattern("WRW")
+                .pattern("WRW")
+                .define('R', ModItems.STEEL_ROD.get())
+                .define('W', ModItems.COPPER_WIRE.get())
+                .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
+
+
 
         oreBlasting(output, List.of(Items.IRON_INGOT), RecipeCategory.MISC, ModItems.STEEL_INGOT.get(), 0.25f, 300, "steel");
         // Throws error

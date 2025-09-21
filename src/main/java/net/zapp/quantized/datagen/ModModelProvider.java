@@ -31,13 +31,23 @@ public class ModModelProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.QUANTUM_MATTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.Q_BIT.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.Q_BYTE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.STEEL_INGOT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.STEEL_NUGGET.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.STEEL_GEAR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STEEL_PLATE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STEEL_ROD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.MALLET.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.WIRE_CUTTERS.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.COPPER_WIRE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.INDUCTOR.get(), ModelTemplates.FLAT_ITEM);
+
 
         /* BLOCKS */
         blockModels.createTrivialCube(ModBlocks.QUANTUM_MATTER_BLOCK.get());
         blockModels.createTrivialCube(ModBlocks.STEEL_BLOCK.get());
+        blockModels.createTrivialCube(ModBlocks.MACHINE_BLOCK.get());
     }
 
     @Override
