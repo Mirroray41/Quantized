@@ -10,7 +10,7 @@ import net.zapp.quantized.Quantized;
 
 public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
     private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/growth_chamber/growth_chamber_gui.png");
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/machine_block/machine_block_screen.png");
     private static final ResourceLocation ARROW_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
 

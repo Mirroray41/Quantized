@@ -1,0 +1,7 @@
+{
+  "type": "quantized:machine_block",
+  "ingredient": "minecraft:dirt",
+  "result": {
+    "id": "minecraft:diamond"
+  }
+}

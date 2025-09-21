@@ -16,12 +16,12 @@ public class ModRecipes {
             DeferredRegister.create(Registries.RECIPE_TYPE, Quantized.MOD_ID);
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MachineBlockRecipe>> MACHINE_MACHINE_SERIALIZER =
-            SERIALIZERS.register("growth_chamber", MachineBlockRecipe.Serializer::new);
+            SERIALIZERS.register("machine_block", MachineBlockRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<MachineBlockRecipe>> MACHINE_BLOCK_TYPE =
-            TYPES.register("growth_chamber", () -> new RecipeType<MachineBlockRecipe>() {
+            TYPES.register("machine_block", () -> new RecipeType<MachineBlockRecipe>() {
                 @Override
                 public String toString() {
-                    return "growth_chamber";
+                    return "machine_block";
                 }
             });
 

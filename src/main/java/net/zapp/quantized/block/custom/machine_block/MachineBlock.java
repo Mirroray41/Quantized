@@ -34,7 +34,7 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return null;
+        return new MachineBlockTile(blockPos, blockState);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MachineBlock extends BaseEntityBlock {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             if(entity instanceof MachineBlockTile machineBlockTile) {
-                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(machineBlockTile, Component.literal("Growth Chamber")), pPos);
+                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(machineBlockTile, Component.literal("Machine Block")), pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
