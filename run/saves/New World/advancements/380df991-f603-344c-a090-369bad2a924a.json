@@ -262,18 +262,6 @@
     },
     "done": true
   },
-  "quantized:recipes/misc/q_bit": {
-    "criteria": {
-      "has_q_byte": "2025-09-21 15:47:36 +0200"
-    },
-    "done": true
-  },
-  "quantized:recipes/misc/q_byte": {
-    "criteria": {
-      "has_q_bit": "2025-09-21 15:47:36 +0200"
-    },
-    "done": true
-  },
   "minecraft:recipes/misc/blue_dye": {
     "criteria": {
       "has_lapis_lazuli": "2025-09-21 17:39:32 +0200"
@@ -487,6 +475,306 @@
   "quantized:recipes/misc/inductor": {
     "criteria": {
       "has_copper_wire": "2025-09-21 20:39:23 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/8_q_bytes_from_q_byte": {
+    "criteria": {
+      "has_q_byte": "2025-09-22 13:40:22 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/q_byte_from_8_q_bytes": {
+    "criteria": {
+      "has_q_byte": "2025-09-22 13:40:22 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/8_q_bytes_from_64_q_bytes": {
+    "criteria": {
+      "has_8_q_bytes": "2025-09-22 13:40:32 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/64_q_bytes_from_8_q_bytes": {
+    "criteria": {
+      "has_8_q_bytes": "2025-09-22 13:40:32 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/64_q_bytes_from_512_q_bytes": {
+    "criteria": {
+      "has_64_q_bytes": "2025-09-22 13:40:37 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/512_q_bytes_from_64_q_bytes": {
+    "criteria": {
+      "has_64_q_bytes": "2025-09-22 13:40:37 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/4_kq_bytes_from_512_q_bytes": {
+    "criteria": {
+      "has_the_recipe": "2025-09-22 13:40:46 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/4_kq_bytes_from_32_kq_bytes": {
+    "criteria": {
+      "has_4k_q_bytes": "2025-09-22 13:40:47 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/32_kq_bytes_from_4_kq_bytes": {
+    "criteria": {
+      "has_4k_q_bytes": "2025-09-22 13:40:47 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/256_kq_bytes_from_32_kq_bytes": {
+    "criteria": {
+      "has_32k_q_bytes": "2025-09-22 13:40:54 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/32_kq_bytes_from_256_kq_bytes": {
+    "criteria": {
+      "has_32k_q_bytes": "2025-09-22 13:40:54 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/256_kq_bytes_from_2_mq_bytes": {
+    "criteria": {
+      "has_256k_q_bytes": "2025-09-22 13:40:58 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/2_mq_bytes_from_256_kq_bytes": {
+    "criteria": {
+      "has_256k_q_bytes": "2025-09-22 13:40:58 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/16_mq_bytes_from_2_mq_bytes": {
+    "criteria": {
+      "has_2m_q_bytes": "2025-09-22 13:41:03 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/2_mq_bytes_from_16_mq_bytes": {
+    "criteria": {
+      "has_2m_q_bytes": "2025-09-22 13:41:03 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/128_mq_bytes_from_16_mq_bytes": {
+    "criteria": {
+      "has_16m_q_bytes": "2025-09-22 13:41:07 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/16_mq_bytes_from_128_mq_bytes": {
+    "criteria": {
+      "has_16m_q_bytes": "2025-09-22 13:41:07 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/128_mq_bytes_from_1_gq_bytes": {
+    "criteria": {
+      "has_128m_q_bytes": "2025-09-22 13:41:14 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/1_gq_bytes_from_128_mq_bytes": {
+    "criteria": {
+      "has_128m_q_bytes": "2025-09-22 13:41:14 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/diamond_leggings": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/diamond_sword": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/jukebox": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/diamond_chestplate": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/diamond_pickaxe": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/diamond_hoe": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/diamond_shovel": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/diamond_boots": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/combat/diamond_helmet": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/diamond_block": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:story/mine_diamond": {
+    "criteria": {
+      "diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/diamond_axe": {
+    "criteria": {
+      "has_diamond": "2025-09-22 13:57:35 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/q_byte_from_q_bit": {
+    "criteria": {
+      "has_q_bit": "2025-09-22 16:09:01 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/q_bit_from_q_byte": {
+    "criteria": {
+      "has_q_bit": "2025-09-22 16:09:01 +0200"
+    },
+    "done": true
+  },
+  "energizedpower:recipes/crafting/diamond_hammer": {
+    "criteria": {
+      "has_the_ingredient": "2025-09-23 20:58:44 +0200"
+    },
+    "done": true
+  },
+  "energizedpower:main/basics/coal_engine": {
+    "criteria": {
+      "has_the_item": "2025-09-23 20:59:03 +0200"
+    },
+    "done": true
+  },
+  "energizedpower:recipes/crafting/heat_generator": {
+    "criteria": {
+      "has_the_ingredient": "2025-09-23 20:59:03 +0200"
+    },
+    "done": true
+  },
+  "energizedpower:recipes/crafting/inventory_coal_engine": {
+    "criteria": {
+      "has_the_ingredient": "2025-09-23 20:59:03 +0200"
+    },
+    "done": true
+  },
+  "energizedpower:main/basics/gold_cable": {
+    "criteria": {
+      "has_the_item": "2025-09-23 20:59:49 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/8_q_bytes_from_8_qb_drive": {
+    "criteria": {
+      "has_8_qb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/512_q_bytes_from_512_qb_drive": {
+    "criteria": {
+      "has_512_qb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/1_gq_bytes_from_1_gqb_drive": {
+    "criteria": {
+      "has_1_gqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/128_mq_bytes_from_128_mqb_drive": {
+    "criteria": {
+      "has_128_mqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/16_mq_bytes_from_16_mqb_drive": {
+    "criteria": {
+      "has_16_mqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/2_mq_bytes_from_2_mqb_drive": {
+    "criteria": {
+      "has_2_mqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/4_kq_bytes_from_4_kqb_drive": {
+    "criteria": {
+      "has_4_kqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/256_kq_bytes_from_256_kqb_drive": {
+    "criteria": {
+      "has_256_kqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/64_q_bytes_from_64_qb_drive": {
+    "criteria": {
+      "has_64_qb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/32_kq_bytes_from_32_kqb_drive": {
+    "criteria": {
+      "has_32_kqb_drive": "2025-09-24 15:46:08 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/8_qb_drive_from_8_q_bytes": {
+    "criteria": {
+      "has_the_recipe": "2025-09-24 15:49:04 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/64_qb_drive_from_64_q_bytes": {
+    "criteria": {
+      "has_the_recipe": "2025-09-24 15:49:33 +0200"
     },
     "done": true
   },

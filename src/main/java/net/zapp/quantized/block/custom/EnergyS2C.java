@@ -1,0 +1,47 @@
+package net.zapp.quantized.block.custom;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.block.custom.machine_block.MachineBlockTile;
+import org.jetbrains.annotations.NotNull;
+
+public record EnergyS2C(int energy, int capacity, BlockPos pos) implements CustomPacketPayload {
+    public static final Type<EnergyS2C> ID =
+            new Type<>(QAPI.id("energy_sync"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnergyS2C> STREAM_CODEC =
+            StreamCodec.ofMember(EnergyS2C::write, EnergyS2C::new);
+
+    public EnergyS2C(RegistryFriendlyByteBuf buffer) {
+        this(buffer.readInt(), buffer.readInt(), buffer.readBlockPos());
+    }
+
+    public void write(RegistryFriendlyByteBuf buffer) {
+        buffer.writeInt(energy);
+        buffer.writeInt(capacity);
+        buffer.writeBlockPos(pos);
+    }
+
+    @Override
+    @NotNull
+    public Type<? extends CustomPacketPayload> type() {
+        return ID;
+    }
+
+    public static void handle(EnergyS2C data, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
+
+            //BlockEntity
+            if(blockEntity instanceof MachineBlockTile) {
+                MachineBlockTile energyStorage = (MachineBlockTile) blockEntity;
+                energyStorage.getEnergyStorage().setEnergy(data.energy);
+                energyStorage.getEnergyStorage().setCapacity(data.capacity);
+            }
+        });
+    }
+}

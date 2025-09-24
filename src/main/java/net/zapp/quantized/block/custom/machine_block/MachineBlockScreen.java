@@ -13,6 +13,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/machine_block/machine_block_screen.png");
     private static final ResourceLocation ARROW_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
+    private static final ResourceLocation ENERGY_BAR_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
 
     public MachineBlockScreen(MachineBlockMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -26,12 +28,17 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         renderProgressArrow(guiGraphics, x, y);
+        renderEnergyBar(guiGraphics, x, y);
     }
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE,x + 73, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
         }
+    }
+
+    private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
     @Override

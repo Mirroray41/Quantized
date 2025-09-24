@@ -12,7 +12,7 @@ darknessEffectScale:1.0
 glintSpeed:0.5
 glintStrength:0.75
 prioritizeChunkUpdates:0
-fullscreen:false
+fullscreen:true
 gamma:0.5
 graphicsMode:1
 guiScale:3
@@ -128,6 +128,7 @@ key_key.hotbar.6:key.keyboard.6
 key_key.hotbar.7:key.keyboard.7
 key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
+key_key.energizedpower.teleporter.use:key.keyboard.v
 soundCategory_master:0.16777041942604853
 soundCategory_music:0.0
 soundCategory_record:0.46713615023474164

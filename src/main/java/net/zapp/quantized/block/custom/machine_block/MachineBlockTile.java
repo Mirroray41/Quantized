@@ -19,15 +19,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.block.custom.CustomEnergyStorage;
 import net.zapp.quantized.block.ModBlockEntities;
 import net.zapp.quantized.block.ModRecipes;
+import net.zapp.quantized.block.custom.ICustomEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class MachineBlockTile extends BlockEntity implements MenuProvider {
@@ -41,8 +44,15 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
         }
     };
 
+    private final CustomEnergyStorage energy = createEnergyStorage();
+    private final Lazy<ICustomEnergyStorage> energyHandler = Lazy.of(() -> new CustomEnergyStorage(energy));
+
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
+
+    public static final int CONSUMPTION = 16;
+    public static final int MAXTRANSFER = 1000;
+    public static final int CAPACITY = 100000;
 
     protected final ContainerData data;
     private int progress = 0;
@@ -56,6 +66,8 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
                 return switch (i) {
                     case 0 -> MachineBlockTile.this.progress;
                     case 1 -> MachineBlockTile.this.maxProgress;
+                    case 2 -> MachineBlockTile.this.energyHandler.get().getEnergy();
+                    case 3 -> MachineBlockTile.this.energyHandler.get().getMaxEnergyStored();
                     default -> 0;
                 };
             }
@@ -70,7 +82,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
             @Override
             public int getCount() {
-                return 2;
+                return 4;
             }
         };
     }
@@ -103,8 +115,14 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(ValueOutput output) {
         itemHandler.serialize(output);
-        output.putInt("growth_chamber.progress", progress);
-        output.putInt("growth_chamber.max_progress", maxProgress);
+
+        output.putInt("machine_block.energy", energyHandler.get().getEnergyStored());
+        output.putInt("machine_block.max_energy", energyHandler.get().getMaxEnergyStored());
+        output.putBoolean("machine_block.can_receive", energyHandler.get().canReceive());
+        output.putBoolean("machine_block.can_extract", energyHandler.get().canExtract());
+
+        output.putInt("machine_block.progress", progress);
+        output.putInt("machine_block.max_progress", maxProgress);
 
         super.saveAdditional(output);
     }
@@ -113,14 +131,17 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
+        energyHandler.get().setEnergy(input.getIntOr("machine_block.energy", 0));
+
         itemHandler.deserialize(input);
-        progress = input.getIntOr("growth_chamber.progress", 0);
-        maxProgress = input.getIntOr("growth_chamber.max_progress", 0);
+        progress = input.getIntOr("machine_block.progress", 0);
+        maxProgress = input.getIntOr("machine_block.max_progress", 0);
     }
 
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
-        if(hasRecipe()) {
+        if(hasRecipe() && (energyHandler.get().getEnergyStored() > CONSUMPTION)) {
             increaseCraftingProgress();
+            energyHandler.get().extractEnergy(CONSUMPTION, false);
             setChanged(level, blockPos, blockState);
 
             if(hasCraftingFinished()) {
@@ -190,5 +211,14 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Nonnull
+    private CustomEnergyStorage createEnergyStorage() {
+        return new CustomEnergyStorage(CAPACITY, MAXTRANSFER, MAXTRANSFER, true, true);
+    }
+
+    public ICustomEnergyStorage getEnergyStorage() {
+        return this.energyHandler.get();
     }
 }

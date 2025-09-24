@@ -3,7 +3,11 @@ package net.zapp.quantized;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.zapp.quantized.block.ModBlockEntities;
 import net.zapp.quantized.block.ModBlocks;
 import net.zapp.quantized.block.ModMenuTypes;
@@ -12,6 +16,8 @@ import net.zapp.quantized.block.custom.machine_block.MachineBlockRecipe;
 import net.zapp.quantized.block.custom.machine_block.MachineBlockScreen;
 import net.zapp.quantized.item.ModCreativeModeTabs;
 import net.zapp.quantized.item.ModItems;
+import net.zapp.quantized.networking.ModClientMessages;
+import net.zapp.quantized.networking.ModMessages;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -53,7 +59,6 @@ public class Quantized {
         ModMenuTypes.register(modEventBus);
         ModRecipes.register(modEventBus);
 
-
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
@@ -87,6 +92,21 @@ public class Quantized {
         @SubscribeEvent
         public static void registerScreens(RegisterMenuScreensEvent event) {
             event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);
+        }
+
+        @SubscribeEvent
+        public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getEnergyStorage());
+        }
+
+        @SubscribeEvent
+        public static void registerPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
+            ModMessages.register(event);
+        }
+
+        @SubscribeEvent
+        public static void registerClientPayloadHandlersEvent(RegisterClientPayloadHandlersEvent event) {
+            ModClientMessages.register(event);
         }
     }
 }

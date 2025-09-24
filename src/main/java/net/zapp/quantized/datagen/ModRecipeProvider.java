@@ -55,16 +55,17 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModBlocks.QUANTUM_MATTER_BLOCK)
                 .unlockedBy("has_quantum_matter_block", has(ModBlocks.QUANTUM_MATTER_BLOCK)).save(output);
 
-        shaped(RecipeCategory.MISC, ModItems.Q_BYTE.get())
-                .pattern("BBB")
-                .pattern("B B")
-                .pattern("BBB")
-                .define('B', ModItems.Q_BIT.get())
-                .unlockedBy("has_q_bit", has(ModItems.Q_BIT)).save(output);
-
-        shapeless(RecipeCategory.MISC, ModItems.Q_BIT.get(), 8)
-                .requires(ModItems.Q_BYTE)
-                .unlockedBy("has_q_byte", has(ModItems.Q_BYTE)).save(output);
+        eightCompactingRecipe(ModItems.Q_BIT.get(), ModItems.Q_BYTE, "has_q_bit");
+        eightCompactingRecipe(ModItems.Q_BYTE.get(), ModItems.Q_BYTES_8, "has_q_byte");
+        eightCompactingRecipe(ModItems.Q_BYTES_8.get(), ModItems.Q_BYTES_64, "has_8_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_64.get(), ModItems.Q_BYTES_512, "has_64_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_512.get(), ModItems.Q_BYTES_4K, "has_512_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_4K.get(), ModItems.Q_BYTES_32K, "has_4k_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_32K.get(), ModItems.Q_BYTES_256K, "has_32k_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_256K.get(), ModItems.Q_BYTES_2M, "has_256k_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_2M.get(), ModItems.Q_BYTES_16M, "has_2m_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_16M.get(), ModItems.Q_BYTES_128M, "has_16m_q_bytes");
+        eightCompactingRecipe(ModItems.Q_BYTES_128M.get(), ModItems.Q_BYTES_1G, "has_128m_q_bytes");
 
         shaped(RecipeCategory.MISC, ModBlocks.STEEL_BLOCK.get())
                 .pattern("BBB")
@@ -137,7 +138,36 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('W', ModItems.COPPER_WIRE.get())
                 .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
 
+        shaped(RecipeCategory.MISC, ModItems.DRIVE_CASING.get())
+                .pattern("SNS")
+                .pattern("SGS")
+                .pattern("SSS")
+                .define('S', ModItems.STEEL_PLATE.get())
+                .define('G', Items.GLASS)
+                .define('N', Items.GOLD_NUGGET)
+                .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
 
+        driveUnpackRecipe(ModItems.DRIVE_8.get(), ModItems.Q_BYTES_8.get());
+        driveUnpackRecipe(ModItems.DRIVE_64.get(), ModItems.Q_BYTES_64.get());
+        driveUnpackRecipe(ModItems.DRIVE_512.get(), ModItems.Q_BYTES_512.get());
+        driveUnpackRecipe(ModItems.DRIVE_4K.get(), ModItems.Q_BYTES_4K.get());
+        driveUnpackRecipe(ModItems.DRIVE_32K.get(), ModItems.Q_BYTES_32K.get());
+        driveUnpackRecipe(ModItems.DRIVE_256K.get(), ModItems.Q_BYTES_256K.get());
+        driveUnpackRecipe(ModItems.DRIVE_2M.get(), ModItems.Q_BYTES_2M.get());
+        driveUnpackRecipe(ModItems.DRIVE_16M.get(), ModItems.Q_BYTES_16M.get());
+        driveUnpackRecipe(ModItems.DRIVE_128M.get(), ModItems.Q_BYTES_128M.get());
+        driveUnpackRecipe(ModItems.DRIVE_1G.get(), ModItems.Q_BYTES_1G.get());
+        
+        drivePackRecipe(ModItems.DRIVE_8.get(), ModItems.Q_BYTES_8.get());
+        drivePackRecipe(ModItems.DRIVE_64.get(), ModItems.Q_BYTES_64.get());
+        drivePackRecipe(ModItems.DRIVE_512.get(), ModItems.Q_BYTES_512.get());
+        drivePackRecipe(ModItems.DRIVE_4K.get(), ModItems.Q_BYTES_4K.get());
+        drivePackRecipe(ModItems.DRIVE_32K.get(), ModItems.Q_BYTES_32K.get());
+        drivePackRecipe(ModItems.DRIVE_256K.get(), ModItems.Q_BYTES_256K.get());
+        drivePackRecipe(ModItems.DRIVE_2M.get(), ModItems.Q_BYTES_2M.get());
+        drivePackRecipe(ModItems.DRIVE_16M.get(), ModItems.Q_BYTES_16M.get());
+        drivePackRecipe(ModItems.DRIVE_128M.get(), ModItems.Q_BYTES_128M.get());
+        drivePackRecipe(ModItems.DRIVE_1G.get(), ModItems.Q_BYTES_1G.get());
 
         oreBlasting(output, List.of(Items.IRON_INGOT), RecipeCategory.MISC, ModItems.STEEL_INGOT.get(), 0.25f, 300, "steel");
         // Throws error
@@ -163,5 +193,31 @@ public class ModRecipeProvider extends RecipeProvider {
             SimpleCookingRecipeBuilder.generic(Ingredient.of(itemlike), pCategory, pResult, pExperience, pCookingTime, pCookingSerializer, factory).group(pGroup).unlockedBy(getHasName(itemlike), has(itemlike))
                     .save(recipeOutput, Quantized.MOD_ID + ":" + getItemName(pResult) + pRecipeName + "_" + getItemName(itemlike));
         }
+    }
+
+    protected void eightCompactingRecipe(ItemLike item1, ItemLike item2, String unlock){
+        shaped(RecipeCategory.MISC, item2)
+                .pattern("BBB")
+                .pattern("B B")
+                .pattern("BBB")
+                .define('B', item1)
+                .unlockedBy(unlock, has(item1)).save(output, getItemName(item2) + "_from_" + getItemName(item1));
+
+        shapeless(RecipeCategory.MISC, item1, 8)
+                .requires(item2)
+                .unlockedBy(unlock, has(item1)).save(output, getItemName(item1) + "_from_" + getItemName(item2));
+    }
+
+    protected void driveUnpackRecipe(ItemLike drive, ItemLike data) {
+        shapeless(RecipeCategory.MISC, data, 1)
+                .requires(drive)
+                .unlockedBy("has_" + getItemName(drive), has(ModItems.DRIVE_8.get())).save(output, getItemName(data) + "_from_" + getItemName(drive));
+    }
+
+    protected void drivePackRecipe(ItemLike drive, ItemLike data) {
+        shapeless(RecipeCategory.MISC, drive, 1)
+                .requires(data)
+                .requires(ModItems.DRIVE_CASING)
+                .unlockedBy("has_" + getItemName(data), has(ModItems.DRIVE_8.get())).save(output, getItemName(drive) + "_from_" + getItemName(data));
     }
 }

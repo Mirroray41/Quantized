@@ -17,7 +17,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public MachineBlockMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public MachineBlockMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -45,6 +45,14 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         int arrowPixelSize = 24;
 
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
+    }
+
+    public int getScaledEnergyBar() {
+        int energyStored = this.data.get(2);
+        int maxEnergy = this.data.get(3);
+        int arrowPixelSize = 54;
+
+        return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
