@@ -24,7 +24,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.api.module.EnergyModule;
-import net.zapp.quantized.api.module.ItemHandlerModule;
+import net.zapp.quantized.api.module.ItemModule;
 import net.zapp.quantized.api.module.TankModule;
 import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.api.module.identifiers.HasItemModule;
@@ -50,7 +50,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     public static final int TANK_CAPACITY = 8_000;
 
     // ---- Modules (storage-only) ----
-    private final ItemHandlerModule itemM = new ItemHandlerModule(2, slot -> markDirtyAndUpdate());
+    private final ItemModule itemM = new ItemModule("MachineBlockTile", 2, slot -> markDirtyAndUpdate());
     private final EnergyModule energyM = new EnergyModule("MachineBlockTile",
             FE_CAPACITY, MAX_FE_TRANSFER, MAX_FE_TRANSFER, true, true, s -> markDirtyAndUpdate()
     );
@@ -92,7 +92,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         super(ModBlockEntities.MACHINE_BLOCK_TILE.get(), pos, state);
     }
 
-    public ItemHandlerModule items() {
+    public ItemModule items() {
         return itemM;
     }
 
@@ -250,7 +250,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     }
 
     @Override
-    public ItemHandlerModule getItemHandlerModule() {
+    public ItemModule getItemModule() {
         return itemM;
     }
 
