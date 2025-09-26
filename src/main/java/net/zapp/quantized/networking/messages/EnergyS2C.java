@@ -7,6 +7,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.api.energy.CustomEnergyStorage;
+import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,10 +39,11 @@ public record EnergyS2C(int energy, int capacity, BlockPos pos) implements Custo
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
             //BlockEntity
-            if(blockEntity instanceof MachineBlockTile) {
-                MachineBlockTile energyStorage = (MachineBlockTile) blockEntity;
-                energyStorage.getEnergyStorage().setEnergy(data.energy);
-                energyStorage.getEnergyStorage().setCapacity(data.capacity);
+            if(blockEntity instanceof HasEnergyModule energyModule) {
+                // NEW
+                CustomEnergyStorage energy = energyModule.getEnergyModule().getEnergy();
+                energy.setEnergy(data.energy);
+                energy.setCapacity(data.capacity);
             }
         });
     }

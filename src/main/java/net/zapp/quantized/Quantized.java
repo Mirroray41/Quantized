@@ -1,33 +1,40 @@
 package net.zapp.quantized;
 
+import com.mojang.logging.LogUtils;
+import net.minecraft.core.Direction;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.zapp.quantized.init.ModBlockEntities;
-import net.zapp.quantized.init.ModBlocks;
-import net.zapp.quantized.init.ModMenuTypes;
-import net.zapp.quantized.init.ModRecipes;
 import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
-import net.zapp.quantized.init.ModFluidTypes;
-import net.zapp.quantized.init.ModFluids;
-import net.zapp.quantized.init.ModCreativeModeTabs;
-import net.zapp.quantized.init.ModItems;
+import net.zapp.quantized.init.*;
 import net.zapp.quantized.networking.ModClientMessages;
 import net.zapp.quantized.networking.ModMessages;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.slf4j.Logger;
+
 
 import com.mojang.logging.LogUtils;
 
@@ -109,8 +116,23 @@ public class Quantized {
 
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getEnergyStorage());
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
+                    (be, side) -> {
+                ItemStackHandler handler = be.items().handler();
+                if (side == Direction.UP) {
+                    return new RangedWrapper(handler, 0, 1);
+                } else if (side == Direction.DOWN) {
+                    return new RangedWrapper(handler, 1, 2);
+                } else {
+                    return new RangedWrapper(handler, 0, 2);
+                }
+            });
+
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
+                    (be, side) -> be.energy().getEnergy());
+
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
+                    (be, side) -> be.fluids().tank());
         }
 
         @SubscribeEvent

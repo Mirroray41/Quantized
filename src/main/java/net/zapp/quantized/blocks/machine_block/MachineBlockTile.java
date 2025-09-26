@@ -1,7 +1,6 @@
 package net.zapp.quantized.blocks.machine_block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,10 +20,15 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.zapp.quantized.api.module.EnergyModule;
+import net.zapp.quantized.api.module.ItemModule;
+import net.zapp.quantized.api.module.TankModule;
+import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
+import net.zapp.quantized.api.module.identifiers.HasItemModule;
+import net.zapp.quantized.api.module.identifiers.HasTankModule;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -37,144 +41,104 @@ import net.zapp.quantized.init.ModRecipes;
 import net.zapp.quantized.api.energy.ICustomEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class MachineBlockTile extends BlockEntity implements MenuProvider {
-    public final ItemStackHandler itemHandler = new ItemStackHandler(2) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            if(!level.isClientSide()) {
-                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-            }
-        }
-    };
-
-    private final CustomEnergyStorage energy = createEnergyStorage();
-    private final Lazy<ICustomEnergyStorage> energyHandler = Lazy.of(() -> new CustomEnergyStorage(energy));
-
-    private final FluidTank tank = new FluidTank(TANK_CAPACITY) {
-        @Override
-        protected void onContentsChanged() {
-            setChanged();
-            if (level != null && !level.isClientSide) {
-                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-            }
-        }
-    };
-    private final Lazy<FluidTank> tankHandler = Lazy.of(() -> tank);
-
+public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
+    // ---- Slots ----
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
 
+    // ---- Energy/Fluids constants ----
     public static final int CONSUMPTION = 16;
     public static final int MAX_FE_TRANSFER = 1000;
-    public static final int FE_CAPACITY = 100000;
+    public static final int FE_CAPACITY = 100_000;
+    public static final int TANK_CAPACITY = 8_000;
 
-    public static final Holder<Fluid> FLUID_TYPE = Holder.direct(Fluids.WATER);
-    public static final int TANK_CAPACITY = 8000;
+    // ---- Modules (storage-only) ----
+    private final ItemModule itemM = new ItemModule("MachineBlockTile", 2, slot -> markDirtyAndUpdate());
+    private final EnergyModule energyM = new EnergyModule("MachineBlockTile",
+            FE_CAPACITY, MAX_FE_TRANSFER, MAX_FE_TRANSFER, true, true, s -> markDirtyAndUpdate()
+    );
+    private final TankModule tankM = new TankModule("MachineBlockTile",
+            TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate()
+    );
 
-    protected final ContainerData data;
+    // ---- Menu sync data ----
     private int progress = 0;
     private int maxProgress = 72;
 
-    public MachineBlockTile(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.MACHINE_BLOCK_TILE.get(), pos, blockState);
-        data = new ContainerData() {
-            @Override
-            public int get(int i) {
-                return switch (i) {
-                    case 0 -> MachineBlockTile.this.progress;
-                    case 1 -> MachineBlockTile.this.maxProgress;
-                    case 2 -> MachineBlockTile.this.energyHandler.get().getEnergy();
-                    case 3 -> MachineBlockTile.this.energyHandler.get().getMaxEnergyStored();
-                    case 4 -> MachineBlockTile.this.tank.getFluidAmount();
-                    case 5 -> MachineBlockTile.this.tank.getCapacity();
-                    default -> 0;
-                };
-            }
+    protected final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int i) {
+            return switch (i) {
+                case 0 -> progress;
+                case 1 -> maxProgress;
+                case 2 -> energyM.getEnergy().getEnergy();
+                case 3 -> energyM.getEnergy().getMaxEnergyStored();
+                case 4 -> fluidM.getFluid().getFluidAmount();
+                default -> 0;
+            };
+        }
 
-            @Override
-            public void set(int i, int value) {
-                switch (i) {
-                    case 0: MachineBlockTile.this.progress = value;
-                    case 1: MachineBlockTile.this.maxProgress = value;
-                }
+        @Override
+        public void set(int i, int value) {
+            switch (i) {
+                case 0 -> progress = value;
+                case 1 -> maxProgress = value;
             }
+        }
 
-            @Override
-            public int getCount() {
-                return 6;
-            }
-        };
+        @Override
+        public int getCount() {
+            return 5;
+        }
+    };
+
+    public MachineBlockTile(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.MACHINE_BLOCK_TILE.get(), pos, state);
     }
 
+    public ItemModule items() {
+        return itemM;
+    }
+
+    public EnergyModule energy() {
+        return energyM;
+    }
+
+    public TankModule fluids() {
+        return tankM;
+    }
+
+    public ICustomEnergyStorage getEnergyStorage() {
+        return energyM.getEnergy();
+    }
+
+    public FluidStack getTankFluid() {
+        return tankM.tank().getFluid();
+    }
+
+    // ---- UI / Menu ----
     @Override
     public Component getDisplayName() {
         return Component.translatable("block.quantized.tile.name");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new MachineBlockMenu(i, inventory, this, this.data);
+    public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+        return new MachineBlockMenu(id, inv, this, this.data);
     }
 
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
+    // ---- Ticking / Crafting ----
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (level.isClientSide) return;
 
-        Containers.dropContents(this.level, this.worldPosition, inventory);
-    }
+        if (hasRecipe() && energyM.getEnergy().getEnergyStored() >= CONSUMPTION) {
+            progress++;
+            energyM.getEnergy().extractEnergy(CONSUMPTION, false);
+            setChanged(level, pos, state);
 
-    @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        drops();
-        super.preRemoveSideEffects(pos, state);
-    }
-
-    @Override
-    protected void saveAdditional(ValueOutput output) {
-        itemHandler.serialize(output);
-
-        output.putInt("machine_block.energy", energyHandler.get().getEnergyStored());
-        output.putInt("machine_block.max_energy", energyHandler.get().getMaxEnergyStored());
-        output.store("machine_block.tank_fluid", FluidStack.CODEC, tank.getFluid());
-
-        output.putInt("machine_block.tank_capacity", tank.getCapacity());
-        output.putBoolean("machine_block.can_receive", energyHandler.get().canReceive());
-        output.putBoolean("machine_block.can_extract", energyHandler.get().canExtract());
-
-        output.putInt("machine_block.progress", progress);
-        output.putInt("machine_block.max_progress", maxProgress);
-
-        super.saveAdditional(output);
-    }
-
-    @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-
-        energyHandler.get().setEnergy(input.getIntOr("machine_block.energy", 0));
-        energyHandler.get().setCapacity(input.getIntOr("machine_block.max_energy", FE_CAPACITY));
-
-        tank.setFluid(input.read("machine_block.tank_fluid", FluidStack.CODEC).orElse(new FluidStack(FLUID_TYPE, 0)));
-        tank.setCapacity(input.getIntOr("machine_block.tank_capacity", TANK_CAPACITY));
-
-        itemHandler.deserialize(input);
-        progress = input.getIntOr("machine_block.progress", 0);
-        maxProgress = input.getIntOr("machine_block.max_progress", 0);
-    }
-
-    public void tick(Level level, BlockPos blockPos, BlockState blockState) {
-        if(hasRecipe() && (energyHandler.get().getEnergyStored() > CONSUMPTION)) {
-            increaseCraftingProgress();
-            energyHandler.get().extractEnergy(CONSUMPTION, false);
-            setChanged(level, blockPos, blockState);
-
-            if(hasCraftingFinished()) {
+            if (progress >= maxProgress) {
                 craftItem();
                 resetProgress();
             }
@@ -185,11 +149,33 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
     private void craftItem() {
         Optional<RecipeHolder<MachineBlockRecipe>> recipe = getCurrentRecipe();
-        ItemStack output = recipe.get().value().output();
+        if (recipe.isEmpty()) return;
 
-        itemHandler.extractItem(INPUT_SLOT, 1, false);
-        itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(output.getItem(),
-                itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + output.getCount()));
+        ItemStack output = recipe.get().value().output();
+        // consume input
+        itemM.handler().extractItem(INPUT_SLOT, 1, false);
+        // place output
+        ItemStack curOut = itemM.handler().getStackInSlot(OUTPUT_SLOT);
+        itemM.handler().setStackInSlot(OUTPUT_SLOT,
+                new ItemStack(output.getItem(), curOut.getCount() + output.getCount()));
+    }
+
+    private Optional<RecipeHolder<MachineBlockRecipe>> getCurrentRecipe() {
+        if (!(this.level instanceof ServerLevel server)) return Optional.empty();
+        return server.recipeAccess()
+                .getRecipeFor(ModRecipes.MACHINE_BLOCK_TYPE.get(),
+                        new MachineBlockRecipeInput(itemM.handler().getStackInSlot(INPUT_SLOT)), level);
+    }
+
+    private boolean hasRecipe() {
+        Optional<RecipeHolder<MachineBlockRecipe>> r = getCurrentRecipe();
+        if (r.isEmpty()) return false;
+
+        ItemStack out = r.get().value().output();
+        ItemStack slot = itemM.handler().getStackInSlot(OUTPUT_SLOT);
+        boolean itemOk = slot.isEmpty() || slot.is(out.getItem());
+        int max = slot.isEmpty() ? 64 : slot.getMaxStackSize();
+        return itemOk && (slot.getCount() + out.getCount() <= max);
     }
 
     private void resetProgress() {
@@ -197,63 +183,86 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
         maxProgress = 72;
     }
 
-    private boolean hasCraftingFinished() {
-        return this.progress >= this.maxProgress;
-    }
-
-    private void increaseCraftingProgress() {
-        progress++;
-    }
-
-    private boolean hasRecipe() {
-        Optional<RecipeHolder<MachineBlockRecipe>> recipe = getCurrentRecipe();
-        if(recipe.isEmpty()) {
-            return false;
+    // ---- Drop items when broken ----
+    public void drops() {
+        if (level == null) return;
+        SimpleContainer inv = new SimpleContainer(itemM.handler().getSlots());
+        for (int i = 0; i < itemM.handler().getSlots(); i++) {
+            inv.setItem(i, itemM.handler().getStackInSlot(i));
         }
-
-        ItemStack output = recipe.get().value().output();
-        return canInsertAmountIntoOutputSlot(output.getCount()) && canInsertItemIntoOutputSlot(output);
-    }
-
-    private Optional<RecipeHolder<MachineBlockRecipe>> getCurrentRecipe() {
-        return ((ServerLevel) this.level).recipeAccess()
-                .getRecipeFor(ModRecipes.MACHINE_BLOCK_TYPE.get(), new MachineBlockRecipeInput(itemHandler.getStackInSlot(INPUT_SLOT)), level);
-    }
-
-    private boolean canInsertItemIntoOutputSlot(ItemStack output) {
-        return itemHandler.getStackInSlot(OUTPUT_SLOT).isEmpty() ||
-                itemHandler.getStackInSlot(OUTPUT_SLOT).getItem() == output.getItem();
-    }
-
-    private boolean canInsertAmountIntoOutputSlot(int count) {
-        int maxCount = itemHandler.getStackInSlot(OUTPUT_SLOT).isEmpty() ? 64 : itemHandler.getStackInSlot(OUTPUT_SLOT).getMaxStackSize();
-        int currentCount = itemHandler.getStackInSlot(OUTPUT_SLOT).getCount();
-
-        return maxCount >= currentCount + count;
+        Containers.dropContents(level, worldPosition, inv);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        return saveWithoutMetadata(pRegistries);
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        drops();
+        super.preRemoveSideEffects(pos, state);
     }
 
-    @Nullable
+    // ---- Save / Load ----
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
+    protected void saveAdditional(ValueOutput out) {
+        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+
+        // modules
+        itemM.save(out, regs);
+        energyM.save(out, regs);
+        tankM.save(out, regs);
+
+        // local fields
+        out.putInt("progress", progress);
+        out.putInt("maxProgress", maxProgress);
+
+        super.saveAdditional(out);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput in) {
+        super.loadAdditional(in);
+        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+
+        // modules
+        itemM.load(in, regs);
+        energyM.load(in, regs);
+        tankM.load(in, regs);
+
+        // local fields
+        progress = in.getIntOr("progress", 0);
+        maxProgress = in.getIntOr("maxProgress", 72);
+    }
+
+    // ---- Network sync ----
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Nonnull
-    private CustomEnergyStorage createEnergyStorage() {
-        return new CustomEnergyStorage(FE_CAPACITY, MAX_FE_TRANSFER, MAX_FE_TRANSFER, true, true);
+    // ---- Dirty+update helper ----
+    private void markDirtyAndUpdate() {
+        setChanged();
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 
-    public ICustomEnergyStorage getEnergyStorage() {
-        return this.energyHandler.get();
+    @Override
+    public EnergyModule getEnergyModule() {
+        return energyM;
     }
 
-    public FluidTank getTank(){
-        return this.tankHandler.get();
+    @Override
+    public ItemModule getItemModule() {
+        return itemM;
+    }
+
+    @Override
+    public TankModule getTankModule() {
+        return tankM;
     }
 
     public FluidStack getFluid() {

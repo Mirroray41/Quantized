@@ -6,10 +6,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.api.module.identifiers.HasTankModule;
 import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
-import net.zapp.quantized.networking.utils.FluidStoragePacketUpdate;
 
 /*
  * This file incorporates code from EnergizedPower by JDDev0,
@@ -39,10 +40,10 @@ public record FluidSyncS2C(int tank, FluidStack fluidStack, int capacity, BlockP
         context.enqueueWork(() -> {
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
-            if (blockEntity instanceof MachineBlockTile) {
-                MachineBlockTile fluidTank = (MachineBlockTile) blockEntity;
-                fluidTank.getTank().setFluid(data.fluidStack);
-                fluidTank.getTank().setCapacity(data.capacity);
+            if (blockEntity instanceof HasTankModule tankModule) {
+                FluidTank tank = tankModule.getTankModule().tank();
+                tank.setFluid(data.fluidStack);
+                tank.setCapacity(data.capacity);
             }
         });
     }
