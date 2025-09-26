@@ -5,19 +5,20 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.zapp.quantized.api.energy.CustomEnergyStorage;
 
-import java.util.function.IntConsumer;
-
 public class EnergyModule implements Module {
     private final CustomEnergyStorage energy;
     private final String moduleOwner;
 
-    public EnergyModule(String moduleOwner, int capacity, int maxReceive, int maxExtract, boolean canReceive, boolean canExtract, IntConsumer onChange) {
+    public EnergyModule(String moduleOwner, int capacity, int transferRate, boolean canReceive, boolean canExtract) {
+        this(moduleOwner, capacity, transferRate, transferRate, canReceive, canExtract);
+    }
+
+    public EnergyModule(String moduleOwner, int capacity, int maxReceive, int maxExtract, boolean canReceive, boolean canExtract) {
         this.moduleOwner = moduleOwner;
-        IntConsumer change = onChange != null ? onChange : s -> {};
         this.energy = new CustomEnergyStorage(capacity, maxReceive, maxExtract, canReceive, canExtract);
     }
 
-    public CustomEnergyStorage getEnergy() { return energy; }
+    public CustomEnergyStorage getHandler() { return energy; }
 
     @Override
     public void save(ValueOutput out, HolderLookup.Provider registries) {

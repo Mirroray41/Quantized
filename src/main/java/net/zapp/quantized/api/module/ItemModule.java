@@ -27,7 +27,7 @@ public class ItemModule implements Module {
         };
     }
 
-    public ItemStackHandler handler() {
+    public ItemStackHandler getHandler() {
        return items;
    }
 

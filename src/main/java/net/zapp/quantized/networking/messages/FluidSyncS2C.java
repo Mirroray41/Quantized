@@ -8,16 +8,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.Quantized;
 import net.zapp.quantized.api.module.identifiers.HasTankModule;
-import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 
 /*
  * This file incorporates code from EnergizedPower by JDDev0,
  * licensed under the MIT License.
  */
 public record FluidSyncS2C(int tank, FluidStack fluidStack, int capacity, BlockPos pos) implements CustomPacketPayload {
-    public static final Type<FluidSyncS2C> ID = new Type<>(QAPI.id("fluid_sync"));
+    public static final Type<FluidSyncS2C> ID = new Type<>(Quantized.id("fluid_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, FluidSyncS2C> STREAM_CODEC = StreamCodec.ofMember(FluidSyncS2C::write, FluidSyncS2C::new);
 
     public FluidSyncS2C(RegistryFriendlyByteBuf buffer) {
@@ -41,7 +40,7 @@ public record FluidSyncS2C(int tank, FluidStack fluidStack, int capacity, BlockP
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
             if (blockEntity instanceof HasTankModule tankModule) {
-                FluidTank tank = tankModule.getTankModule().tank();
+                FluidTank tank = tankModule.getTankModule().getHandler();
                 tank.setFluid(data.fluidStack);
                 tank.setCapacity(data.capacity);
             }

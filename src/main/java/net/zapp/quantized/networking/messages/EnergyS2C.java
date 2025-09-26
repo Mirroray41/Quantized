@@ -6,15 +6,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.Quantized;
 import net.zapp.quantized.api.energy.CustomEnergyStorage;
 import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
-import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import org.jetbrains.annotations.NotNull;
 
 public record EnergyS2C(int energy, int capacity, BlockPos pos) implements CustomPacketPayload {
     public static final Type<EnergyS2C> ID =
-            new Type<>(QAPI.id("energy_sync"));
+            new Type<>(Quantized.id("energy_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, EnergyS2C> STREAM_CODEC =
             StreamCodec.ofMember(EnergyS2C::write, EnergyS2C::new);
 
@@ -38,10 +37,8 @@ public record EnergyS2C(int energy, int capacity, BlockPos pos) implements Custo
         context.enqueueWork(() -> {
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
-            //BlockEntity
             if(blockEntity instanceof HasEnergyModule energyModule) {
-                // NEW
-                CustomEnergyStorage energy = energyModule.getEnergyModule().getEnergy();
+                CustomEnergyStorage energy = energyModule.getEnergyModule().getHandler();
                 energy.setEnergy(data.energy);
                 energy.setCapacity(data.capacity);
             }
