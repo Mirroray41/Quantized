@@ -1,21 +1,34 @@
 package net.zapp.quantized;
 
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.client.renderer.fog.environment.FogEnvironment;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.zapp.quantized.init.ModBlockEntities;
-import net.zapp.quantized.init.ModBlocks;
-import net.zapp.quantized.init.ModMenuTypes;
-import net.zapp.quantized.init.ModRecipes;
-import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
-import net.zapp.quantized.init.ModCreativeModeTabs;
-import net.zapp.quantized.init.ModItems;
+import net.zapp.quantized.block.ModBlockEntities;
+import net.zapp.quantized.block.ModBlocks;
+import net.zapp.quantized.block.ModMenuTypes;
+import net.zapp.quantized.block.ModRecipes;
+import net.zapp.quantized.block.custom.machine_block.MachineBlockRecipe;
+import net.zapp.quantized.block.custom.machine_block.MachineBlockScreen;
+import net.zapp.quantized.fluid.ModFluidTypes;
+import net.zapp.quantized.fluid.ModFluids;
+import net.zapp.quantized.item.ModCreativeModeTabs;
+import net.zapp.quantized.item.ModItems;
 import net.zapp.quantized.networking.ModClientMessages;
 import net.zapp.quantized.networking.ModMessages;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -29,6 +42,8 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+
+import javax.annotation.Nullable;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Quantized.MOD_ID)
@@ -56,6 +71,8 @@ public class Quantized {
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
         ModRecipes.register(modEventBus);
+        ModFluids.register(modEventBus);
+        ModFluidTypes.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
@@ -95,7 +112,6 @@ public class Quantized {
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getEnergyStorage());
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getTank());
         }
 
         @SubscribeEvent
@@ -106,6 +122,47 @@ public class Quantized {
         @SubscribeEvent
         public static void registerClientPayloadHandlersEvent(RegisterClientPayloadHandlersEvent event) {
             ModClientMessages.register(event);
+        }
+
+        @SubscribeEvent
+        static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public int getTintColor() {
+                    return ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getTintColor();
+                }
+
+                @Override
+                public ResourceLocation getStillTexture() {
+                    return ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getStillTexture();
+                }
+
+                @Override
+                public ResourceLocation getFlowingTexture() {
+                    return ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getFlowingTexture();
+                }
+
+                @Override
+                public @Nullable ResourceLocation getOverlayTexture() {
+                    return ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getOverlayTexture();
+                }
+
+                @Override
+                public Vector4f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor) {
+                    Vector3f fogColor = ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getFogColor();
+                    return new Vector4f(
+                            fogColor.x,
+                            fogColor.y,
+                            fogColor.z,
+                            fluidFogColor.w
+                    );
+                }
+
+                @Override
+                public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData) {
+                    //TODO FIX
+                }
+            }, ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get());
         }
     }
 }
