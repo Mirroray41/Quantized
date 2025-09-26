@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": "quantized:steel_nugget",
+    "S": "quantized:steel_plate",
+    "T": "minecraft:blue_terracotta"
+  },
+  "pattern": [
+    " S ",
+    "TNS",
+    " T "
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:wire_cutters"
+  }
+}

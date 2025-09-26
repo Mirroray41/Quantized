@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_q_bit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quantized:q_bit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:q_bit_from_q_byte"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_q_bit"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:q_bit_from_q_byte"
+    ]
+  }
+}

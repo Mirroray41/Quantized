@@ -29,8 +29,8 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 0, 54, 34));
-        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 1, 104, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.items().handler(), 0, 54, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.items().handler(), 1, 104, 34));
 
         addDataSlots(data);
     }

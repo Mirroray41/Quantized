@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_64_qb_drive": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quantized:8_qb_drive"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:64_q_bytes_from_64_qb_drive"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_64_qb_drive"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:64_q_bytes_from_64_qb_drive"
+    ]
+  }
+}

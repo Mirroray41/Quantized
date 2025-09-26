@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "quantized:steel_ingot",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    " I ",
+    " SI",
+    "S  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:mallet"
+  }
+}
