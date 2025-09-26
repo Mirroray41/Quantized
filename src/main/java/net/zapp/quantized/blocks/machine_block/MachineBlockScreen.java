@@ -41,6 +41,10 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
+    private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
+        //TODO: Add the render code for fluid Tank.
+    }
+
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);

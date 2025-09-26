@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import net.zapp.quantized.networking.utils.FluidStoragePacketUpdate;
 
 /*
@@ -38,10 +39,10 @@ public record FluidSyncS2C(int tank, FluidStack fluidStack, int capacity, BlockP
         context.enqueueWork(() -> {
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
-            if (blockEntity instanceof FluidStoragePacketUpdate) {
-                FluidStoragePacketUpdate fluidStorage = (FluidStoragePacketUpdate) blockEntity;
-                fluidStorage.setTankCapacity(data.tank, data.capacity);
-                fluidStorage.setFluid(data.tank, data.fluidStack);
+            if (blockEntity instanceof MachineBlockTile) {
+                MachineBlockTile fluidTank = (MachineBlockTile) blockEntity;
+                fluidTank.getTank().setFluid(data.fluidStack);
+                fluidTank.getTank().setCapacity(data.capacity);
             }
         });
     }

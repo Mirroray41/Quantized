@@ -1,6 +1,7 @@
 package net.zapp.quantized.blocks.machine_block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,9 +21,16 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.api.energy.CustomEnergyStorage;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
@@ -49,12 +57,26 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
     private final CustomEnergyStorage energy = createEnergyStorage();
     private final Lazy<ICustomEnergyStorage> energyHandler = Lazy.of(() -> new CustomEnergyStorage(energy));
 
+    private final FluidTank tank = new FluidTank(TANK_CAPACITY) {
+        @Override
+        protected void onContentsChanged() {
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
+    private final Lazy<FluidTank> tankHandler = Lazy.of(() -> tank);
+
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
 
     public static final int CONSUMPTION = 16;
-    public static final int MAXTRANSFER = 1000;
-    public static final int CAPACITY = 100000;
+    public static final int MAX_FE_TRANSFER = 1000;
+    public static final int FE_CAPACITY = 100000;
+
+    public static final Holder<Fluid> FLUID_TYPE = Holder.direct(Fluids.WATER);
+    public static final int TANK_CAPACITY = 8000;
 
     protected final ContainerData data;
     private int progress = 0;
@@ -120,6 +142,8 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
         output.putInt("machine_block.energy", energyHandler.get().getEnergyStored());
         output.putInt("machine_block.max_energy", energyHandler.get().getMaxEnergyStored());
+        output.store("machine_block.tank_fluid", FluidStack.CODEC, tank.getFluid());
+        output.putInt("machine_block.tank_capacity", tank.getCapacity());
         output.putBoolean("machine_block.can_receive", energyHandler.get().canReceive());
         output.putBoolean("machine_block.can_extract", energyHandler.get().canExtract());
 
@@ -134,6 +158,10 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
         super.loadAdditional(input);
 
         energyHandler.get().setEnergy(input.getIntOr("machine_block.energy", 0));
+        energyHandler.get().setCapacity(input.getIntOr("machine_block.max_energy", FE_CAPACITY));
+
+        tank.setFluid(input.read("machine_block.tank_fluid", FluidStack.CODEC).orElse(new FluidStack(FLUID_TYPE, 0)));
+        tank.setCapacity(input.getIntOr("machine_block.tank_capacity", TANK_CAPACITY));
 
         itemHandler.deserialize(input);
         progress = input.getIntOr("machine_block.progress", 0);
@@ -217,10 +245,14 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
     @Nonnull
     private CustomEnergyStorage createEnergyStorage() {
-        return new CustomEnergyStorage(CAPACITY, MAXTRANSFER, MAXTRANSFER, true, true);
+        return new CustomEnergyStorage(FE_CAPACITY, MAX_FE_TRANSFER, MAX_FE_TRANSFER, true, true);
     }
 
     public ICustomEnergyStorage getEnergyStorage() {
         return this.energyHandler.get();
+    }
+
+    public FluidTank getTank(){
+        return this.tankHandler.get();
     }
 }

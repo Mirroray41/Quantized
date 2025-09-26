@@ -55,6 +55,11 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
+    public int getScaledFluidTank() {
+        //TODO: Whenever the UI is made fill this part in I guess.
+        return 0;
+    }
+
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.
     // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
