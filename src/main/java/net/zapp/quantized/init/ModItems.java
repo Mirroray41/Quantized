@@ -11,9 +11,6 @@ import net.zapp.quantized.item.custom.DriveItem;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Quantized.MOD_ID);
 
-    public static final DeferredItem<Item> QUANTUM_MATTER = ITEMS.registerItem("quantum_matter",
-            Item::new, new Item.Properties());
-
     public static final DeferredItem<Item> Q_BIT = ITEMS.registerItem("q_bit",
             Item::new, new Item.Properties());
 
@@ -92,7 +89,6 @@ public class ModItems {
 
     public static final DeferredItem<Item> INDUCTOR = ITEMS.registerItem("inductor",
             Item::new, new Item.Properties());
-
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

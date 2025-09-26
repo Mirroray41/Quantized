@@ -1,12 +1,23 @@
 package net.zapp.quantized.blocks.machine_block;
 
+import com.mojang.blaze3d.textures.GpuTextureView;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.fluid.FluidTankRenderState;
+import net.zapp.quantized.init.ModFluids;
+import org.joml.Matrix3x2f;
 
 public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
     private static final ResourceLocation GUI_TEXTURE =
@@ -15,6 +26,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
+    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
 
     public MachineBlockScreen(MachineBlockMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -29,11 +42,12 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
         renderProgressArrow(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
+        renderFluidTank(guiGraphics, x, y);
     }
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE,x + 73, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE,x + 82, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
         }
     }
 
@@ -43,6 +57,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
         //TODO: Add the render code for fluid Tank.
+        renderFluidMeterContent(guiGraphics, new FluidStack(ModFluids.QUANTUM_FLUX, 2000), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 28, y + 16, 0, 0, 12, 54, 12, 54);
     }
 
     @Override
@@ -50,4 +66,53 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
+
+    protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
+                                           int w, int h) {
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(x, y);
+        renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
+        guiGraphics.pose().popMatrix();
+    }
+
+    private void renderFluidStack(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int w, int h) {
+        if (fluidStack.isEmpty())
+            return;
+
+        Fluid fluid = fluidStack.getFluid();
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid);
+        ResourceLocation stillFluidImageId = fluidTypeExtensions.getStillTexture(fluidStack);
+        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).
+                apply(stillFluidImageId);
+
+        int fluidColorTint = fluidTypeExtensions.getTintColor(fluidStack);
+
+        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity) ?
+                0 : (h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0) ? 0 :
+                (Math.min(fluidStack.getAmount(), tankCapacity - 1) * h / tankCapacity + 1)));
+
+        for (int yOffset = h; yOffset > fluidMeterPos; yOffset -= 16) {
+            for (int xOffset = 0; xOffset < w; xOffset += 16) {
+                int width = Math.min(w - xOffset, 16);
+                int height = Math.min(yOffset - fluidMeterPos, 16);
+
+                float u0 = stillFluidSprite.getU0();
+                float u1 = stillFluidSprite.getU1();
+                float v0 = stillFluidSprite.getV0();
+                float v1 = stillFluidSprite.getV1();
+                u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
+                v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
+
+                GpuTextureView gpuTextureView = this.minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
+                guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
+                        RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
+                        new Matrix3x2f(guiGraphics.pose()),
+                        xOffset, yOffset, width, height,
+                        u0, u1, v0, v1, fluidColorTint,
+                        guiGraphics.scissorStack.peek()
+                ));
+            }
+        }
+    }
 }
+

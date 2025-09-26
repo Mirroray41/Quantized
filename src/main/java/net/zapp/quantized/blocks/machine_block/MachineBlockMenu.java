@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.init.ModBlocks;
 import net.zapp.quantized.init.ModMenuTypes;
@@ -17,7 +18,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public MachineBlockMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public MachineBlockMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -55,9 +56,12 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
-    public int getScaledFluidTank() {
-        //TODO: Whenever the UI is made fill this part in I guess.
-        return 0;
+    public int getFluidCapacity() {
+        return this.data.get(5);
+    }
+
+    public FluidStack getFluid() {
+        return blockEntity.getFluid();
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

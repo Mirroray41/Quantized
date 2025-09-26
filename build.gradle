@@ -128,6 +128,7 @@ dependencies {
     // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
     // localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:24.2.0.6"
     localRuntime "curse.maven:energized-power-782147:6927412"
+    localRuntime "curse.maven:pipez-443900:6945397"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
@@ -195,3 +196,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.named('createMinecraftArtifacts') {
+    dependsOn 'generateModMetadata'
+}
+
+

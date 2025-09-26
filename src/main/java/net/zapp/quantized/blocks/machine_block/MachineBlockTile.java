@@ -29,6 +29,11 @@ import net.zapp.quantized.api.module.TankModule;
 import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.api.module.identifiers.HasItemModule;
 import net.zapp.quantized.api.module.identifiers.HasTankModule;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.api.energy.CustomEnergyStorage;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
@@ -70,6 +75,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
                 case 1 -> maxProgress;
                 case 2 -> energyM.getEnergy().getEnergy();
                 case 3 -> energyM.getEnergy().getMaxEnergyStored();
+                case 4 -> fluidM.getFluid().getFluidAmount();
                 default -> 0;
             };
         }
@@ -84,7 +90,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
     };
 
@@ -257,5 +263,9 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     @Override
     public TankModule getTankModule() {
         return tankM;
+    }
+
+    public FluidStack getFluid() {
+        return this.tank.getFluid();
     }
 }
