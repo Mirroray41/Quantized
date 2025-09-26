@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.zapp.quantized.api.module.EnergyModule;
@@ -30,17 +31,12 @@ import net.zapp.quantized.api.module.TankModule;
 import net.zapp.quantized.api.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.api.module.identifiers.HasItemModule;
 import net.zapp.quantized.api.module.identifiers.HasTankModule;
-import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.zapp.quantized.api.energy.CustomEnergyStorage;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
 import net.zapp.quantized.init.ModFluids;
 import net.zapp.quantized.init.ModRecipes;
-import net.zapp.quantized.api.energy.ICustomEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -56,13 +52,13 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     public static final int FE_CAPACITY = 100_000;
     public static final int TANK_CAPACITY = 8_000;
 
+
+
     // ---- Modules (storage-only) ----
-    private final ItemModule itemM = new ItemModule("MachineBlockTile", 2, slot -> markDirtyAndUpdate());
-    private final EnergyModule energyM = new EnergyModule("MachineBlockTile",
-            FE_CAPACITY, MAX_FE_TRANSFER, MAX_FE_TRANSFER, true, true, s -> markDirtyAndUpdate()
-    );
-    private final TankModule tankM = new TankModule("MachineBlockTile",
-            TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate()
+    private final String ownerName = "MachineBlockTile";
+    private final ItemModule itemM = new ItemModule(ownerName, 2, slot -> markDirtyAndUpdate());
+    private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, MAX_FE_TRANSFER, true, true);
+    private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate()
     );
 
     // ---- Menu sync data ----
@@ -75,9 +71,9 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
             return switch (i) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
-                case 2 -> energyM.getEnergy().getEnergy();
-                case 3 -> energyM.getEnergy().getMaxEnergyStored();
-                case 4 -> tankM.tank().getCapacity();
+                case 2 -> energyM.getHandler().getEnergy();
+                case 3 -> energyM.getHandler().getMaxEnergyStored();
+                case 4 -> tankM.getHandler().getCapacity();
                 default -> 0;
             };
         }
@@ -100,26 +96,6 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         super(ModBlockEntities.MACHINE_BLOCK_TILE.get(), pos, state);
     }
 
-    public ItemModule items() {
-        return itemM;
-    }
-
-    public EnergyModule energy() {
-        return energyM;
-    }
-
-    public TankModule fluids() {
-        return tankM;
-    }
-
-    public ICustomEnergyStorage getEnergyStorage() {
-        return energyM.getEnergy();
-    }
-
-    public FluidStack getTankFluid() {
-        return tankM.tank().getFluid();
-    }
-
     // ---- UI / Menu ----
     @Override
     public Component getDisplayName() {
@@ -135,10 +111,10 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        if (hasRecipe() && energyM.getEnergy().getEnergyStored() >= CONSUMPTION) {
+        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
             progress++;
-            energyM.getEnergy().extractEnergy(CONSUMPTION, false);
-            tankM.tank().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
+            energyM.getHandler().extractEnergy(CONSUMPTION, false);
+            tankM.getHandler().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
             setChanged(level, pos, state);
 
             if (progress >= maxProgress) {
@@ -156,10 +132,10 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
 
         ItemStack output = recipe.get().value().output();
         // consume input
-        itemM.handler().extractItem(INPUT_SLOT, 1, false);
+        itemM.getHandler().extractItem(INPUT_SLOT, 1, false);
         // place output
-        ItemStack curOut = itemM.handler().getStackInSlot(OUTPUT_SLOT);
-        itemM.handler().setStackInSlot(OUTPUT_SLOT,
+        ItemStack curOut = itemM.getHandler().getStackInSlot(OUTPUT_SLOT);
+        itemM.getHandler().setStackInSlot(OUTPUT_SLOT,
                 new ItemStack(output.getItem(), curOut.getCount() + output.getCount()));
     }
 
@@ -167,7 +143,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         if (!(this.level instanceof ServerLevel server)) return Optional.empty();
         return server.recipeAccess()
                 .getRecipeFor(ModRecipes.MACHINE_BLOCK_TYPE.get(),
-                        new MachineBlockRecipeInput(itemM.handler().getStackInSlot(INPUT_SLOT)), level);
+                        new MachineBlockRecipeInput(itemM.getHandler().getStackInSlot(INPUT_SLOT)), level);
     }
 
     private boolean hasRecipe() {
@@ -175,7 +151,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         if (r.isEmpty()) return false;
 
         ItemStack out = r.get().value().output();
-        ItemStack slot = itemM.handler().getStackInSlot(OUTPUT_SLOT);
+        ItemStack slot = itemM.getHandler().getStackInSlot(OUTPUT_SLOT);
         boolean itemOk = slot.isEmpty() || slot.is(out.getItem());
         int max = slot.isEmpty() ? 64 : slot.getMaxStackSize();
         return itemOk && (slot.getCount() + out.getCount() <= max);
@@ -189,9 +165,9 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     // ---- Drop items when broken ----
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.handler().getSlots());
-        for (int i = 0; i < itemM.handler().getSlots(); i++) {
-            inv.setItem(i, itemM.handler().getStackInSlot(i));
+        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
+        for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
+            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
         }
         Containers.dropContents(level, worldPosition, inv);
     }
@@ -254,21 +230,17 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     }
 
     @Override
-    public EnergyModule getEnergyModule() {
+    public @NotNull EnergyModule getEnergyModule() {
         return energyM;
     }
 
     @Override
-    public ItemModule getItemModule() {
+    public @NotNull ItemModule getItemModule() {
         return itemM;
     }
 
     @Override
-    public TankModule getTankModule() {
+    public @NotNull TankModule getTankModule() {
         return tankM;
-    }
-
-    public FluidStack getFluid() {
-        return this.tankM.tank().getFluid();
     }
 }

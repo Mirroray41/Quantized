@@ -26,7 +26,7 @@ public class TankModule implements Module {
         };
      }
 
-     public FluidTank tank() {
+     public FluidTank getHandler() {
         return tank;
      }
 

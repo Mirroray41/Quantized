@@ -13,7 +13,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.api.QAPI;
 import net.zapp.quantized.blocks.machine_block.MachineBlock;
 
 import java.util.function.Function;
@@ -41,7 +40,7 @@ public class ModBlocks {
     }
 
     public static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<Block.Properties, T> factory, Block.Properties properties) {
-        ResourceLocation blockId = QAPI.id(name);
+        ResourceLocation blockId = Quantized.id(name);
         return BLOCKS.register(name, () -> factory.apply(properties.setId(ResourceKey.create(Registries.BLOCK, blockId))));
     }
 

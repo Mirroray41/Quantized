@@ -30,9 +30,8 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.items().handler(), 0, 63, 34));
-        this.addSlot(new SlotItemHandler(blockEntity.items().handler(), 1, 113, 34));
-
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 54, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 104, 34));
         addDataSlots(data);
     }
 
@@ -61,7 +60,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     }
 
     public FluidStack getFluid() {
-        return blockEntity.getFluid();
+        return blockEntity.getFluidHandler().getFluid();
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
