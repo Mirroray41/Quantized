@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.api.module.EnergyModule;
 import net.zapp.quantized.api.module.ItemModule;
 import net.zapp.quantized.api.module.TankModule;
@@ -238,9 +237,5 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
-    }
-
-    public FluidStack getFluid() {
-        return this.tankM.getHandler().getFluid();
     }
 }

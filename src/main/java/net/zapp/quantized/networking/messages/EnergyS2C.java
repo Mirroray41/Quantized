@@ -38,7 +38,7 @@ public record EnergyS2C(int energy, int capacity, BlockPos pos) implements Custo
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
             if(blockEntity instanceof HasEnergyModule energyModule) {
-                CustomEnergyStorage energy = energyModule.getEnergyModule().getHandler();
+                CustomEnergyStorage energy = energyModule.getEnergyHandler();
                 energy.setEnergy(data.energy);
                 energy.setCapacity(data.capacity);
             }

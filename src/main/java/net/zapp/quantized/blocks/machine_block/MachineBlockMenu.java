@@ -61,7 +61,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     }
 
     public FluidStack getFluid() {
-        return blockEntity.getFluid();
+        return blockEntity.getFluidHandler().getFluid();
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

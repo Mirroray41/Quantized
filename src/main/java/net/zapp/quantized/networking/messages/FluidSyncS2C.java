@@ -40,7 +40,7 @@ public record FluidSyncS2C(int tank, FluidStack fluidStack, int capacity, BlockP
             BlockEntity blockEntity = context.player().level().getBlockEntity(data.pos);
 
             if (blockEntity instanceof HasTankModule tankModule) {
-                FluidTank tank = tankModule.getTankModule().getHandler();
+                FluidTank tank = tankModule.getFluidHandler();
                 tank.setFluid(data.fluidStack);
                 tank.setCapacity(data.capacity);
             }

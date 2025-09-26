@@ -45,7 +45,7 @@ public class ModEvents {
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
                 (be, side) -> {
-                    ItemStackHandler handler = be.getItemModule().getHandler();
+                    ItemStackHandler handler = be.getItemHandler();
                     if (side == Direction.UP) {
                         return new RangedWrapper(handler, 0, 1);
                     } else if (side == Direction.DOWN) {
@@ -56,10 +56,10 @@ public class ModEvents {
                 });
 
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
-                (be, side) -> be.getEnergyModule().getHandler());
+                (be, side) -> be.getEnergyHandler());
 
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(),
-                (be, side) -> be.getTankModule().getHandler());
+                (be, side) -> be.getFluidHandler());
     }
 
     @SubscribeEvent
