@@ -57,7 +57,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
         //TODO: Add the render code for fluid Tank.
-        renderFluidMeterContent(guiGraphics, new FluidStack(ModFluids.QUANTUM_FLUX, 2000), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
+        System.out.println(menu.getFluidCapacity());
+        renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 28, y + 16, 0, 0, 12, 54, 12, 54);
     }
 

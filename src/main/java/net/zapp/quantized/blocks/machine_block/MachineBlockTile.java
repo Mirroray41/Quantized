@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.zapp.quantized.api.module.EnergyModule;
 import net.zapp.quantized.api.module.ItemModule;
 import net.zapp.quantized.api.module.TankModule;
@@ -37,6 +38,7 @@ import net.zapp.quantized.api.energy.CustomEnergyStorage;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
+import net.zapp.quantized.init.ModFluids;
 import net.zapp.quantized.init.ModRecipes;
 import net.zapp.quantized.api.energy.ICustomEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +77,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
                 case 1 -> maxProgress;
                 case 2 -> energyM.getEnergy().getEnergy();
                 case 3 -> energyM.getEnergy().getMaxEnergyStored();
-                case 4 -> fluidM.getFluid().getFluidAmount();
+                case 4 -> tankM.tank().getCapacity();
                 default -> 0;
             };
         }
@@ -136,6 +138,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         if (hasRecipe() && energyM.getEnergy().getEnergyStored() >= CONSUMPTION) {
             progress++;
             energyM.getEnergy().extractEnergy(CONSUMPTION, false);
+            tankM.tank().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
             setChanged(level, pos, state);
 
             if (progress >= maxProgress) {
@@ -266,6 +269,6 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     }
 
     public FluidStack getFluid() {
-        return this.tank.getFluid();
+        return this.tankM.tank().getFluid();
     }
 }
