@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "quantized:steel_rod",
+    "W": "quantized:copper_wire"
+  },
+  "pattern": [
+    "WRW",
+    "WRW",
+    "WRW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:inductor"
+  }
+}

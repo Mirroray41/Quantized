@@ -56,12 +56,8 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
-    public int getScaledFluidBar() {
-        int fluidStored = this.data.get(4);
-        int maxFluid = this.data.get(5);
-        int arrowPixelSize = 54;
-
-        return maxFluid != 0 && fluidStored != 0 ? fluidStored * arrowPixelSize / maxFluid : 0;
+    public int getFluidCapacity() {
+        return this.data.get(5);
     }
 
     public FluidStack getFluid() {

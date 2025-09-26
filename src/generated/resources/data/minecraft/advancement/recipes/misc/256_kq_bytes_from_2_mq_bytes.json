@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_256k_q_bytes": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quantized:256_kq_bytes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:256_kq_bytes_from_2_mq_bytes"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_256k_q_bytes"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:256_kq_bytes_from_2_mq_bytes"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "quantized:4_kq_bytes",
+    "quantized:drive_casing"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:4_kqb_drive"
+  }
+}

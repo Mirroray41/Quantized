@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass",
+    "N": "minecraft:gold_nugget",
+    "S": "quantized:steel_plate"
+  },
+  "pattern": [
+    "SNS",
+    "SGS",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:drive_casing"
+  }
+}

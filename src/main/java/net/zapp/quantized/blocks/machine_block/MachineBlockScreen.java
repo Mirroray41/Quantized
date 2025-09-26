@@ -16,6 +16,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.fluid.FluidTankRenderState;
+import net.zapp.quantized.init.ModFluids;
 import org.joml.Matrix3x2f;
 
 public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
@@ -25,6 +26,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
+    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
 
     public MachineBlockScreen(MachineBlockMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -54,8 +57,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
         //TODO: Add the render code for fluid Tank.
-        System.out.println(menu.getFluid().getFluid());
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 28, y + 16 + 54 - menu.getScaledFluidBar(), 0, 54 - menu.getScaledFluidBar(), 12, menu.getScaledFluidBar(), 12, 54);
+        renderFluidMeterContent(guiGraphics, new FluidStack(ModFluids.QUANTUM_FLUX, 2000), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 28, y + 16, 0, 0, 12, 54, 12, 54);
     }
 
     @Override
@@ -67,11 +70,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
     protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
                                            int w, int h) {
         guiGraphics.pose().pushMatrix();
-
         guiGraphics.pose().translate(x, y);
-
         renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
-
         guiGraphics.pose().popMatrix();
     }
 

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:copper_ingot",
+    "quantized:wire_cutters"
+  ],
+  "result": {
+    "count": 3,
+    "id": "quantized:copper_wire"
+  }
+}
