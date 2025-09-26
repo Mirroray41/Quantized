@@ -1,18 +1,29 @@
 package net.zapp.quantized.item;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.api.QAPI;
+import net.zapp.quantized.fluid.ModFluids;
 import net.zapp.quantized.item.custom.CraftingTool;
 import net.zapp.quantized.item.custom.DriveItem;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Quantized.MOD_ID);
-
-    public static final DeferredItem<Item> QUANTUM_MATTER = ITEMS.registerItem("quantum_matter",
-            Item::new, new Item.Properties());
 
     public static final DeferredItem<Item> Q_BIT = ITEMS.registerItem("q_bit",
             Item::new, new Item.Properties());
@@ -92,7 +103,6 @@ public class ModItems {
 
     public static final DeferredItem<Item> INDUCTOR = ITEMS.registerItem("inductor",
             Item::new, new Item.Properties());
-
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

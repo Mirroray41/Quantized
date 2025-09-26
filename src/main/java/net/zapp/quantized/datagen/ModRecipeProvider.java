@@ -44,17 +44,6 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
 
-        shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_MATTER_BLOCK.get())
-                .pattern("BBB")
-                .pattern("BBB")
-                .pattern("BBB")
-                .define('B', ModItems.QUANTUM_MATTER.get())
-                .unlockedBy("has_quantum_matter", has(ModItems.QUANTUM_MATTER)).save(output);
-
-        shapeless(RecipeCategory.MISC, ModItems.QUANTUM_MATTER.get(), 9)
-                .requires(ModBlocks.QUANTUM_MATTER_BLOCK)
-                .unlockedBy("has_quantum_matter_block", has(ModBlocks.QUANTUM_MATTER_BLOCK)).save(output);
-
         eightCompactingRecipe(ModItems.Q_BIT.get(), ModItems.Q_BYTE, "has_q_bit");
         eightCompactingRecipe(ModItems.Q_BYTE.get(), ModItems.Q_BYTES_8, "has_q_byte");
         eightCompactingRecipe(ModItems.Q_BYTES_8.get(), ModItems.Q_BYTES_64, "has_8_q_bytes");
