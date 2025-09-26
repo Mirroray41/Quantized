@@ -5,6 +5,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -25,6 +27,9 @@ public class ModBlocks {
     public static final DeferredBlock<Block> MACHINE_BLOCK = registerBlock("machine_block",
             (properties) -> new MachineBlock(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+
+    public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
+            (properties) -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));
 
 
 
