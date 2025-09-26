@@ -196,3 +196,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.named('createMinecraftArtifacts') {
+    dependsOn 'generateModMetadata'
+}
+
+

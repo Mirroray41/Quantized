@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "quantized:block/quantum_matter_block"
+    }
+  }
+}

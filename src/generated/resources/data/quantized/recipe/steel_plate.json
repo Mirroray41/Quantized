@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "quantized:steel_ingot",
+    "quantized:mallet"
+  ],
+  "result": {
+    "count": 2,
+    "id": "quantized:steel_plate"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "quantized:32_kqb_drive"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:32_kq_bytes"
+  }
+}

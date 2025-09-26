@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "quantized:copper_wire"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wire_cutters": {
+      "conditions": {
+        "items": [
+          {
+            "items": "quantized:wire_cutters"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_wire_cutters"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "quantized:copper_wire"
+    ]
+  }
+}
