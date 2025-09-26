@@ -44,11 +44,16 @@
   "item.quantized.mallet": "Mallet",
   "item.quantized.wire_cutters": "Wire Cutters",
 
+  "fluid_type.quantized.quantum_flux": "Quantum Flux",
+
   "quantized.configuration.title": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml": "Quantized Configs",
   "quantized.configuration.section.quantized.common.toml.title": "Quantized Configs",
   "quantized.configuration.items": "Item List",
   "quantized.configuration.logDirtBlock": "Log Dirt Block",
   "quantized.configuration.magicNumberIntroduction": "Magic Number Text",
-  "quantized.configuration.magicNumber": "Magic Number"
+  "quantized.configuration.magicNumber": "Magic Number",
+  "tooltip.quantized.machine_block.energy_stored": "%1$s/%2$s RF",
+  "tooltip.quantized.machine_block.energy_usage": "%1$s/%2$s RF/t",
+  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB"
 }

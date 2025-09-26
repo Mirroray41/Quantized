@@ -243,4 +243,15 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     public @NotNull TankModule getTankModule() {
         return tankM;
     }
+
+    public int getEnergyConsumption() {
+        return this.CONSUMPTION;
+    }
+
+    public int getCurrentEnergyConsumption() {
+        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
+            return this.CONSUMPTION;
+        }
+        return 0;
+    }
 }

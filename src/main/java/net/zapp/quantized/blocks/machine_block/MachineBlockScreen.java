@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,8 +17,11 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.fluid.FluidTankRenderState;
-import net.zapp.quantized.init.ModFluids;
 import org.joml.Matrix3x2f;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
     private static final ResourceLocation GUI_TEXTURE =
@@ -56,8 +60,6 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
     }
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
-        //TODO: Add the render code for fluid Tank.
-        System.out.println(menu.getFluidCapacity());
         renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 28, y + 16, 0, 0, 12, 54, 12, 54);
     }
@@ -113,6 +115,25 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
                         guiGraphics.scissorStack.peek()
                 ));
             }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        super.renderTooltip(guiGraphics, mouseX, mouseY);
+
+        if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
+            List<Component> components = new ArrayList<>(2);
+            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyCapacity(), menu.getEnergyStored()));
+            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getCurrentEnergyConsumption(), menu.getEnergyConsumption()));
+
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+        } else if (isHovering(28, 16, 12, 54, mouseX, mouseY)) {
+            List<Component> components = new ArrayList<>(2);
+            components.add(menu.getFluid().getHoverName());
+            components.add(Component.translatable("tooltip.quantized.machine_block.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
+
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 }
