@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.zapp.quantized.block.ModBlocks;
+import net.zapp.quantized.init.ModBlocks;
 
 import java.util.Set;
 

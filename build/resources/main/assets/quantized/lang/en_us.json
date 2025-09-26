@@ -1,0 +1,54 @@
+{
+  "creativetab.quantized.misc": "Quantized",
+  "creativetab.quantized.data": "Quantized - Data",
+  "block.quantized.quantum_matter_block": "Quantum Matter Block",
+  "item.quantized.quantum_matter": "Quantum Matter",
+
+  "item.quantized.q_bit": "Q-Bit",
+  "item.quantized.q_byte": "Q-Byte",
+
+  "item.quantized.drive_casing": "Drive Casing",
+
+  "item.quantized.8_q_bytes": "8 Q-Bytes",
+  "item.quantized.64_q_bytes": "64 Q-Bytes",
+  "item.quantized.512_q_bytes": "512 Q-Bytes",
+  "item.quantized.4_kq_bytes": "4K Q-Bytes",
+  "item.quantized.32_kq_bytes": "32K Q-Bytes",
+  "item.quantized.256_kq_bytes": "256K Q-Bytes",
+  "item.quantized.2_mq_bytes": "2M Q-Bytes",
+  "item.quantized.16_mq_bytes": "16M Q-Bytes",
+  "item.quantized.128_mq_bytes": "128M Q-Bytes",
+  "item.quantized.1_gq_bytes": "1G Q-Bytes",
+
+  "item.quantized.8_qb_drive": "8 QB Drive",
+  "item.quantized.64_qb_drive": "64 QB Drive",
+  "item.quantized.512_qb_drive": "512 QB Drive",
+  "item.quantized.4_kqb_drive": "4 KQB Drive",
+  "item.quantized.32_kqb_drive": "32 KQB Drive",
+  "item.quantized.256_kqb_drive": "256 KQB Drive",
+  "item.quantized.2_mqb_drive": "2 MQB Drive",
+  "item.quantized.16_mqb_drive": "16 MQB Drive",
+  "item.quantized.128_mqb_drive": "128 MQB Drive",
+  "item.quantized.1_gqb_drive": "1 GQB Drive",
+
+  "block.quantized.steel_block": "Steel Block",
+  "item.quantized.steel_ingot": "Steel Ingot",
+  "item.quantized.steel_nugget": "Steel Nugget",
+  "item.quantized.steel_gear": "Steel Gear",
+  "item.quantized.steel_plate": "Steel Plate",
+  "item.quantized.steel_rod": "Steel Rod",
+
+  "item.quantized.copper_wire": "Copper Wire",
+  "item.quantized.inductor": "Inductor",
+
+  "item.quantized.mallet": "Mallet",
+  "item.quantized.wire_cutters": "Wire Cutters",
+
+  "quantized.configuration.title": "Quantized Configs",
+  "quantized.configuration.section.quantized.common.toml": "Quantized Configs",
+  "quantized.configuration.section.quantized.common.toml.title": "Quantized Configs",
+  "quantized.configuration.items": "Item List",
+  "quantized.configuration.logDirtBlock": "Log Dirt Block",
+  "quantized.configuration.magicNumberIntroduction": "Magic Number Text",
+  "quantized.configuration.magicNumber": "Magic Number"
+}
