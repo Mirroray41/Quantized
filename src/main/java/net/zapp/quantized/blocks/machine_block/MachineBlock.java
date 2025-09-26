@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.zapp.quantized.block.ModBlockEntities;
+import net.zapp.quantized.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {

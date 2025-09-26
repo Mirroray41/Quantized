@@ -1,7 +1,6 @@
-package net.zapp.quantized.block;
+package net.zapp.quantized.init;
 
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -9,8 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.block.custom.machine_block.MachineBlock;
-import net.zapp.quantized.item.ModItems;
+import net.zapp.quantized.blocks.machine_block.MachineBlock;
 
 import java.util.function.Function;
 

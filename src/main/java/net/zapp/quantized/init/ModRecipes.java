@@ -1,4 +1,4 @@
-package net.zapp.quantized.block;
+package net.zapp.quantized.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -7,7 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.block.custom.machine_block.MachineBlockRecipe;
+import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
 
 public class ModRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =

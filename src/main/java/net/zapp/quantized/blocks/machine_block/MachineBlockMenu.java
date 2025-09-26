@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import net.zapp.quantized.block.ModBlocks;
-import net.zapp.quantized.block.ModMenuTypes;
+import net.zapp.quantized.init.ModBlocks;
+import net.zapp.quantized.init.ModMenuTypes;
 
 public class MachineBlockMenu extends AbstractContainerMenu {
     public final MachineBlockTile blockEntity;

@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.zapp.quantized.block.ModRecipes;
+import net.zapp.quantized.init.ModRecipes;
 
 public record MachineBlockRecipe(Ingredient inputItem, ItemStack output) implements Recipe<MachineBlockRecipeInput> {
     public NonNullList<Ingredient> getIngredients() {

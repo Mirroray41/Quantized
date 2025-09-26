@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block.recipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

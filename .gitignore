@@ -1,1 +1,4 @@
-/src/generated/
+/build
+/.idea
+/.gradle
+/.run

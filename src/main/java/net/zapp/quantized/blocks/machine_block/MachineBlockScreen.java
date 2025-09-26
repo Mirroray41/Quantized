@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

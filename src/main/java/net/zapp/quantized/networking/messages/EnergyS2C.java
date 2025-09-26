@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom;
+package net.zapp.quantized.networking.messages;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.api.QAPI;
-import net.zapp.quantized.block.custom.machine_block.MachineBlockTile;
+import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import org.jetbrains.annotations.NotNull;
 
 public record EnergyS2C(int energy, int capacity, BlockPos pos) implements CustomPacketPayload {

@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom.machine_block;
+package net.zapp.quantized.blocks.machine_block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -24,10 +24,12 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.zapp.quantized.block.custom.CustomEnergyStorage;
-import net.zapp.quantized.block.ModBlockEntities;
-import net.zapp.quantized.block.ModRecipes;
-import net.zapp.quantized.block.custom.ICustomEnergyStorage;
+import net.zapp.quantized.api.energy.CustomEnergyStorage;
+import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
+import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipeInput;
+import net.zapp.quantized.init.ModBlockEntities;
+import net.zapp.quantized.init.ModRecipes;
+import net.zapp.quantized.api.energy.ICustomEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;

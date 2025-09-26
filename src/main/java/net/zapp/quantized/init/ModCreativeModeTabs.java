@@ -1,4 +1,4 @@
-package net.zapp.quantized.item;
+package net.zapp.quantized.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.block.ModBlocks;
 
 import java.util.function.Supplier;
 

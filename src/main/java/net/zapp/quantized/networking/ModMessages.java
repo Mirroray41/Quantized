@@ -8,7 +8,8 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.zapp.quantized.block.custom.EnergyS2C;
+import net.zapp.quantized.networking.messages.EnergyS2C;
+import net.zapp.quantized.networking.messages.FluidSyncS2C;
 
 public final class ModMessages {
     private ModMessages() {}
@@ -17,6 +18,7 @@ public final class ModMessages {
         final PayloadRegistrar registrar = event.registrar("1.0");
 
         registrar.playToClient(EnergyS2C.ID, EnergyS2C.STREAM_CODEC);
+        registrar.playToClient(FluidSyncS2C.ID, FluidSyncS2C.STREAM_CODEC);
     }
 
     public static void sendToServer(CustomPacketPayload message) {

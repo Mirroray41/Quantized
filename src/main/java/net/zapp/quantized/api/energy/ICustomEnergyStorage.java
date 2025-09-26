@@ -1,4 +1,4 @@
-package net.zapp.quantized.block.custom;
+package net.zapp.quantized.api.energy;
 
 import net.neoforged.neoforge.energy.IEnergyStorage;
 

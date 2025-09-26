@@ -1,6 +1,5 @@
 package net.zapp.quantized;
 
-import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -8,14 +7,13 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.zapp.quantized.block.ModBlockEntities;
-import net.zapp.quantized.block.ModBlocks;
-import net.zapp.quantized.block.ModMenuTypes;
-import net.zapp.quantized.block.ModRecipes;
-import net.zapp.quantized.block.custom.machine_block.MachineBlockRecipe;
-import net.zapp.quantized.block.custom.machine_block.MachineBlockScreen;
-import net.zapp.quantized.item.ModCreativeModeTabs;
-import net.zapp.quantized.item.ModItems;
+import net.zapp.quantized.init.ModBlockEntities;
+import net.zapp.quantized.init.ModBlocks;
+import net.zapp.quantized.init.ModMenuTypes;
+import net.zapp.quantized.init.ModRecipes;
+import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
+import net.zapp.quantized.init.ModCreativeModeTabs;
+import net.zapp.quantized.init.ModItems;
 import net.zapp.quantized.networking.ModClientMessages;
 import net.zapp.quantized.networking.ModMessages;
 import org.slf4j.Logger;

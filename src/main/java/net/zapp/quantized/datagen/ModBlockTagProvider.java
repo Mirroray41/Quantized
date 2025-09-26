@@ -5,7 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.block.ModBlocks;
+import net.zapp.quantized.init.ModBlocks;
 
 import java.util.concurrent.CompletableFuture;
 

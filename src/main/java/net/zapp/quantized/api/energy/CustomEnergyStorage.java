@@ -1,7 +1,6 @@
-package net.zapp.quantized.block.custom;
+package net.zapp.quantized.api.energy;
 
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class CustomEnergyStorage implements ICustomEnergyStorage {
     private final boolean canReceive;

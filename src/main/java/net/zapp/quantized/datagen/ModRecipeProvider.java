@@ -1,20 +1,17 @@
 package net.zapp.quantized.datagen;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.block.ModBlocks;
-import net.zapp.quantized.item.ModItems;
+import net.zapp.quantized.init.ModBlocks;
+import net.zapp.quantized.init.ModItems;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

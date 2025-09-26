@@ -1,4 +1,4 @@
-package net.zapp.quantized.item;
+package net.zapp.quantized.init;
 
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
