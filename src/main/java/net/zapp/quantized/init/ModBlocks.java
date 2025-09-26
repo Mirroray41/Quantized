@@ -1,4 +1,4 @@
-package net.zapp.quantized.block;
+package net.zapp.quantized.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -14,9 +14,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.api.QAPI;
-import net.zapp.quantized.block.custom.machine_block.MachineBlock;
-import net.zapp.quantized.fluid.ModFluids;
-import net.zapp.quantized.item.ModItems;
+import net.zapp.quantized.blocks.machine_block.MachineBlock;
 
 import java.util.function.Function;
 

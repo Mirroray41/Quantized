@@ -1,4 +1,4 @@
-package net.zapp.quantized.fluid;
+package net.zapp.quantized.init;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -6,6 +6,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.fluid.CustomFluidType;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
