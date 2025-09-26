@@ -18,7 +18,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public MachineBlockMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
     }
 
     public MachineBlockMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -32,7 +32,6 @@ public class MachineBlockMenu extends AbstractContainerMenu {
 
         this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 54, 34));
         this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 104, 34));
-
         addDataSlots(data);
     }
 
@@ -57,7 +56,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     }
 
     public int getFluidCapacity() {
-        return this.data.get(5);
+        return this.data.get(4);
     }
 
     public FluidStack getFluid() {

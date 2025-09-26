@@ -22,6 +22,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.zapp.quantized.api.module.EnergyModule;
 import net.zapp.quantized.api.module.ItemModule;
 import net.zapp.quantized.api.module.TankModule;
@@ -31,6 +34,7 @@ import net.zapp.quantized.api.module.identifiers.HasTankModule;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipe;
 import net.zapp.quantized.blocks.machine_block.recipe.MachineBlockRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
+import net.zapp.quantized.init.ModFluids;
 import net.zapp.quantized.init.ModRecipes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +73,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
                 case 1 -> maxProgress;
                 case 2 -> energyM.getHandler().getEnergy();
                 case 3 -> energyM.getHandler().getMaxEnergyStored();
-                case 4 -> tankM.getHandler().getFluidAmount();
+                case 4 -> tankM.getHandler().getCapacity();
                 default -> 0;
             };
         }
@@ -110,6 +114,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
         if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
             progress++;
             energyM.getHandler().extractEnergy(CONSUMPTION, false);
+            tankM.getHandler().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
             setChanged(level, pos, state);
 
             if (progress >= maxProgress) {
