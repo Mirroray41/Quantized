@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.init.ModBlocks;
 import net.zapp.quantized.init.ModMenuTypes;
@@ -17,7 +18,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public MachineBlockMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public MachineBlockMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -29,8 +30,8 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 0, 54, 34));
-        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 1, 104, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 0, 63, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 1, 113, 34));
 
         addDataSlots(data);
     }
@@ -55,9 +56,16 @@ public class MachineBlockMenu extends AbstractContainerMenu {
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
-    public int getScaledFluidTank() {
-        //TODO: Whenever the UI is made fill this part in I guess.
-        return 0;
+    public int getScaledFluidBar() {
+        int fluidStored = this.data.get(4);
+        int maxFluid = this.data.get(5);
+        int arrowPixelSize = 54;
+
+        return maxFluid != 0 && fluidStored != 0 ? fluidStored * arrowPixelSize / maxFluid : 0;
+    }
+
+    public FluidStack getFluid() {
+        return blockEntity.getFluid();
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

@@ -25,11 +25,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.api.energy.CustomEnergyStorage;
@@ -92,6 +89,8 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
                     case 1 -> MachineBlockTile.this.maxProgress;
                     case 2 -> MachineBlockTile.this.energyHandler.get().getEnergy();
                     case 3 -> MachineBlockTile.this.energyHandler.get().getMaxEnergyStored();
+                    case 4 -> MachineBlockTile.this.tank.getFluidAmount();
+                    case 5 -> MachineBlockTile.this.tank.getCapacity();
                     default -> 0;
                 };
             }
@@ -106,7 +105,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
             @Override
             public int getCount() {
-                return 4;
+                return 6;
             }
         };
     }
@@ -143,6 +142,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
         output.putInt("machine_block.energy", energyHandler.get().getEnergyStored());
         output.putInt("machine_block.max_energy", energyHandler.get().getMaxEnergyStored());
         output.store("machine_block.tank_fluid", FluidStack.CODEC, tank.getFluid());
+
         output.putInt("machine_block.tank_capacity", tank.getCapacity());
         output.putBoolean("machine_block.can_receive", energyHandler.get().canReceive());
         output.putBoolean("machine_block.can_extract", energyHandler.get().canExtract());
@@ -254,5 +254,9 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider {
 
     public FluidTank getTank(){
         return this.tankHandler.get();
+    }
+
+    public FluidStack getFluid() {
+        return this.tank.getFluid();
     }
 }

@@ -110,6 +110,7 @@ public class Quantized {
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getEnergyStorage());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_BLOCK_TILE.get(), (tile, side) -> tile.getTank());
         }
 
         @SubscribeEvent
