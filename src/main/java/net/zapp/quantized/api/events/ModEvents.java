@@ -2,6 +2,8 @@ package net.zapp.quantized.api.events;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.core.Direction;
@@ -22,6 +24,7 @@ import net.zapp.quantized.Quantized;
 import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
 import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
 import net.zapp.quantized.init.ModBlockEntities;
+import net.zapp.quantized.init.ModBlocks;
 import net.zapp.quantized.init.ModFluidTypes;
 import net.zapp.quantized.init.ModMenuTypes;
 import net.zapp.quantized.networking.ModClientMessages;
