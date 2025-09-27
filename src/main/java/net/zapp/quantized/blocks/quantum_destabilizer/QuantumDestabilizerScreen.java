@@ -50,7 +50,7 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SPIRAL_TEXTURE,x + 82, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SPIRAL_TEXTURE,x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
         }
     }
 

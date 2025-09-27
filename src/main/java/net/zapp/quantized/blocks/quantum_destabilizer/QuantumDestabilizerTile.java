@@ -114,7 +114,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
         if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
             progress++;
-            energyM.getHandler().extractEnergy(CONSUMPTION, false);
+            //energyM.getHandler().extractEnergy(CONSUMPTION, false);
             tankM.getHandler().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
             setChanged(level, pos, state);
 

@@ -42,9 +42,9 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     public int getScaledArrowProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);
-        int arrowPixelSize = 24;
+        int arrowPixelSize = 22;
 
-        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
+        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress + 1: 0;
     }
 
     public int getScaledEnergyBar() {
