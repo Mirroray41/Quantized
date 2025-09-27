@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +33,6 @@ import net.zapp.quantized.api.module.identifiers.HasTankModule;
 import net.zapp.quantized.blocks.quantum_destabilizer.recipe.QuantumDestabilizerRecipe;
 import net.zapp.quantized.blocks.quantum_destabilizer.recipe.QuantumDestabilizerRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
-import net.zapp.quantized.init.ModFluids;
 import net.zapp.quantized.init.ModRecipes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +47,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     private static final int INPUT_SLOT = 0;
 
     // ---- Energy/Fluids constants ----
-    public static final int CONSUMPTION = 16;
+    public static final int DEFAULT_POWER_CONSUMPTION = 16;
     public static final int MAX_FE_TRANSFER = 1000;
     public static final int FE_CAPACITY = 100_000;
     public static final int TANK_CAPACITY = 8_000;
@@ -65,6 +64,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     // ---- Menu sync data ----
     private int progress = 0;
     private int maxProgress = 72;
+    public int powerConsumption = 16;
 
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -72,9 +72,10 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             return switch (i) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
-                case 2 -> energyM.getHandler().getEnergy();
-                case 3 -> energyM.getHandler().getMaxEnergyStored();
-                case 4 -> tankM.getHandler().getCapacity();
+                case 2 -> powerConsumption;
+                case 3 -> energyM.getHandler().getEnergy();
+                case 4 -> energyM.getHandler().getMaxEnergyStored();
+                case 5 -> tankM.getHandler().getCapacity();
                 default -> 0;
             };
         }
@@ -84,12 +85,13 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             switch (i) {
                 case 0 -> progress = value;
                 case 1 -> maxProgress = value;
+                case 2 -> powerConsumption = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
     };
 
@@ -108,58 +110,114 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         return new QuantumDestabilizerMenu(id, inv, this, this.data);
     }
 
-    // ---- Ticking / Crafting ----
+    // --- State ---
+    private QuantumDestabilizerRecipe currentRecipe = null;
+    private boolean inventoryUpdated = true;
+
+    // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
-            progress++;
-            //energyM.getHandler().extractEnergy(CONSUMPTION, false);
-            tankM.getHandler().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
-            setChanged(level, pos, state);
-
-            if (progress >= maxProgress) {
-                craftFluid();
-                resetProgress();
-            }
-        } else {
-            resetProgress();
+        if (currentRecipe == null && inventoryUpdated) {
+            tryStartCraft();
         }
+
+        if (currentRecipe != null && !stillValid(currentRecipe)) {
+            resetCraft();
+            tryStartCraft();
+        }
+
+        if (currentRecipe != null) {
+            if (energyM.getHandler().getEnergyStored() >= powerConsumption) {
+                energyM.getHandler().extractEnergy(powerConsumption, false);
+                progress++;
+
+                if (progress >= maxProgress) {
+                    finishCraft(currentRecipe);
+                    tryStartCraft();
+                }
+            } else {
+                progress = Mth.clamp(progress--, 0, progress);
+            }
+        }
+
+        setChanged(level, pos, state);
     }
 
-    private void craftFluid() {
-        Optional<RecipeHolder<QuantumDestabilizerRecipe>> recipe = getCurrentRecipe();
-        if (recipe.isEmpty()) return;
+    // --- Job lifecycle helpers ---
+    private void tryStartCraft() {
+        inventoryUpdated = false;
 
-        FluidStack output = recipe.get().value().output();
-        // consume input
-        itemM.getHandler().extractItem(INPUT_SLOT, 1, false);
-        // place output
-        tankM.getHandler().fill(output, IFluidHandler.FluidAction.EXECUTE);
-    }
-
-    private Optional<RecipeHolder<QuantumDestabilizerRecipe>> getCurrentRecipe() {
-        if (!(this.level instanceof ServerLevel server)) return Optional.empty();
-        return server.recipeAccess()
-                .getRecipeFor(ModRecipes.QUANTUM_DESTABILIZER_TYPE.get(),
-                        new QuantumDestabilizerRecipeInput(itemM.getHandler().getStackInSlot(INPUT_SLOT)), level);
-    }
-
-    private boolean hasRecipe() {
         Optional<RecipeHolder<QuantumDestabilizerRecipe>> r = getCurrentRecipe();
-        if (r.isEmpty()) return false;
+        if (r.isEmpty()) {
+            powerConsumption = 0;
+            return;
+        }
 
-        FluidStack out = r.get().value().output();
-        FluidStack tank = tankM.getHandler().getFluid();
-        boolean fluidOk = tank.isEmpty() || tank.is(out.getFluidType());
-        int max = tank.isEmpty() ? 64 : tankM.getHandler().getCapacity();
-        return fluidOk && (tank.getAmount() + out.getAmount() <= max);
+        QuantumDestabilizerRecipe rec = r.get().value();
+        FluidStack out = rec.output();
+
+        if (!canAcceptOutput(out)) {
+            powerConsumption = 0;
+            return;
+        }
+
+        currentRecipe = r.get().value();
+        powerConsumption = rec.powerUsage();
+        maxProgress = rec.craftingTicks();
     }
 
-    private void resetProgress() {
+    private boolean stillValid(QuantumDestabilizerRecipe recipe) {
+        if (!recipe.matches(new QuantumDestabilizerRecipeInput(itemM.getHandler().getStackInSlot(INPUT_SLOT)), level)) {
+            return false;
+        }
+
+        if (!canAcceptOutput(recipe.output())) {
+            return false;
+        }
+
+        return powerConsumption > 0;
+    }
+
+    private void finishCraft(QuantumDestabilizerRecipe recipe) {
+        itemM.getHandler().extractItem(INPUT_SLOT, 1, false);
+        tankM.getHandler().fill(recipe.output().copy(), IFluidHandler.FluidAction.EXECUTE);
+
+        resetCraft();
+        inventoryUpdated = true;
+    }
+
+    private void resetCraft() {
         progress = 0;
+        currentRecipe = null;
+        powerConsumption = 0;
         maxProgress = 72;
     }
+
+    // --- Recipe / IO checks ---
+    private Optional<RecipeHolder<QuantumDestabilizerRecipe>> getCurrentRecipe() {
+        if (!(this.level instanceof ServerLevel server)) return Optional.empty();
+        return server.recipeAccess().getRecipeFor(
+                ModRecipes.QUANTUM_DESTABILIZER_TYPE.get(),
+                new QuantumDestabilizerRecipeInput(itemM.getHandler().getStackInSlot(INPUT_SLOT)),
+                level
+        );
+    }
+
+    private boolean canAcceptOutput(FluidStack out) {
+        FluidStack inTank = tankM.getHandler().getFluid();
+
+        boolean typeOk = inTank.isEmpty() || isSameFluid(inTank, out);
+        if (!typeOk) return false;
+
+        int free = tankM.getHandler().getCapacity() - inTank.getAmount();
+        return free >= out.getAmount();
+    }
+
+    private static boolean isSameFluid(FluidStack a, FluidStack b) {
+        return FluidStack.isSameFluidSameComponents(a, b);
+    }
+
 
     // ---- Drop items when broken ----
     public void drops() {
@@ -221,7 +279,9 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     }
 
     // ---- Dirty+update helper ----
+    // This gets called whenever the inventory or tank or energy storage is updated.
     private void markDirtyAndUpdate() {
+        inventoryUpdated = true;
         setChanged();
         if (level != null && !level.isClientSide) {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
@@ -241,17 +301,6 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
-    }
-
-    public int getEnergyConsumption() {
-        return CONSUMPTION;
-    }
-
-    public int getCurrentEnergyConsumption() {
-        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
-            return CONSUMPTION;
-        }
-        return 0;
     }
 
     // ---- Rendering ----

@@ -18,7 +18,7 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public MachineBlockMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public MachineBlockMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -48,31 +48,26 @@ public class MachineBlockMenu extends AbstractContainerMenu {
     }
 
     public int getScaledEnergyBar() {
-        int energyStored = this.data.get(2);
-        int maxEnergy = this.data.get(3);
+        int energyStored = this.data.get(3);
+        int maxEnergy = this.data.get(4);
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
-
-    public int getEnergyStored() {
+    public int getEnergyConsumption() {
         return this.data.get(2);
     }
 
-    public int getEnergyCapacity() {
+    public int getEnergyStored() {
         return this.data.get(3);
     }
 
-    public int getEnergyConsumption() {
-        return this.blockEntity.getEnergyConsumption();
-    }
-
-    public int getCurrentEnergyConsumption() {
-        return this.blockEntity.getCurrentEnergyConsumption();
+    public int getEnergyCapacity() {
+        return this.data.get(4);
     }
 
     public int getFluidCapacity() {
-        return this.data.get(4);
+        return this.data.get(5);
     }
 
     public FluidStack getFluid() {

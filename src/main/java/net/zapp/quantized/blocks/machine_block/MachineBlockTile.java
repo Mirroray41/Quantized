@@ -47,7 +47,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     private static final int OUTPUT_SLOT = 1;
 
     // ---- Energy/Fluids constants ----
-    public static final int CONSUMPTION = 16;
+    
     public static final int MAX_FE_TRANSFER = 1000;
     public static final int FE_CAPACITY = 100_000;
     public static final int TANK_CAPACITY = 8_000;
@@ -64,6 +64,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     // ---- Menu sync data ----
     private int progress = 0;
     private int maxProgress = 72;
+    private int powerConsumption = 16;
 
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -71,9 +72,10 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
             return switch (i) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
-                case 2 -> energyM.getHandler().getEnergy();
-                case 3 -> energyM.getHandler().getMaxEnergyStored();
-                case 4 -> tankM.getHandler().getCapacity();
+                case 2 -> powerConsumption;
+                case 3 -> energyM.getHandler().getEnergy();
+                case 4 -> energyM.getHandler().getMaxEnergyStored();
+                case 5 -> tankM.getHandler().getCapacity();
                 default -> 0;
             };
         }
@@ -83,12 +85,13 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
             switch (i) {
                 case 0 -> progress = value;
                 case 1 -> maxProgress = value;
+                case 2 -> powerConsumption = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
     };
 
@@ -111,9 +114,9 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
+        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= powerConsumption) {
             progress++;
-            energyM.getHandler().extractEnergy(CONSUMPTION, false);
+            energyM.getHandler().extractEnergy(powerConsumption, false);
             tankM.getHandler().fill(new FluidStack(ModFluids.QUANTUM_FLUX, 50), IFluidHandler.FluidAction.EXECUTE);
             setChanged(level, pos, state);
 
@@ -242,16 +245,5 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
-    }
-
-    public int getEnergyConsumption() {
-        return CONSUMPTION;
-    }
-
-    public int getCurrentEnergyConsumption() {
-        if (hasRecipe() && energyM.getHandler().getEnergyStored() >= CONSUMPTION) {
-            return CONSUMPTION;
-        }
-        return 0;
     }
 }

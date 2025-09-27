@@ -123,8 +123,8 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
         if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyCapacity(), menu.getEnergyStored()));
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getCurrentEnergyConsumption(), menu.getEnergyConsumption()));
+            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
+            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(28, 16, 12, 54, mouseX, mouseY)) {

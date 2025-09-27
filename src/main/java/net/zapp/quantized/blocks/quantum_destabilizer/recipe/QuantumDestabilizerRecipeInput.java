@@ -6,7 +6,7 @@ import net.minecraft.world.item.crafting.*;
 public record QuantumDestabilizerRecipeInput(ItemStack input) implements RecipeInput {
     @Override
     public ItemStack getItem(int i) {
-        return input;
+        return i == 0 ? input : ItemStack.EMPTY;
     }
 
     @Override

@@ -1,7 +1,8 @@
 {
   "type": "quantized:quantum_destabilizer",
   "ingredient": "minecraft:dirt",
-  "complexity": 200,
+  "crafting_time": 100,
+  "power_usage": 200,
   "result": {
     "id": "quantized:quantum_flux",
     "amount": 100
