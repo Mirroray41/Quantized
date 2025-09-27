@@ -31,7 +31,7 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 63, 34));
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 79, 34));
         addDataSlots(data);
     }
 

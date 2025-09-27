@@ -61,7 +61,7 @@ public record QuantumDestabilizerRecipe(Ingredient inputItem, FluidStack output)
     public static class Serializer implements RecipeSerializer<QuantumDestabilizerRecipe> {
         public static final MapCodec<QuantumDestabilizerRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC.fieldOf("ingredient").forGetter(QuantumDestabilizerRecipe::inputItem),
-                FluidStack.CODEC.fieldOf("result").forGetter(QuantumDestabilizerRecipe::output)
+                FluidStack.CODEC.fieldOf("id").forGetter(QuantumDestabilizerRecipe::output)
         ).apply(inst, QuantumDestabilizerRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, QuantumDestabilizerRecipe> STREAM_CODEC =
