@@ -54,7 +54,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumDestabilizerTile";
-    private final ItemModule itemM = new ItemModule(ownerName, 2, slot -> markDirtyAndUpdate());
+    private final ItemModule itemM = new ItemModule(ownerName, 1, slot -> markDirtyAndUpdate());
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, MAX_FE_TRANSFER, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate()
     );
