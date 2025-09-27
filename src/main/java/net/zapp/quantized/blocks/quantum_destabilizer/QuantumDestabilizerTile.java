@@ -41,6 +41,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
+    // ---- Rendering init ----
+    private float rotation;
+
     // ---- Slots ----
     private static final int INPUT_SLOT = 0;
 
@@ -249,5 +252,15 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             return CONSUMPTION;
         }
         return 0;
+    }
+
+    // ---- Rendering ----
+    public float getRenderingRotation() {
+        rotation += 0.5f;
+        if(rotation >= 360) {
+            rotation = 0;
+        }
+
+        return rotation;
     }
 }

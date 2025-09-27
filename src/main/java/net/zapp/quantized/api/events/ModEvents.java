@@ -13,6 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
 import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
+import net.zapp.quantized.blocks.quantum_destabilizer.renderer.QuantumDestabilizerRenderer;
 import net.zapp.quantized.init.ModBlockEntities;
 import net.zapp.quantized.init.ModBlocks;
 import net.zapp.quantized.init.ModFluidTypes;
@@ -40,6 +42,12 @@ public class ModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
 
     }
+
+    @SubscribeEvent
+    public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), QuantumDestabilizerRenderer::new);
+    }
+
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);

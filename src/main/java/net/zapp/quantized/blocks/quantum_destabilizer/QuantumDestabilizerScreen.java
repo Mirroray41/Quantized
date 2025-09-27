@@ -127,7 +127,7 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
             components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getCurrentEnergyConsumption(), menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
-        } else if (isHovering(28, 16, 12, 54, mouseX, mouseY)) {
+        } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
             components.add(Component.translatable("tooltip.quantized.machine_block.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
