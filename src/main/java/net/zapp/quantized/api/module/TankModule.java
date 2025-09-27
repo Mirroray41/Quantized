@@ -32,6 +32,7 @@ public class TankModule implements Module {
 
     @Override
     public void save(ValueOutput out, HolderLookup.Provider registries) {
+        if (tank.getFluid().isEmpty()) return; // Avoid serializing nothing.
         out.store(moduleOwner + ".fluid", FluidStack.CODEC, tank.getFluid());
         out.putInt(moduleOwner + ".fluid_capacity", tank.getCapacity());
     }

@@ -27,7 +27,7 @@ import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import net.zapp.quantized.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumDestabilizer extends BaseEntityBlock{
+public class QuantumDestabilizer extends BaseEntityBlock {
     public static final MapCodec<MachineBlock> CODEC = simpleCodec(MachineBlock::new);
 
     private static final VoxelShape SHAPE =
