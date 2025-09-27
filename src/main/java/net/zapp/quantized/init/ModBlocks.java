@@ -14,6 +14,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.blocks.machine_block.MachineBlock;
+import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizer;
 
 import java.util.function.Function;
 
@@ -26,6 +27,10 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> MACHINE_BLOCK = registerBlock("machine_block",
             (properties) -> new MachineBlock(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+
+    public static final DeferredBlock<Block> QUANTUM_DESTABILIZER = registerBlock("quantum_destabilizer",
+            (properties) -> new QuantumDestabilizer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",

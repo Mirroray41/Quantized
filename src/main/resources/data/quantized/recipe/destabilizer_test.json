@@ -1,0 +1,9 @@
+{
+  "type": "quantized:quantum_destabilizer",
+  "ingredient": "minecraft:dirt",
+  "complexity": 200,
+  "result": {
+    "id": "quantized:quantum_flux",
+    "amount": 100
+  }
+}

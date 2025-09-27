@@ -20,6 +20,7 @@ import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.blocks.machine_block.MachineBlockScreen;
+import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
 import net.zapp.quantized.init.ModBlockEntities;
 import net.zapp.quantized.init.ModFluidTypes;
 import net.zapp.quantized.init.ModMenuTypes;
@@ -39,6 +40,7 @@ public class ModEvents {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);
+        event.register(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), QuantumDestabilizerScreen::new);
     }
 
     @SubscribeEvent

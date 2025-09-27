@@ -1,4 +1,4 @@
-package net.zapp.quantized.blocks.machine_block;
+package net.zapp.quantized.blocks.quantum_destabilizer;
 
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
+public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDestabilizerMenu> {
     private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/machine_block/machine_block_screen.png");
-    private static final ResourceLocation ARROW_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/quantum_destabilizer_screen.png");
+    private static final ResourceLocation SPIRAL_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/spiral_progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
 
-    public MachineBlockScreen(MachineBlockMenu menu, Inventory playerInventory, Component title) {
+    public QuantumDestabilizerScreen(QuantumDestabilizerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -50,7 +50,7 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE,x + 82, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SPIRAL_TEXTURE,x + 82, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
         }
     }
 
@@ -136,4 +136,3 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
         }
     }
 }
-
