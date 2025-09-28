@@ -8,7 +8,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -41,7 +40,7 @@ import java.util.Optional;
 
 public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
     // ---- Rendering init ----
-    private float rotation;
+    private static final float ROTATION = 5f;
 
     // ---- Slots ----
     private static final int INPUT_SLOT = 0;
@@ -66,7 +65,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     private int maxProgress = 72;
     public int powerConsumption = 16;
 
-    protected final ContainerData data = new ContainerData() {
+    public final ContainerData data = new ContainerData() {
         @Override
         public int get(int i) {
             return switch (i) {
@@ -116,7 +115,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (level.isClientSide) return;
+        //if (level.isClientSide) return;
 
         if (currentRecipe == null && inventoryUpdated) {
             tryStartCraft();
@@ -130,20 +129,24 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         if (currentRecipe != null) {
             if (energyM.getHandler().getEnergyStored() >= powerConsumption) {
                 energyM.getHandler().extractEnergy(powerConsumption, false);
-                progress++;
-                state.setValue(QuantumDestabilizer.ON, true);
+                this.progress += 1;
+                //System.out.println(progress);
+                state = state.setValue(QuantumDestabilizer.ON, true);
 
                 if (progress >= maxProgress) {
                     finishCraft(currentRecipe);
                     tryStartCraft();
                 }
             } else {
-                progress = Mth.clamp(progress--, 0, progress);
-                state.setValue(QuantumDestabilizer.ON, false);
+                progress = Math.clamp(progress-1, 0, maxProgress);
+                state = state.setValue(QuantumDestabilizer.ON, false);
             }
+        } else {
+            state = state.setValue(QuantumDestabilizer.ON, false);
         }
 
         setChanged(level, pos, state);
+        level.setBlock(pos, state, 3);
     }
 
     // --- Job lifecycle helpers ---
@@ -306,12 +309,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     }
 
     // ---- Rendering ----
-    public float getRenderingRotation() {
-        rotation += 0.5f;
-        if(rotation >= 360) {
-            rotation = 0;
-        }
-
-        return rotation;
+    public float getRotationSpeed() {
+        return ROTATION;
     }
 }

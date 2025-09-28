@@ -19,6 +19,8 @@ import net.minecraft.world.phys.Vec3;
 import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 
 public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumDestabilizerTile> {
+    private float rotation;
+
 
     public QuantumDestabilizerRenderer(BlockEntityRendererProvider.Context context) {
 
@@ -34,7 +36,7 @@ public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumD
         pPoseStack.pushPose();
         pPoseStack.translate(0.5f, 0.75f, 0.5f);
         pPoseStack.scale(0.5f, 0.5f, 0.5f);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(pBlockEntity.getRenderingRotation()));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(getRotation(pBlockEntity)));
 
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, getLightLevel(pBlockEntity.getLevel(),
                 pBlockEntity.getBlockPos()), OverlayTexture.NO_OVERLAY, pPoseStack, pBufferSource, pBlockEntity.getLevel(), 1);
@@ -48,5 +50,19 @@ public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumD
         int sLight = level.getBrightness(LightLayer.SKY, pos);
 
         return LightTexture.pack(bLight, sLight);
+    }
+
+    private float getRotation(QuantumDestabilizerTile blockEntity) {
+        float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
+
+        System.out.println((float) blockEntity.data.get(0) / blockEntity.data.get(1));
+
+        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1))) * deltaTime);
+
+        if(rotation >= 360) {
+            rotation = rotation - 360;
+        }
+
+        return rotation;
     }
 }

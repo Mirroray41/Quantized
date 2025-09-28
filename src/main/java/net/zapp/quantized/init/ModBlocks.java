@@ -31,7 +31,8 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> QUANTUM_DESTABILIZER = registerBlock("quantum_destabilizer",
             (properties) -> new QuantumDestabilizer(properties
-                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()));
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(QuantumDestabilizer.ON) ? 15 : 0)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
             (properties) -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));
