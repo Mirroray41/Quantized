@@ -19,22 +19,39 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zapp.quantized.blocks.machine_block.MachineBlock;
-import net.zapp.quantized.blocks.machine_block.MachineBlockTile;
 import net.zapp.quantized.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumDestabilizer extends BaseEntityBlock {
     public static final MapCodec<MachineBlock> CODEC = simpleCodec(MachineBlock::new);
 
+    public static final BooleanProperty ON = BooleanProperty.create("on");
+
     private static final VoxelShape SHAPE =
-            Block.box(0, 0, 0, 16, 8, 16);
+            Shapes.or(Block.box(0, 0, 0, 16, 8, 16),
+                    Block.box(0, 8, 4, 2, 11, 12),
+                    Block.box(14, 8, 4, 16, 11, 12),
+                    Block.box(4, 8, 0, 12, 11, 2),
+                    Block.box(4, 8, 14, 12, 11, 16));
 
     public QuantumDestabilizer(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(
+                this.stateDefinition.any()
+                        .setValue(ON, false)
+        );
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
+        stateBuilder.add(ON);
     }
 
     @Override
@@ -64,7 +81,7 @@ public class QuantumDestabilizer extends BaseEntityBlock {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             if(entity instanceof QuantumDestabilizerTile quantumDestabilizerTile) {
-                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(quantumDestabilizerTile, Component.literal("Machine Block")), pPos);
+                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(quantumDestabilizerTile, Component.translatable("block.quantized.quantum_destabilizer")), pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

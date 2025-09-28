@@ -131,6 +131,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             if (energyM.getHandler().getEnergyStored() >= powerConsumption) {
                 energyM.getHandler().extractEnergy(powerConsumption, false);
                 progress++;
+                state.setValue(QuantumDestabilizer.ON, true);
 
                 if (progress >= maxProgress) {
                     finishCraft(currentRecipe);
@@ -138,6 +139,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
                 }
             } else {
                 progress = Mth.clamp(progress--, 0, progress);
+                state.setValue(QuantumDestabilizer.ON, false);
             }
         }
 

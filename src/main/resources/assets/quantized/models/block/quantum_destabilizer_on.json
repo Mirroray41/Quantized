@@ -4,7 +4,7 @@
     "render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "quantized:block/quantum_destabilizer",
+		"0": "quantized:block/quantum_destabilizer_on",
 		"particle": "quantized:block/steel_block"
 	},
 	"elements": [

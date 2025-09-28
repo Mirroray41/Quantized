@@ -1,8 +1,7 @@
 {
   "creativetab.quantized.misc": "Quantized",
   "creativetab.quantized.data": "Quantized - Data",
-  "block.quantized.quantum_matter_block": "Quantum Matter Block",
-  "item.quantized.quantum_matter": "Quantum Matter",
+  "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
 
   "item.quantized.q_bit": "Q-Bit",
   "item.quantized.q_byte": "Q-Byte",

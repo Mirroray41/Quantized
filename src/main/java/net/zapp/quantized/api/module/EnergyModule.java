@@ -30,7 +30,7 @@ public class EnergyModule implements Module {
 
     @Override
     public void load(ValueInput in, HolderLookup.Provider registries) {
-        energy.setCapacity(in.getIntOr(moduleOwner + ".energy", energy.getMaxEnergyStored()));
+        energy.setCapacity(in.getIntOr(moduleOwner + ".max_energy", energy.getMaxEnergyStored()));
         energy.setEnergy(in.getIntOr(moduleOwner + ".energy", 0));
     }
 }
