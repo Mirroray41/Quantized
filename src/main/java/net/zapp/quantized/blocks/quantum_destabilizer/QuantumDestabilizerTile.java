@@ -115,7 +115,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
-        //if (level.isClientSide) return;
+        if (level.isClientSide) return;
 
         if (currentRecipe == null && inventoryUpdated) {
             tryStartCraft();
@@ -130,7 +130,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             if (energyM.getHandler().getEnergyStored() >= powerConsumption) {
                 energyM.getHandler().extractEnergy(powerConsumption, false);
                 this.progress += 1;
-                //System.out.println(progress);
+
                 state = state.setValue(QuantumDestabilizer.ON, true);
 
                 if (progress >= maxProgress) {

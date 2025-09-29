@@ -1,6 +1,6 @@
 {
   "type": "quantized:quantum_destabilizer",
-  "ingredient": "minecraft:dirt",
+  "ingredient": "minecraft:chain",
   "crafting_time": 100,
   "power_usage": 200,
   "result": {

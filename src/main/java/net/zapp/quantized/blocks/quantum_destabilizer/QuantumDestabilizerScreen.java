@@ -69,6 +69,26 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF5e6469, false);
+    }
+
+    protected int getTextLen(String text) {
+        int out = 0;
+        for (int i = 0 ; i < text.length() ; i++) {
+            switch (text.charAt(i)) {
+                case 'I', 'k', ' ', 'f': out+=5; break;
+                case 't': out+=4; break;
+                case 'l': out+=3; break;
+                case 'i': out+=2; break;
+                default: out+=6; break;
+            }
+        }
+        return out;
+    }
+
     protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
                                            int w, int h) {
         guiGraphics.pose().pushMatrix();
