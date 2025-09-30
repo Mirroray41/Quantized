@@ -61,7 +61,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate()
     );
 
-    // ---- Menu sync data ----
+    // ---- Menu sync flux ----
     private int progress = 0;
     private int maxProgress = 72;
 

@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Quantized.MOD_ID)
 public class Quantized {
-    // Define mod id in a common place for everything to reference
+    // Define mod id in data common place for everything to reference
     public static final String MOD_ID = "quantized";
-    // Directly reference a slf4j logger
+    // Directly reference data slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -39,7 +39,7 @@ public class Quantized {
         ModFluids.register(modEventBus);
         ModFluidTypes.register(modEventBus);
 
-        // Register the item to a creative tab
+        // Register the item to data creative tab
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -50,7 +50,7 @@ public class Quantized {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        event.enqueueWork(FluxDataConfig::load);
     }
 
     // Add the example block item to the building blocks tab
