@@ -53,7 +53,13 @@
   "quantized.configuration.logDirtBlock": "Log Dirt Block",
   "quantized.configuration.magicNumberIntroduction": "Magic Number Text",
   "quantized.configuration.magicNumber": "Magic Number",
-  "tooltip.quantized.machine_block.energy_stored": "%1$s/%2$s RF",
-  "tooltip.quantized.machine_block.energy_usage": "%1$s/%2$s RF/t",
-  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB"
+  "tooltip.quantized.machine_block.energy_stored": "%1$s/%2$s §§4RF",
+  "tooltip.quantized.machine_block.energy_usage": "%1$s/%2$s §4RF/t",
+  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB",
+  "tooltip.quantized.item.data_value": "§bQ-Bytes: %1$s ",
+  "tooltip.quantized.item.flux_value": "§6Q-Flux: %1$s",
+  "tooltip.quantized.item.data_value_shift": "§bQ-Bytes: %1$s (%2$s x %3$s)",
+  "tooltip.quantized.item.flux_value_shift": "§6Q-Flux: %1$s (%2$s x %3$s)",
+  "tooltip.quantized.item.data_value_singular": "1 §bQ-Byte"
+
 }
