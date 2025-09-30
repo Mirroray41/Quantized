@@ -39,6 +39,7 @@ public class Quantized {
         ModFluids.register(modEventBus);
         ModFluidTypes.register(modEventBus);
         ModComponents.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         // Register the item to data creative tab
         modEventBus.addListener(this::addCreative);

@@ -1,6 +1,6 @@
 {
   "variants": {
-    "off=false": {
+    "on=false": {
       "model": "quantized:block/quantum_destabilizer"
     },
     "on=true": {

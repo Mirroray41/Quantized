@@ -10,13 +10,17 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.blocks.machine_block.MachineBlockMenu;
+import net.zapp.quantized.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, Quantized.MOD_ID);
 
     public static final DeferredHolder<MenuType<?>, MenuType<MachineBlockMenu>> MACHINE_BLOCK_MENU =
-            registerMenuType("growth_chamber_menu", MachineBlockMenu::new);
+            registerMenuType("machine_block_menu", MachineBlockMenu::new);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<QuantumDestabilizerMenu>> QUANTUM_DESTABILIZER_MENU =
+            registerMenuType("quantum_destabilizer_menu", QuantumDestabilizerMenu::new);
 
     private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name,
                                                                                                               IContainerFactory<T> factory) {

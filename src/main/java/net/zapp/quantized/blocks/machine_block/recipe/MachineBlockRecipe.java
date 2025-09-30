@@ -34,7 +34,7 @@ public record MachineBlockRecipe(Ingredient inputItem, ItemStack output) impleme
 
     @Override
     public RecipeSerializer<? extends Recipe<MachineBlockRecipeInput>> getSerializer() {
-        return ModRecipes.MACHINE_MACHINE_SERIALIZER.get();
+        return ModRecipes.MACHINE_BLOCK_SERIALIZER.get();
     }
 
     @Override

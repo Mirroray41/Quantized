@@ -1,4 +1,4 @@
-package net.zapp.quantized.blocks.machine_block;
+package net.zapp.quantized.blocks.quantum_destabilizer;
 
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu> {
+public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDestabilizerMenu> {
     private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/machine_block/machine_block_screen.png");
-    private static final ResourceLocation ARROW_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/arrow_progress.png");
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/quantum_destabilizer_screen.png");
+    private static final ResourceLocation SPIRAL_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/spiral_progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
 
-    public MachineBlockScreen(MachineBlockMenu menu, Inventory playerInventory, Component title) {
+    public QuantumDestabilizerScreen(QuantumDestabilizerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -50,7 +50,7 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_TEXTURE,x + 82, y + 35, 0, 0, menu.getScaledArrowProgress(), 16, 24, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SPIRAL_TEXTURE,x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
         }
     }
 
@@ -59,14 +59,34 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
     }
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
-        renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 29, y + 17, 10, 52);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 28, y + 16, 0, 0, 12, 54, 12, 54);
+        renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 155, y + 17, 10, 52);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 154, y + 16, 0, 0, 12, 54, 12, 54);
     }
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF5e6469, false);
+    }
+
+    protected int getTextLen(String text) {
+        int out = 0;
+        for (int i = 0 ; i < text.length() ; i++) {
+            switch (text.charAt(i)) {
+                case 'I', 'k', ' ', 'f': out+=5; break;
+                case 't': out+=4; break;
+                case 'l': out+=3; break;
+                case 'i': out+=2; break;
+                default: out+=6; break;
+            }
+        }
+        return out;
     }
 
     protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
@@ -127,7 +147,7 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
             components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
-        } else if (isHovering(28, 16, 12, 54, mouseX, mouseY)) {
+        } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
             components.add(Component.translatable("tooltip.quantized.machine_block.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
@@ -136,4 +156,3 @@ public class MachineBlockScreen extends AbstractContainerScreen<MachineBlockMenu
         }
     }
 }
-

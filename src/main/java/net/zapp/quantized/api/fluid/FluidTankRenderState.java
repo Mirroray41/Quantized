@@ -1,4 +1,4 @@
-package net.zapp.quantized.fluid;
+package net.zapp.quantized.api.fluid;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
