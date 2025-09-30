@@ -1,5 +1,6 @@
 package net.zapp.quantized.blocks.quantum_destabilizer;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -8,9 +9,11 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,6 +36,7 @@ import net.zapp.quantized.blocks.quantum_destabilizer.recipe.QuantumDestabilizer
 import net.zapp.quantized.blocks.quantum_destabilizer.recipe.QuantumDestabilizerRecipeInput;
 import net.zapp.quantized.init.ModBlockEntities;
 import net.zapp.quantized.init.ModRecipes;
+import net.zapp.quantized.init.ModSounds;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -130,6 +134,8 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             if (energyM.getHandler().getEnergyStored() >= powerConsumption) {
                 energyM.getHandler().extractEnergy(powerConsumption, false);
                 this.progress += 1;
+
+                level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(), SoundSource.BLOCKS, 1f, 1 + (float) progress / maxProgress);
 
                 state = state.setValue(QuantumDestabilizer.ON, true);
 

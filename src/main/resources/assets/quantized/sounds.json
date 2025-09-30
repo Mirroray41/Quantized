@@ -1,0 +1,11 @@
+{
+  "quantum_destabilizer_work": {
+    "subtitle": "sound.quantized.quantum_destabilizer.work",
+    "sounds": [
+      {
+        "name": "quantized:quantum_destabilizer_work",
+        "volume": 0.7
+      }
+    ]
+  }
+}

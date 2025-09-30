@@ -54,5 +54,6 @@
   "quantized.configuration.magicNumber": "Magic Number",
   "tooltip.quantized.machine_block.energy_stored": "Battery: %1$s/%2$s FE",
   "tooltip.quantized.machine_block.energy_usage": "Using: %1$s FE/t",
-  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB"
+  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB",
+  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working"
 }
