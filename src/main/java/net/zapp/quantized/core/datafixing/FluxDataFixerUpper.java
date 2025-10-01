@@ -31,9 +31,8 @@ public class FluxDataFixerUpper {
     }
 
     /**
-     * Gets the DataFluxPair associated with this itemStack and writes the value to the stack's dataComponent
-     * This method is private since it can cause desync between server-client if used incorrectly.
-     * @param stack The ItemStack to get and write the data for.
+     * Gets the DataFluxPair associated with this itemStack.
+     * @param stack The ItemStack to get the data for.
      * @return The DataFluxPair for this ItemStack, it could also be 0 (No Definition)
      * By this point Item Tags have been computed.
      */
