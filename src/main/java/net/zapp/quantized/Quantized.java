@@ -8,7 +8,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.zapp.quantized.init.*;
+import net.zapp.quantized.compat.externjson.FluxDataJsonLoader;
+import net.zapp.quantized.core.configs.Config;
+import net.zapp.quantized.core.configs.FluxDataConfig;
+import net.zapp.quantized.core.init.*;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -45,6 +48,7 @@ public class Quantized {
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        FluxDataJsonLoader.ensureExternJsonDirectoryExists();
     }
 
     public static ResourceLocation id(String path) {
