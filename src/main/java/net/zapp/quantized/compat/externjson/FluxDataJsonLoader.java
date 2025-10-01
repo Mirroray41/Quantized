@@ -24,19 +24,17 @@ import java.util.stream.Stream;
 
 public final class FluxDataJsonLoader implements PreparableReloadListener {
     private static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
-    private static final String JSON_DIR = "flux_data";
+    private static final String JSON_DIR = "flux_data_overrides";
     private static final String ITEMS_KEY = "items";
     private static final String TAGS_KEY  = "tags";
     private static final String PRIORITY  = "priority";
 
-    private static final int DEFAULT_PACK_PRIORITY = 0;
     private static final int DEFAULT_CONFIG_FILE_PRIORITY = 10_000;
 
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, Executor bg, Executor game) {
         CompletableFuture<List<Pack>> prepared = CompletableFuture.supplyAsync(() -> {
             List<Pack> packs = new ArrayList<>();
-            loadDatapackJson(rm, packs);
             loadExternalConfigJson(packs);
             sortPacks(packs);
             return packs;
@@ -44,18 +42,6 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
 
         return prepared.thenCompose(barrier::wait)
                 .thenAcceptAsync(this::applyPacks, game);
-    }
-
-    private void loadDatapackJson(ResourceManager rm, List<Pack> out) {
-        rm.listResources(JSON_DIR, rl -> rl.getPath().endsWith(".json")).forEach((id, res) -> {
-            try (Reader r = res.openAsReader()) {
-                JsonObject root = GSON.fromJson(r, JsonObject.class);
-                int prio = getPriority(root, DEFAULT_PACK_PRIORITY);
-                out.add(new Pack(prio, id, root));
-            } catch (Exception ex) {
-                warn("Failed datapack json {}: {}", id, ex.toString());
-            }
-        });
     }
 
     private void loadExternalConfigJson(List<Pack> out) {
@@ -69,8 +55,9 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
                     int prio = getPriority(root, DEFAULT_CONFIG_FILE_PRIORITY);
                     ResourceLocation id = ResourceLocation.fromNamespaceAndPath("config", p.getFileName().toString());
                     out.add(new Pack(prio, id, root));
+                    Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied Json Config [{}]", p.getFileName());
                 } catch (Exception ex) {
-                    warn("Failed config json {}: {}", p, ex.toString());
+                    Quantized.LOGGER.warn("[Quantized:JsonDataFluxer] Failed config json {}: {}", p, ex.toString());
                 }
             });
         } catch (Exception ignored) {
@@ -101,7 +88,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
         for (Pack p : packs) {
             applyOnePack(p);
         }
-        info("Applied {} pack(s).", packs.size());
+        Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied {} pack(s).", packs.size());
     }
 
     private void applyOnePack(Pack p) {
@@ -121,7 +108,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
                     FluxDataConfig.overrideItem(rl, pair);
                 }
             } catch (Exception ex) {
-                warn("Bad item key '{}' in {}", e.getKey(), p.id());
+                Quantized.LOGGER.warn("[Quantized:JsonDataFluxer] Bad item key '{}' in {}", e.getKey(), p.id());
             }
         });
     }
@@ -138,7 +125,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
                     FluxDataConfig.overrideTag(TagKey.create(Registries.ITEM, rl), pair);
                 }
             } catch (Exception ex) {
-                warn("Bad tag key '{}' in {}", normalized, p.id());
+                Quantized.LOGGER.warn("[Quantized:JsonDataFluxer] Bad tag key '{}' in {}", normalized, p.id());
             }
         });
     }
@@ -178,13 +165,5 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
             return ns + ":" + path;
         }
         return k;
-    }
-
-    private static void info(String msg, Object... args) {
-        Quantized.LOGGER.info("[FluxJSON] {} {}", msg, args);
-    }
-
-    private static void warn(String msg, Object... args) {
-        Quantized.LOGGER.warn("[FluxJSON] {} {}", msg, args);
     }
 }

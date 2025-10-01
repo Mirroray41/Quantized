@@ -10,13 +10,11 @@ import net.minecraft.world.item.Item;
 import net.neoforged.fml.loading.FMLPaths;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.utils.DataFluxPair;
-import net.zapp.quantized.compat.externjson.PackValues;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -36,7 +34,7 @@ public class FluxDataConfig {
         ITEMS.clear();
         TAGS.clear();
 
-        Path file = configDir.resolve("quantized").resolve("flux_data.toml");
+        Path file = configDir.resolve("quantized").resolve("default_flux_data.toml");
         CommentedFileConfig config = CommentedFileConfig.builder(file)
                 .autosave()
                 .preserveInsertionOrder()
@@ -172,14 +170,5 @@ public class FluxDataConfig {
 
     public static void overrideTag(TagKey<Item> tag, DataFluxPair v) {
         TAGS.put(tag, v);
-    }
-
-    public static void mergeFromPacks(List<PackValues> packs) {
-        for (var pv : packs) {
-            pv.items().forEach(FluxDataConfig::overrideItem);
-            pv.tags().forEach(FluxDataConfig::overrideTag);
-        }
-
-        Quantized.LOGGER.info("Merged {} data_flux pack(s).", packs.size());
     }
 }
