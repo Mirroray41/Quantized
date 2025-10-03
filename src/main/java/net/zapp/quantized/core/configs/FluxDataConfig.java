@@ -54,9 +54,6 @@ public class FluxDataConfig {
             config.set("tags", tags);
         }
 
-        readItemsFromConfig(config);
-        readTagsFromConfig(config);
-
         prepopulateConfigIfAbsent(config);
 
         ITEMS.clear();

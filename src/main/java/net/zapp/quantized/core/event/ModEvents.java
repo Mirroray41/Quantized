@@ -71,7 +71,7 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onAddReload(AddServerReloadListenersEvent event) {
-        event.addListener(Quantized.id("kube_js_json_loader"), new FluxDataJsonLoader());
+        event.addListener(Quantized.id("data_flux_json_loader"), new FluxDataJsonLoader());
     }
 
     @SubscribeEvent

@@ -7,6 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public record DataFluxPair(int data, int flux) {
+    public static final DataFluxPair ZERO = zero();
     public static final Codec<DataFluxPair> CODEC = RecordCodecBuilder.create(i ->
             i.group(
                 Codec.INT.fieldOf("data").forGetter(DataFluxPair::data),
@@ -31,7 +32,7 @@ public record DataFluxPair(int data, int flux) {
         return data == 0 && flux == 0;
     }
 
-    public static DataFluxPair zero() {
+    private static DataFluxPair zero() {
         return new DataFluxPair(0, 0);
     }
 }

@@ -8,9 +8,17 @@ import net.minecraft.world.item.ItemStack;
 import net.zapp.quantized.core.configs.FluxDataConfig;
 import net.zapp.quantized.core.utils.DataFluxPair;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class FluxDataFixerUpper {
+    private static final Map<Item, DataFluxPair> CACHE = new IdentityHashMap<>();
+
+
+    public static void clearCache() {
+        CACHE.clear();
+    }
     /**
      * Gets the DataFluxPair associated with this Item
      * @param item The item to get the data flux pair for.
@@ -19,15 +27,27 @@ public class FluxDataFixerUpper {
      * or because the item's corresponding tag was used to give it a value.
      */
     public static DataFluxPair getDataFlux(Item item) {
+        var cached = CACHE.get(item);
+        if (cached != null) return cached;
+
         var id = BuiltInRegistries.ITEM.getKey(item);
-        var d = FluxDataConfig.itemMapView().get(id);
-        if (d != null) return d;
-        var holder = item.builtInRegistryHolder();
-        for (var e : FluxDataConfig.tagMapView().entrySet()) {
-            if (holder.is(e.getKey()))
-                return e.getValue();
+        var fromItem = FluxDataConfig.itemMapView().get(id);
+        if (fromItem != null) {
+            CACHE.put(item, fromItem);
+            return fromItem;
         }
-        return new DataFluxPair(0, 0);
+
+        var holder = item.builtInRegistryHolder();
+        var tagMap = FluxDataConfig.tagMapView();
+        for (var tagKey : holder.tags().toList()) {
+            var fromTag = tagMap.get(tagKey);
+            if (fromTag != null) {
+                CACHE.put(item, fromTag);
+                return fromTag;
+            }
+        }
+        CACHE.put(item, DataFluxPair.ZERO);
+        return DataFluxPair.ZERO;
     }
 
     /**
@@ -37,7 +57,7 @@ public class FluxDataFixerUpper {
      * By this point Item Tags have been computed.
      */
     public static DataFluxPair getDataFluxFromStack(ItemStack stack) {
-        if (stack.isEmpty()) return DataFluxPair.zero();
+        if (stack.isEmpty()) return DataFluxPair.ZERO;
         return getDataFlux(stack.getItem());
     }
 
@@ -47,5 +67,4 @@ public class FluxDataFixerUpper {
         for (var k : FluxDataConfig.tagMapView().keySet()) if (itemTags.contains(k)) return FluxDataConfig.tagMapView().get(k);
         return null;
     }
-
 }

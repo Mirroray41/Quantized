@@ -9,6 +9,7 @@ import net.minecraft.tags.TagKey;
 import net.neoforged.fml.loading.FMLPaths;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.configs.FluxDataConfig;
+import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
 import net.zapp.quantized.core.utils.DataFluxPair;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
 
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, Executor bg, Executor game) {
+        FluxDataFixerUpper.clearCache(); // In case new values appear we need to cache them so clear the existing cache.
         CompletableFuture<List<Pack>> prepared = CompletableFuture.supplyAsync(() -> {
             List<Pack> packs = new ArrayList<>();
             loadExternalConfigJson(packs);
