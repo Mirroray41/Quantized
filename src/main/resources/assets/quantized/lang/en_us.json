@@ -1,8 +1,7 @@
 {
   "creativetab.quantized.misc": "Quantized",
   "creativetab.quantized.data": "Quantized - Data",
-  "block.quantized.quantum_matter_block": "Quantum Matter Block",
-  "item.quantized.quantum_matter": "Quantum Matter",
+  "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
 
   "item.quantized.q_bit": "Q-Bit",
   "item.quantized.q_byte": "Q-Byte",
@@ -53,7 +52,14 @@
   "quantized.configuration.logDirtBlock": "Log Dirt Block",
   "quantized.configuration.magicNumberIntroduction": "Magic Number Text",
   "quantized.configuration.magicNumber": "Magic Number",
-  "tooltip.quantized.machine_block.energy_stored": "%1$s/%2$s RF",
-  "tooltip.quantized.machine_block.energy_usage": "%1$s/%2$s RF/t",
-  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB"
+  "tooltip.quantized.item.data_value": "§bQ-Bytes: %1$s ",
+  "tooltip.quantized.item.flux_value": "§6Q-Flux: %1$s",
+  "tooltip.quantized.item.data_value_shift": "§bQ-Bytes: %1$s (%2$s x %3$s)",
+  "tooltip.quantized.item.flux_value_shift": "§6Q-Flux: %1$s (%2$s x %3$s)",
+  "tooltip.quantized.item.data_value_singular": "1 §bQ-Byte",
+
+  "tooltip.quantized.machine_block.energy_stored": "Battery: %1$s/%2$s FE",
+  "tooltip.quantized.machine_block.energy_usage": "Using: %1$s FE/t",
+  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB",
+  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working"
 }

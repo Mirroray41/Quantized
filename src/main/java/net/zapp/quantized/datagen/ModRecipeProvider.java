@@ -10,8 +10,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.init.ModBlocks;
-import net.zapp.quantized.init.ModItems;
+import net.zapp.quantized.core.init.ModBlocks;
+import net.zapp.quantized.core.init.ModItems;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

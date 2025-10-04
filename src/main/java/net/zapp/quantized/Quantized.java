@@ -8,15 +8,18 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.zapp.quantized.init.*;
+import net.zapp.quantized.compat.externjson.FluxDataJsonLoader;
+import net.zapp.quantized.core.configs.Config;
+import net.zapp.quantized.core.configs.FluxDataConfig;
+import net.zapp.quantized.core.init.*;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Quantized.MOD_ID)
 public class Quantized {
-    // Define mod id in a common place for everything to reference
+    // Define mod id in data common place for everything to reference
     public static final String MOD_ID = "quantized";
-    // Directly reference a slf4j logger
+    // Directly reference data slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -29,8 +32,8 @@ public class Quantized {
         // Note that this is necessary if and only if we want *this* class (ExampleMod) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
 
+        ModDataComponents.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
-
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlockEntities.register(modEventBus);
@@ -38,11 +41,14 @@ public class Quantized {
         ModRecipes.register(modEventBus);
         ModFluids.register(modEventBus);
         ModFluidTypes.register(modEventBus);
+        ModComponents.register(modEventBus);
+        ModSounds.register(modEventBus);
 
-        // Register the item to a creative tab
+        // Register the item to data creative tab
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        FluxDataJsonLoader.ensureExternJsonDirectoryExists();
     }
 
     public static ResourceLocation id(String path) {
@@ -50,7 +56,7 @@ public class Quantized {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        event.enqueueWork(FluxDataConfig::load);
     }
 
     // Add the example block item to the building blocks tab

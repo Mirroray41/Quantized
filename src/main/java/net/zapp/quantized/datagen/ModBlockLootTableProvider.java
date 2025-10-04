@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.zapp.quantized.init.ModBlocks;
+import net.zapp.quantized.core.init.ModBlocks;
 
 import java.util.Set;
 
@@ -27,6 +27,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         dropSelf(ModBlocks.STEEL_BLOCK.get());
         dropSelf(ModBlocks.MACHINE_BLOCK.get());
+        dropSelf(ModBlocks.QUANTUM_DESTABILIZER.get());
     }
 
     protected LootTable.Builder createMultipleOreDrops(Block pBlock, Item item, float minDrops, float maxDrops) {

@@ -9,8 +9,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.init.ModBlocks;
-import net.zapp.quantized.init.ModItems;
+import net.zapp.quantized.core.init.ModBlocks;
+import net.zapp.quantized.core.init.ModItems;
 
 import java.util.stream.Stream;
 
@@ -66,6 +66,8 @@ public class ModModelProvider extends ModelProvider {
         /* BLOCKS */
         blockModels.createTrivialCube(ModBlocks.STEEL_BLOCK.get());
         blockModels.createTrivialCube(ModBlocks.MACHINE_BLOCK.get());
+        blockModels.createTrivialCube(ModBlocks.QUANTUM_DESTABILIZER.get());
+        blockModels.createTrivialCube(ModBlocks.QUANTUM_FLUX_BLOCK.get());
     }
 
     @Override
