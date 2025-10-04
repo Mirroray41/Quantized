@@ -32,8 +32,8 @@ public class Quantized {
         // Note that this is necessary if and only if we want *this* class (ExampleMod) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
 
+        ModDataComponents.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
-
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlockEntities.register(modEventBus);

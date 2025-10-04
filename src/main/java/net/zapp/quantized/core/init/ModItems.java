@@ -6,7 +6,11 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.item.custom.CraftingTool;
-import net.zapp.quantized.content.item.custom.DriveItem;
+import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
+import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
+
+import java.lang.reflect.Array;
+import java.util.List;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Quantized.MOD_ID);
@@ -39,25 +43,25 @@ public class ModItems {
             Item::new, new Item.Properties());
 
     public static final DeferredItem<Item> DRIVE_8 = ITEMS.registerItem("8_qb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_64 = ITEMS.registerItem("64_qb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_512 = ITEMS.registerItem("512_qb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_4K = ITEMS.registerItem("4_kqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_32K = ITEMS.registerItem("32_kqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_256K = ITEMS.registerItem("256_kqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_2M = ITEMS.registerItem("2_mqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_16M = ITEMS.registerItem("16_mqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_128M = ITEMS.registerItem("128_mqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_1G = ITEMS.registerItem("1_gqb_drive",
-            DriveItem::new, new Item.Properties());
+            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
 
     public static final DeferredItem<Item> DRIVE_CASING = ITEMS.registerItem("drive_casing",
             Item::new, new Item.Properties());

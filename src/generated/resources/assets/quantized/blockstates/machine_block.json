@@ -1,10 +1,7 @@
 {
   "variants": {
-    "off=false": {
-      "model": "quantized:block/quantum_destabilizer"
-    },
-    "on=true": {
-      "model": "quantized:block/quantum_destabilizer_on"
+    "": {
+      "model": "quantized:block/machine_block"
     }
   }
 }

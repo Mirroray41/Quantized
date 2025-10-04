@@ -130,6 +130,7 @@ dependencies {
     localRuntime "curse.maven:energized-power-782147:6927412"
     localRuntime "curse.maven:pipez-443900:6945397"
     localRuntime "curse.maven:jei-238222:7025033"
+    localRuntime "curse.maven:configured-457570:6802490"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
