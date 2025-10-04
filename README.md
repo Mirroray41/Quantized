@@ -1,25 +1,30 @@
+## Welcome to Quantized!  
+  
+This mod allows you to deconstruct any item into its quantum components and use that to construct any item you desire! But there's a catch: the more complex or "expensive" an item is, the more time and energy it takes to construct or analyze.
 
-Installation information
-=======
+#### How to get going:
+1.  Craft some steel:
+	-  Steel is the building block of quantized. It's acquired by re-smelting iron in a blast furnace
+	- It's used in almost all crafting recipes of quantized.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+2. Create new tools:
+	*   To craft essential crafting components like steel plates or copper wire, you'll need a mallet and some wire cutters
+	* With them, you'll craft some inductors, electromagnets, and more!
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+3. Now give up some junk:
+	- The first machine you'll need to craft is the quantum destabiizer
+	- Deconstruct some not-needed stuff into quantum flux
+	- Then craft a quantum collapser and pipe some quantum flux into it to produce stable q-bits
+	- Then craft them into q-bytes and finally a quantum drive
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+4. Research time:
+	- Now craft a quantum analyzer and put your brand-new quantum drive into it.
+	- Then feed it some juice to get the item saved into the drive.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+5. Assemble your first items:
+	- Craft the quantum fabricator, then put the drive with the analyzed item in it
+	- Feed it some power, and then, Bam, the items you wanted!
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+### Usage in modpacks:
+- You're free to use this mod in modpacks
+- There is a special folder in the config folder of quantized, where you can put your custom quantum item values, either rewrite the original ones or add new ones for other mods.
