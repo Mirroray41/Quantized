@@ -78,7 +78,7 @@ public class ModEvents {
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DataFluxPair pair = FluxDataFixerUpper.getDataFluxFromStack(stack);
-        if (pair.isZero()) return;
+        if (!DataFluxPair.isValid(pair)) return;
         if (stack.getCount() == 1) {
             addTooltipToItem(event.getToolTip(), pair.data(), pair.flux());
             return;

@@ -6,51 +6,71 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record DataFluxPair(int data, int flux) {
-    public static final DataFluxPair ZERO = zero();
-    public static final Codec<DataFluxPair> CODEC = RecordCodecBuilder.create(i ->
-            i.group(
-                Codec.INT.fieldOf("data").forGetter(DataFluxPair::data),
-                Codec.INT.fieldOf("flux").forGetter(DataFluxPair::flux)
-    ).apply(i, DataFluxPair::new));
-
-    public static final StreamCodec<FriendlyByteBuf, DataFluxPair> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, DataFluxPair::data,
-            ByteBufCodecs.VAR_INT, DataFluxPair::flux,
-            DataFluxPair::new
-    );
-
-    public static DataFluxPair minLex(DataFluxPair a, DataFluxPair b) {
-        if (a == null) return b;
-        if (b == null) return a;
-        if (a.flux != b.flux) return a.flux < b.flux ? a : b;
-        return a.data <= b.data ? a : b;
-    }
-
-    public DataFluxPair add(DataFluxPair other) {
-        return new DataFluxPair(data + other.data, flux + other.flux);
-    }
-    public DataFluxPair mul(int k) {
-        return new DataFluxPair(data * k, flux * k);
-    }
-
-    public DataFluxPair plus(DataFluxPair other) {
-        return new DataFluxPair(data + other.data, flux + other.flux);
-    }
-
-    public DataFluxPair scaled(double s) {
-        return new DataFluxPair((int)(data * s), (int)(flux * s));
-    }
-
-    public boolean isZero() {
-        return data == 0 && flux == 0;
-    }
-
+public class DataFluxPair {
     public static DataFluxPair zero() {
         return new DataFluxPair(0, 0);
     }
 
+    private int data = 0;
+    private int flux = 0;
+
+    public DataFluxPair(int data, int flux) {
+        this.data = data;
+        this.flux = flux;
+    }
+
+    public DataFluxPair add(DataFluxPair other) {
+        data += other.data;
+        flux += other.flux;
+        return this;
+    }
+
+    public DataFluxPair setFlux(int flux) {
+        this.flux = flux;
+        return this;
+    }
+
+    public DataFluxPair setData(int data) {
+        this.data = data;
+        return this;
+    }
+
+    public DataFluxPair mul(int k) {
+        data *= k;
+        flux *= k;
+        return this;
+    }
+    public DataFluxPair div(int k) {
+        data = Math.ceilDiv(data, k);
+        flux = Math.max(Math.floorDiv(flux, k), 1);
+        return this;
+    }
+
     public static boolean isValid(DataFluxPair pair) {
         return pair != null && !pair.isZero();
+    }
+
+    private boolean isZero() {
+        return data == 0 && flux == 0;
+    }
+
+    public int data() {
+        return data;
+    }
+
+    public int flux() {
+        return flux;
+    }
+
+    @Override
+    public String toString() {
+        return "DataFluxPair{" +
+                "data=" + data +
+                ", flux=" + flux +
+                '}';
+    }
+
+    public DataFluxPair copy() {
+        return new DataFluxPair(data,flux);
     }
 }

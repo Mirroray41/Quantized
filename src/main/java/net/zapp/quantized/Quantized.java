@@ -8,7 +8,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.zapp.quantized.core.fluxdata.FluxCraftingComputer;
+import net.zapp.quantized.core.fluxdata.FluxDataRecipeComputer;
 import net.zapp.quantized.core.fluxdata.FluxDataJsonLoader;
 import net.zapp.quantized.core.configs.Config;
 import net.zapp.quantized.core.configs.FluxDataConfig;
@@ -45,7 +45,7 @@ public class Quantized {
         ModComponents.register(modEventBus);
         ModSounds.register(modEventBus);
 
-        FluxCraftingComputer.init();
+        FluxDataRecipeComputer.init();
         // Register the item to data creative tab
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us

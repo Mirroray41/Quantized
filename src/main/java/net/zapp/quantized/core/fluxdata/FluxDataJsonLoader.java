@@ -33,7 +33,6 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
 
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, Executor bg, Executor game) {
-        FluxDataFixerUpper.clearCache(); // In case new values appear we need to cache them so clear the existing cache.
         CompletableFuture<List<Pack>> prepared = CompletableFuture.supplyAsync(() -> {
             List<Pack> packs = new ArrayList<>();
             loadExternalConfigJson(packs);
@@ -94,11 +93,12 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     private void applyPacks(List<Pack> packs) {
-        for (Pack p : packs) {
-            applyOnePack(p);
-        }
+        if (!packs.isEmpty())
+            for (Pack p : packs) {
+                applyOnePack(p);
+            }
         Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied {} pack(s).", packs.size());
-        Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Starting Crafting Reverse Computation to try and fill in missing values.");
+        FluxDataFixerUpper.cacheAllItems();
     }
 
     private void applyOnePack(Pack p) {

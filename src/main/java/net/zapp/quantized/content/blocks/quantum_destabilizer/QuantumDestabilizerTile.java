@@ -45,14 +45,14 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     private static final int INPUT_SLOT = 0;
 
     // ---- Energy/Fluids constants ----
-    public static final int FE_CAPACITY = 100_000;
-    public static final int TANK_CAPACITY = 8_000;
+    public static final int FE_CAPACITY = 1_000_000;
+    public static final int TANK_CAPACITY = 8_000_000;
 
     // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumDestabilizerTile";
     private final ItemModule itemM = new ItemModule(ownerName, 1, slot -> markDirtyAndUpdate());
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
-    private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> true, s -> markDirtyAndUpdate());
+    private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), s -> markDirtyAndUpdate());
 
     // ---- Menu sync data ----
     private int progress = 0;
@@ -112,7 +112,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
         DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
-        if (df == null || df.isZero()) {
+        if (!DataFluxPair.isValid(df)) {
             resetCraft();
             setWorking(level, pos, state, false);
             return;
