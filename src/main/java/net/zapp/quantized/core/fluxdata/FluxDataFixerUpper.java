@@ -1,4 +1,4 @@
-package net.zapp.quantized.core.datafixing;
+package net.zapp.quantized.core.fluxdata;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -46,6 +46,9 @@ public class FluxDataFixerUpper {
                 return fromTag;
             }
         }
+
+
+
         CACHE.put(item, DataFluxPair.ZERO);
         return DataFluxPair.ZERO;
     }
@@ -66,5 +69,9 @@ public class FluxDataFixerUpper {
     public static DataFluxPair getForTags(Set<TagKey<Item>> itemTags) {
         for (var k : FluxDataConfig.tagMapView().keySet()) if (itemTags.contains(k)) return FluxDataConfig.tagMapView().get(k);
         return null;
+    }
+
+    public static void cache(Item item, DataFluxPair dataFlux) {
+        CACHE.put(item, dataFlux);
     }
 }

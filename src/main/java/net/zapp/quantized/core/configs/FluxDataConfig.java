@@ -117,19 +117,19 @@ public class FluxDataConfig {
 
 
     private static void addPredefinedItems(BiConsumer<String, DataFluxPair> itemDef) {
-        itemDef.accept("minecraft:stick",      new DataFluxPair(1, 10));
-        itemDef.accept("minecraft:oak_door",   new DataFluxPair(1, 30));
-        itemDef.accept("minecraft:diamond",    new DataFluxPair(1, 200));
-        itemDef.accept("minecraft:diamond_block", new DataFluxPair(9, 1800));
+        itemDef.accept("minecraft:oak_log",      new DataFluxPair(1, 10));
+//        itemDef.accept("minecraft:oak_door",   new DataFluxPair(1, 30));
+//        itemDef.accept("minecraft:diamond",    new DataFluxPair(1, 200));
+//        itemDef.accept("minecraft:diamond_block", new DataFluxPair(9, 1800));
         itemDef.accept("minecraft:iron_ingot", new DataFluxPair(1, 100));
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {
-        tagDef.accept("#minecraft:planks",      new DataFluxPair(2, 50));
-        tagDef.accept("#forge:ingots/iron",     new DataFluxPair(1, 100));
-        tagDef.accept("#forge:ingots/steel",    new DataFluxPair(3, 1500));
-        tagDef.accept("#c:ingots",              new DataFluxPair(1, 75));
-        tagDef.accept("#c:stones",              new DataFluxPair(1, 1));
+//        tagDef.accept("#minecraft:planks",      new DataFluxPair(2, 50));
+//        tagDef.accept("#forge:ingots/iron",     new DataFluxPair(1, 100));
+//        tagDef.accept("#forge:ingots/steel",    new DataFluxPair(3, 1500));
+//        tagDef.accept("#c:ingots",              new DataFluxPair(1, 75));
+//        tagDef.accept("#c:stones",              new DataFluxPair(1, 1));
     }
 
     private static DataFluxPair asNumberPair(Object val) {

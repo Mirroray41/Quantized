@@ -18,6 +18,7 @@ public record MachineBlockRecipe(Ingredient inputItem, ItemStack output) impleme
         return list;
     }
 
+
     @Override
     public boolean matches(MachineBlockRecipeInput machineBlockRecipieInput, Level level) {
         if (level.isClientSide()) {

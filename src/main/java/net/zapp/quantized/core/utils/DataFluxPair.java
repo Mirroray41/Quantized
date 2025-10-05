@@ -20,6 +20,20 @@ public record DataFluxPair(int data, int flux) {
             DataFluxPair::new
     );
 
+    public static DataFluxPair minLex(DataFluxPair a, DataFluxPair b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        if (a.flux != b.flux) return a.flux < b.flux ? a : b;
+        return a.data <= b.data ? a : b;
+    }
+
+    public DataFluxPair add(DataFluxPair other) {
+        return new DataFluxPair(data + other.data, flux + other.flux);
+    }
+    public DataFluxPair mul(int k) {
+        return new DataFluxPair(data * k, flux * k);
+    }
+
     public DataFluxPair plus(DataFluxPair other) {
         return new DataFluxPair(data + other.data, flux + other.flux);
     }
@@ -32,7 +46,11 @@ public record DataFluxPair(int data, int flux) {
         return data == 0 && flux == 0;
     }
 
-    private static DataFluxPair zero() {
+    public static DataFluxPair zero() {
         return new DataFluxPair(0, 0);
+    }
+
+    public static boolean isValid(DataFluxPair pair) {
+        return pair != null && !pair.isZero();
     }
 }

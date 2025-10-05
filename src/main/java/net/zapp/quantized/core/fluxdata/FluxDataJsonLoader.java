@@ -1,4 +1,4 @@
-package net.zapp.quantized.compat.externjson;
+package net.zapp.quantized.core.fluxdata;
 
 import com.google.gson.*;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +9,6 @@ import net.minecraft.tags.TagKey;
 import net.neoforged.fml.loading.FMLPaths;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.configs.FluxDataConfig;
-import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
 import net.zapp.quantized.core.utils.DataFluxPair;
 
 import java.io.IOException;
@@ -76,7 +75,15 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     public static void ensureExternJsonDirectoryExists() {
-        Path cfgRoot = FMLPaths.CONFIGDIR.get().resolve("quantized").resolve(JSON_DIR);
+        Path quantizedDir = FMLPaths.CONFIGDIR.get().resolve("quantized");
+        Path cfgRoot = quantizedDir.resolve(JSON_DIR);
+        if (Files.notExists(quantizedDir)) {
+            try {
+                Files.createDirectories(quantizedDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         if (Files.notExists(cfgRoot)) {
             try {
                 Files.createDirectory(cfgRoot);
@@ -91,6 +98,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
             applyOnePack(p);
         }
         Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied {} pack(s).", packs.size());
+        Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Starting Crafting Reverse Computation to try and fill in missing values.");
     }
 
     private void applyOnePack(Pack p) {
