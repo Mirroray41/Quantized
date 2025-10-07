@@ -2,6 +2,8 @@
   "creativetab.quantized.misc": "Quantized",
   "creativetab.quantized.data": "Quantized - Data",
   "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
+  "block.quantized.quantum_analyzer": "Quantum Analyzer",
+
 
   "item.quantized.q_bit": "Q-Bit",
   "item.quantized.q_byte": "Q-Byte",
@@ -57,6 +59,15 @@
   "tooltip.quantized.item.data_value_shift": "§bQ-Bytes: %1$s (%2$s x %3$s)",
   "tooltip.quantized.item.flux_value_shift": "§6Q-Flux: %1$s (%2$s x %3$s)",
   "tooltip.quantized.item.data_value_singular": "1 §bQ-Byte",
+
+  "tooltip.quantized.disk.data": "§bQ-Bytes: %1$s / %2$s",
+  "tooltip.quantized.disk.max_size": "§aMax Size: %1$s",
+  "tooltip.quantized.disk.count": "§dItem Count: %1$s",
+  "tooltip.quantized.disk.items": "§7§oPress §r§nshift§r§7§o to show stored items",
+  "tooltip.quantized.disk.items_shift": "§cItems Stored:",
+  "tooltip.quantized.disk.item": "    %1$s",
+  "tooltip.quantized.disk.item_more": "    §7And %1$s §7more...",
+
 
   "tooltip.quantized.machine_block.energy_stored": "Battery: %1$s/%2$s FE",
   "tooltip.quantized.machine_block.energy_usage": "Using: %1$s FE/t",

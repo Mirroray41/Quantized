@@ -7,6 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockTile;
+import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 
 import java.util.function.Supplier;
@@ -22,6 +23,10 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<QuantumDestabilizerTile>> QUANTUM_DESTABILIZER_TILE =
             BLOCK_ENTITY_TYPES.register("quantum_destabilizer_tile", () -> new BlockEntityType<>(
                     QuantumDestabilizerTile::new, ModBlocks.QUANTUM_DESTABILIZER.get()));
+
+    public static final Supplier<BlockEntityType<QuantumAnalyzerTile>> QUANTUM_ANALYZER_TILE =
+            BLOCK_ENTITY_TYPES.register("quantum_analyzer_tile", () -> new BlockEntityType<>(
+                    QuantumAnalyzerTile::new, ModBlocks.QUANTUM_ANALYZER.get()));
 
 
     public static void register(IEventBus eventBus) {
