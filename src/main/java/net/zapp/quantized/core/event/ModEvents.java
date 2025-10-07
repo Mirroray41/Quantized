@@ -14,8 +14,8 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.compat.externjson.FluxDataJsonLoader;
-import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
+import net.zapp.quantized.core.fluxdata.FluxDataJsonLoader;
+import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.networking.ModMessages;
 import net.zapp.quantized.core.utils.DataFluxPair;
@@ -78,7 +78,7 @@ public class ModEvents {
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DataFluxPair pair = FluxDataFixerUpper.getDataFluxFromStack(stack);
-        if (pair.isZero()) return;
+        if (!DataFluxPair.isValid(pair)) return;
         if (stack.getCount() == 1) {
             addTooltipToItem(event.getToolTip(), pair.data(), pair.flux());
             return;

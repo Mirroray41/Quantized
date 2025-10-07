@@ -1,4 +1,4 @@
-package net.zapp.quantized.compat.externjson;
+package net.zapp.quantized.core.fluxdata;
 
 import com.google.gson.*;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +9,6 @@ import net.minecraft.tags.TagKey;
 import net.neoforged.fml.loading.FMLPaths;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.configs.FluxDataConfig;
-import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
 import net.zapp.quantized.core.utils.DataFluxPair;
 
 import java.io.IOException;
@@ -34,7 +33,6 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
 
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, Executor bg, Executor game) {
-        FluxDataFixerUpper.clearCache(); // In case new values appear we need to cache them so clear the existing cache.
         CompletableFuture<List<Pack>> prepared = CompletableFuture.supplyAsync(() -> {
             List<Pack> packs = new ArrayList<>();
             loadExternalConfigJson(packs);
@@ -76,7 +74,15 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     public static void ensureExternJsonDirectoryExists() {
-        Path cfgRoot = FMLPaths.CONFIGDIR.get().resolve("quantized").resolve(JSON_DIR);
+        Path quantizedDir = FMLPaths.CONFIGDIR.get().resolve("quantized");
+        Path cfgRoot = quantizedDir.resolve(JSON_DIR);
+        if (Files.notExists(quantizedDir)) {
+            try {
+                Files.createDirectories(quantizedDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         if (Files.notExists(cfgRoot)) {
             try {
                 Files.createDirectory(cfgRoot);
@@ -87,10 +93,12 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     private void applyPacks(List<Pack> packs) {
-        for (Pack p : packs) {
-            applyOnePack(p);
-        }
+        if (!packs.isEmpty())
+            for (Pack p : packs) {
+                applyOnePack(p);
+            }
         Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied {} pack(s).", packs.size());
+        FluxDataFixerUpper.cacheAllItems();
     }
 
     private void applyOnePack(Pack p) {
