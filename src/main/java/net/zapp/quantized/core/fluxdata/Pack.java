@@ -1,4 +1,4 @@
-package net.zapp.quantized.compat.externjson;
+package net.zapp.quantized.core.fluxdata;
 
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
