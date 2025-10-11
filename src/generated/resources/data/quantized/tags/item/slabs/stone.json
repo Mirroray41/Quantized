@@ -4,7 +4,6 @@
     "minecraft:smooth_stone_slab",
     "minecraft:stone_brick_slab",
     "minecraft:purpur_slab",
-    "minecraft:brick_slab",
     "minecraft:cobblestone_slab",
     "minecraft:nether_brick_slab",
     "minecraft:prismarine_slab",
@@ -28,7 +27,6 @@
     "minecraft:polished_deepslate_slab",
     "minecraft:deepslate_tile_slab",
     "minecraft:deepslate_brick_slab",
-    "minecraft:mud_brick_slab",
     "minecraft:tuff_slab",
     "minecraft:polished_tuff_slab",
     "minecraft:tuff_brick_slab"

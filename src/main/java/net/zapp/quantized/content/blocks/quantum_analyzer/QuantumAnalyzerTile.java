@@ -1,6 +1,7 @@
 package net.zapp.quantized.content.blocks.quantum_analyzer;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -21,26 +22,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.ProcessingCurves;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.content.blocks.ProcessingCurves;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
-import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
+import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModDataComponents;
-import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
-import net.zapp.quantized.core.utils.module.TankModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
     // ---- Rendering init ----
@@ -64,7 +61,26 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
     // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumAnalyzerTile";
-    private final ItemModule itemM = new ItemModule(ownerName, 17, slot -> markDirtyAndUpdate());
+    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(17) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            markDirtyAndUpdate();
+        }
+
+        @Override
+        @NotNull
+        public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+            if (slot == DISK_SLOT) {
+                if (stack.getItem() instanceof DriveItem)
+                    return super.insertItem(slot, stack, simulate);
+            } else {
+                if (DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack))) {
+                    return super.insertItem(slot, stack, simulate);
+                }
+            }
+            return stack;
+        }
+    });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
 
     // ---- Menu sync data ----
@@ -126,9 +142,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
 
         if (!disk.has(ModDataComponents.DRIVE_DATA)) {
-            System.out.println("No Drive Data");
             if (!(disk.getItem() instanceof DriveItem)) {
-                System.out.println("No Drive");
                 for (int i = 0 ; i < 15 ; i++) {
                     itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
                 }
@@ -139,43 +153,37 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
         DriveRecord diskData = disk.get(ModDataComponents.DRIVE_DATA);
 
-
-        List<String> items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
-
-        for (int i = 0 ; i < 15 ; i++) {
-            if (i < items.size()) {
-                ResourceLocation location = ResourceLocation.parse(items.get(i));
-                Item item = BuiltInRegistries.ITEM.get(location).get().value();
-                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(item));
-            } else {
-                itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
-            }
+        List<Item> driveItems = DriveItem.getStoredItems(disk);
+        for (int i = 0; i < Math.min(15, driveItems.size()); i++) {
+            itemM.getHandler().setStackInSlot(i + 2, new ItemStack(driveItems.get(i)));
         }
 
+
+
+
         DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
-        if (df == null || df.isZero()) {
+        if (!DataFluxPair.isValid(df)) {
             resetCraft();
             setWorking(level, pos, state, false);
             return;
         }
 
         maxProgress = ProcessingCurves.timeTicks(df.data());
-        powerConsumption = ProcessingCurves.powerPerTick(df.flux());
+        int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
-        boolean canPay = energyM.getHandler().extractEnergy(powerConsumption, true) == powerConsumption;
-        boolean canOut = diskData.dataUsed() + df.data() <= diskData.capacity() && df.data() <= diskData.maxSizePerItem() && !(items.contains(in.getItem().toString()));
+        boolean canPay = energyM.getHandler().extractEnergy(toConsume, true) == toConsume;
+        boolean canOut = diskData != null && diskData.dataUsed() + df.data() <= diskData.capacity() && df.data() <= diskData.maxSizePerItem() && !(driveItems.contains(in.getItem()));
         boolean hasInput = !in.isEmpty();
         boolean working = canPay && canOut && hasInput;
-
-        System.out.println(canOut + ", " + working);
 
         setWorking(level, pos, state, working);
         if (!working) {
             if (progress > 0) progress = Math.max(0, progress - 1);
-
+            powerConsumption = 0; // Fixes people thinking the machine is using power even when it's not.
             return;
         }
 
+        powerConsumption = toConsume;
         progress++;
         energyM.getHandler().extractEnergy(powerConsumption, false);
 

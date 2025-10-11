@@ -23,6 +23,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.content.blocks.ProcessingCurves;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
@@ -50,7 +52,21 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumDestabilizerTile";
-    private final ItemModule itemM = new ItemModule(ownerName, 1, slot -> markDirtyAndUpdate());
+    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(1) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            markDirtyAndUpdate();
+        }
+
+        @Override
+        @NotNull
+        public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+            if (DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack))) {
+                return super.insertItem(slot, stack, simulate);
+            }
+            return stack;
+        }
+    });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), s -> markDirtyAndUpdate());
 

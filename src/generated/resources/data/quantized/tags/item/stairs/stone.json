@@ -3,7 +3,6 @@
     "minecraft:stone_stairs",
     "minecraft:stone_brick_stairs",
     "minecraft:purpur_stairs",
-    "minecraft:brick_stairs",
     "minecraft:cobblestone_stairs",
     "minecraft:nether_brick_stairs",
     "minecraft:prismarine_stairs",
@@ -27,7 +26,6 @@
     "minecraft:polished_deepslate_stairs",
     "minecraft:deepslate_tile_stairs",
     "minecraft:deepslate_brick_stairs",
-    "minecraft:mud_brick_stairs",
     "minecraft:tuff_stairs",
     "minecraft:polished_tuff_stairs",
     "minecraft:tuff_brick_stairs"
