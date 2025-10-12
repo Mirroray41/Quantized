@@ -1,7 +1,6 @@
 package net.zapp.quantized.content.item.custom.drive_item;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -11,9 +10,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModItems;
+import net.zapp.quantized.core.utils.DataFluxPair;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class DriveItem extends Item {
@@ -26,10 +28,10 @@ public class DriveItem extends Item {
         this.maxPatternSize = maxPatternSize;
     }
 
-    public static List<Item> getStoredItems(ItemStack item) {
-        if (!(item.getItem() instanceof DriveItem)) return List.of();
+    public static List<Item> getStoredItems(ItemStack drive) {
+        if (!(drive.getItem() instanceof DriveItem)) return List.of();
 
-        DriveRecord diskData = item.get(ModDataComponents.DRIVE_DATA);
+        DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
         List<String> items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
         if (items.isEmpty()) return List.of();
         List<Item> storedItems = new ArrayList<>(items.size());
@@ -39,6 +41,18 @@ public class DriveItem extends Item {
             BuiltInRegistries.ITEM.get(id).ifPresent(holder -> storedItems.add(holder.value()));
         }
         return storedItems;
+    }
+    
+    public static void addItem(ItemStack drive, ItemStack toAdd, DataFluxPair df) {
+        DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
+        if (diskData == null) return;
+        List<Item> items = new ArrayList<>(getStoredItems(drive));
+        items.add(toAdd.getItem());
+        List<String> itemStrs = items.stream().map(Item::toString).toList();
+        
+        DriveRecord newData = new DriveRecord(diskData.capacity(), diskData.maxSizePerItem(), diskData.dataUsed() + df.data(), itemStrs.toArray(new String[diskData.count() + 1]), diskData.count() + 1);
+        drive.set(ModDataComponents.DRIVE_DATA, newData);
+        
     }
 
     @Override

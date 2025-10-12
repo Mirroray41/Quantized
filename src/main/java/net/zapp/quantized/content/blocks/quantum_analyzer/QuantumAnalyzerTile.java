@@ -1,15 +1,12 @@
 package net.zapp.quantized.content.blocks.quantum_analyzer;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -42,10 +39,7 @@ import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
     // ---- Rendering init ----
@@ -141,6 +135,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
         ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
 
+
+
         if (!disk.has(ModDataComponents.DRIVE_DATA)) {
             if (!(disk.getItem() instanceof DriveItem)) {
                 for (int i = 0 ; i < 15 ; i++) {
@@ -192,9 +188,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
 
         if (progress >= maxProgress) {
-            items.add(in.getItem().toString());
-            DriveRecord newData = new DriveRecord(diskData.capacity(), diskData.maxSizePerItem(), diskData.dataUsed() + df.data(), items.toArray(new String[diskData.count() + 1]), diskData.count() + 1);
-            disk.set(ModDataComponents.DRIVE_DATA, newData);
+            DriveItem.addItem(disk, in, df);
             progress = 0;
         }
     }
@@ -294,5 +288,12 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     // ---- Rendering ----
     public float getRotationSpeed() {
         return ROTATION;
+    }
+
+    public List<ItemStack> getDriveItems() {
+        ItemStack drive = getItemHandler().getStackInSlot(DISK_SLOT);
+        if (drive.isEmpty()) return List.of();
+        if (!drive.has(ModDataComponents.DRIVE_DATA)) return List.of();
+        return DriveItem.getStoredItems(drive).stream().map(ItemStack::new).toList();
     }
 }
