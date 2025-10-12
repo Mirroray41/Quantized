@@ -50,7 +50,7 @@ public class DataFluxPair {
         return pair != null && !pair.isZero();
     }
 
-    private boolean isZero() {
+    public boolean isZero() {
         return data == 0 && flux == 0;
     }
 

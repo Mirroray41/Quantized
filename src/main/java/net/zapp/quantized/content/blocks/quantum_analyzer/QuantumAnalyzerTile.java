@@ -2,11 +2,13 @@ package net.zapp.quantized.content.blocks.quantum_analyzer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -19,26 +21,33 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.zapp.quantized.content.blocks.ProcessingCurves;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.ProcessingCurves;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
-import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
+import net.zapp.quantized.core.datafixing.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModDataComponents;
+import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
+import net.zapp.quantized.core.utils.module.TankModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
@@ -49,6 +58,9 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     private static final int INPUT_SLOT = 0;
     private static final int DISK_SLOT = 1;
 
+    private static List<String> items = new ArrayList<>();
+
+    public int rowOffest = 0;
 
     // ---- Energy/Fluids constants ----
     public static final int FE_CAPACITY = 100_000;
@@ -94,6 +106,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
                 case 2 -> powerConsumption;
                 case 3 -> energyM.getHandler().getEnergy();
                 case 4 -> energyM.getHandler().getMaxEnergyStored();
+                case 5 -> items.toArray().length;
                 default -> 0;
             };
         }
@@ -104,12 +117,13 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
                 case 0 -> progress = value;
                 case 1 -> maxProgress = value;
                 case 2 -> powerConsumption = value;
+                case 6 -> rowOffest = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 7;
         }
     };
 
@@ -135,13 +149,14 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
         ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
 
-
-
         if (!disk.has(ModDataComponents.DRIVE_DATA)) {
+            System.out.println("No Drive Data");
             if (!(disk.getItem() instanceof DriveItem)) {
+                System.out.println("No Drive");
                 for (int i = 0 ; i < 15 ; i++) {
                     itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
                 }
+                items = new ArrayList<>();
                 return;
             }
             disk.set(ModDataComponents.DRIVE_DATA, new DriveRecord(8, 2, 0, new String[0], 0));
@@ -154,8 +169,17 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             itemM.getHandler().setStackInSlot(i + 2, new ItemStack(driveItems.get(i)));
         }
 
+        items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
 
-
+        for (int i = 0 ; i < 15 ; i++) {
+            if (i < items.size() - (rowOffest * 5)) {
+                ResourceLocation location = ResourceLocation.parse(items.get(i + (rowOffest * 5)));
+                Item item = BuiltInRegistries.ITEM.get(location).get().value();
+                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(item));
+            } else {
+                itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
+            }
+        }
 
         DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
         if (!DataFluxPair.isValid(df)) {

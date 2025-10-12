@@ -23,7 +23,7 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public QuantumAnalyzerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(7));
     }
 
     public QuantumAnalyzerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -74,6 +74,14 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
 
     public int getEnergyCapacity() {
         return this.data.get(4);
+    }
+
+    public int getItemCount() {
+        return this.data.get(5);
+    }
+
+    public void setRowOffset(int rowOffset) {
+        this.data.set(6, rowOffset);
     }
 
     @Override
