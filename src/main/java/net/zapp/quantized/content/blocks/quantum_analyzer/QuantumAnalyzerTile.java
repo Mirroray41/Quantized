@@ -45,10 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
-    // ---- Rendering init ----
     private static final float ROTATION = 5f;
 
-    // ---- Slots ----
     private static final int INPUT_SLOT = 0;
     private static final int DISK_SLOT = 1;
 
@@ -60,10 +58,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     public int rowOffest = 0;
     int viewers = 0;
 
-    // ---- Energy/Fluids constants ----
     public static final int FE_CAPACITY = 1_000_000;
 
-    // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumAnalyzerTile";
     private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(17) {
         @Override
@@ -87,7 +83,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
 
-    // ---- Menu sync data ----
     private int progress = 0;
     private int maxProgress = 72;
     public int powerConsumption = 16;
@@ -129,7 +124,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         super(ModBlockEntities.QUANTUM_ANALYZER_TILE.get(), pos, state);
     }
 
-    // ---- UI / Menu ----
     @Override
     public Component getDisplayName() {
         return Component.translatable("block.quantized.quantum_analyzer.name");
@@ -140,7 +134,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         return new QuantumAnalyzerMenu(id, inv, this, this.data);
     }
 
-    // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
@@ -198,7 +191,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         setWorking(level, pos, state, working);
         if (!working) {
             if (progress > 0) progress = Math.max(0, progress - 1);
-            powerConsumption = 0; // Fixes people thinking the machine is using power even when it's not.
+            powerConsumption = 0;
             return;
         }
 
@@ -216,7 +209,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         }
     }
 
-    // ---- helpers ----
     private void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
         if (wasWorking != working) {
             wasWorking = working;
@@ -234,7 +226,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     }
 
 
-    // ---- Drop items when broken ----
     public void drops() {
         if (level == null) return;
         SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
@@ -250,16 +241,13 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         super.preRemoveSideEffects(pos, state);
     }
 
-    // ---- Save / Load ----
     @Override
     protected void saveAdditional(ValueOutput out) {
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        // modules
         itemM.save(out, regs);
         energyM.save(out, regs);
 
-        // local fields
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
@@ -271,16 +259,13 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         super.loadAdditional(in);
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        // modules
         itemM.load(in, regs);
         energyM.load(in, regs);
 
-        // local fields
         progress = in.getIntOr("progress", 0);
         maxProgress = in.getIntOr("maxProgress", 72);
     }
 
-    // ---- Network sync ----
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
@@ -308,7 +293,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         return itemM;
     }
 
-    // ---- Rendering ----
     public float getRotationSpeed() {
         return ROTATION;
     }

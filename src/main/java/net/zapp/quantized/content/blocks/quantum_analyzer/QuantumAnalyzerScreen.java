@@ -62,10 +62,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             scrollStep = (float) scrollHeight / (rows - 3);
         }
 
-        //System.out.println(rows);
-
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
-
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SCROLL_TEXTURE, x + 154, y + 31 + Math.round(scrollAmount), 0, 0, 12, 15, 12, 15);
 
 
@@ -95,6 +92,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
         searchBox.setFGColor(0xFFFFFF);
         searchBox.setMaxLength(128);
         searchBox.setResponder(this::onSearchChanged);
+        searchBox.setCanLoseFocus(true);
         addRenderableWidget(searchBox);
     }
 
@@ -112,20 +110,6 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY + 7, 0xFF5e6469, false);
     }
 
-    protected int getTextLen(String text) {
-        int out = 0;
-        for (int i = 0 ; i < text.length() ; i++) {
-            switch (text.charAt(i)) {
-                case 'I', 'k', ' ', 'f': out+=5; break;
-                case 't': out+=4; break;
-                case 'l': out+=3; break;
-                case 'i': out+=2; break;
-                default: out+=6; break;
-            }
-        }
-        return out;
-    }
-
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -141,17 +125,69 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        //System.out.println(rows + ", " + (scrollAmount - (scrollStep * scrollY)));
         if (isHovering(62, 30, 104, 54, mouseX, mouseY)) {
             if (rows > 3 && scrollAmount - (scrollStep * scrollY) <= scrollHeight && scrollAmount - (scrollStep * scrollY) >= 0) {
                 rowOffest -= scrollY;
                 scrollAmount = rowOffest * scrollStep;
-                //System.out.println(rowOffest + ", " + scrollAmount);
                 syncScrollOffset();
             }
         }
-
         return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (searchBox != null && searchBox.isMouseOver(mouseX, mouseY)) {
+            setFocused(searchBox);
+            searchBox.setFocused(true);
+            return searchBox.mouseClicked(mouseX, mouseY, button);
+        }
+        boolean handled = super.mouseClicked(mouseX, mouseY, button);
+        if (searchBox != null) {
+            searchBox.setFocused(false);
+            if (getFocused() == searchBox) setFocused(null);
+        }
+        return handled;
+    }
+
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (searchBox != null && searchBox.isFocused()) {
+            if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+                searchBox.setFocused(false);
+                if (getFocused() == searchBox) setFocused(null);
+                return true;
+            }
+            if (searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
+            if (this.checkHotbarKeyPressed(keyCode, scanCode)) return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (searchBox != null && searchBox.isFocused() && searchBox.charTyped(codePoint, modifiers)) {
+            return true;
+        }
+        return super.charTyped(codePoint, modifiers);
+    }
+
+
+
+    @Override
+    public void onClose() {
+        rowOffest = 0;
+        scrollAmount = 0;
+        if (searchBox != null) {
+            searchBox.setValue("");
+            lastSent = "";
+        }
+
+        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), ""));
+        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
+
+        super.onClose();
     }
 
     private void onSearchChanged(String text) {
@@ -168,31 +204,17 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
         menu.setRowOffset(rowOffest);
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (searchBox != null && searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
-        if (searchBox != null && searchBox.isFocused() && keyCode != GLFW.GLFW_KEY_ESCAPE) return true;
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        if (searchBox != null && searchBox.charTyped(codePoint, modifiers)) return true;
-        return super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public void onClose() {
-        rowOffest = 0;
-        scrollAmount = 0;
-        if (searchBox != null) {
-            searchBox.setValue("");
-            lastSent = "";
+    protected int getTextLen(String text) {
+        int out = 0;
+        for (int i = 0 ; i < text.length() ; i++) {
+            switch (text.charAt(i)) {
+                case 'I', 'k', ' ', 'f': out+=5; break;
+                case 't': out+=4; break;
+                case 'l': out+=3; break;
+                case 'i': out+=2; break;
+                default: out+=6; break;
+            }
         }
-
-        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), ""));
-        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
-
-        super.onClose();
+        return out;
     }
 }

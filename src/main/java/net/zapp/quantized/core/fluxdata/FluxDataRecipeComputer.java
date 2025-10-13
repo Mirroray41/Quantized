@@ -68,8 +68,8 @@ public final class FluxDataRecipeComputer {
         }
 
         // 2) Resolve everything by DFS with memoization
-        var memo = new HashMap<ResourceLocation, Boolean>();     // outId -> resolved?
-        var inProgress = new HashSet<ResourceLocation>();        // cycle guard
+        var memo = new HashMap<ResourceLocation, Boolean>(); // outId -> resolved?
+        var inProgress = new HashSet<ResourceLocation>(); // cycle guard
 
         for (var outId : byOutput.keySet()) {
             resolveOutput(outId, byOutput, memo, inProgress);
@@ -166,7 +166,7 @@ public final class FluxDataRecipeComputer {
                 FluxDataRecipeComputer.cacheRecipe(ri);
             }
             if (FluxDataRecipeComputer.isOutputCached(outId)) {
-                memo.put(outId, true);   // only remember wins
+                memo.put(outId, true); // only remember wins
                 return true;
             }
         }
