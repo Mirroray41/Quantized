@@ -14,7 +14,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.CreativeModeTabSearchRegistry;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.core.networking.messages.MenuSettingC2SPacket;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -129,6 +131,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
                 rowOffest -= scrollY;
                 scrollAmount = rowOffest * scrollStep;
                 //System.out.println(rowOffest + ", " + scrollAmount);
+                ClientPacketDistributor.sendToServer(new MenuSettingC2SPacket(menu.blockEntity.getBlockPos(), rowOffest));
                 menu.setRowOffset(rowOffest);
             }
         }

@@ -21,27 +21,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModDataComponents;
-import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
-import net.zapp.quantized.core.utils.module.TankModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +58,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     public int rowOffest = 0;
 
     // ---- Energy/Fluids constants ----
-    public static final int FE_CAPACITY = 100_000;
+    public static final int FE_CAPACITY = 1_000_000;
 
     // ---- Modules (storage-only) ----
     private final String ownerName = "QuantumAnalyzerTile";
