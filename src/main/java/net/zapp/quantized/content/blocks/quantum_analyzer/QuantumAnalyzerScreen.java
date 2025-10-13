@@ -1,25 +1,22 @@
 package net.zapp.quantized.content.blocks.quantum_analyzer;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.SessionSearchTrees;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.searchtree.SearchTree;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.CreativeModeTabSearchRegistry;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.core.networking.messages.MenuSettingC2SPacket;
+import net.zapp.quantized.core.networking.messages.MenuFilterC2SPacket;
+import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyzerMenu> {
     private static final ResourceLocation GUI_TEXTURE =
@@ -42,6 +39,9 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private int rowOffest;
 
     private int rows;
+
+    private EditBox searchBox;
+    private String lastSent = "";
 
     public QuantumAnalyzerScreen(QuantumAnalyzerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -82,6 +82,22 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 23 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
+
+
+    @Override
+    protected void init() {
+        super.init();
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
+        searchBox = new EditBox(font, x + 62, y + 17, 90, 12, Component.literal("Search"));
+        searchBox.setBordered(true);
+        searchBox.setFGColor(0xFFFFFF);
+        searchBox.setMaxLength(128);
+        searchBox.setResponder(this::onSearchChanged);
+        addRenderableWidget(searchBox);
+    }
+
 
 
     @Override
@@ -131,69 +147,52 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
                 rowOffest -= scrollY;
                 scrollAmount = rowOffest * scrollStep;
                 //System.out.println(rowOffest + ", " + scrollAmount);
-                ClientPacketDistributor.sendToServer(new MenuSettingC2SPacket(menu.blockEntity.getBlockPos(), rowOffest));
-                menu.setRowOffset(rowOffest);
+                syncScrollOffset();
             }
         }
 
         return true;
     }
 
-    /*
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        if (this.ignoreTextInput) {
-            return false;
-        } else if (!selectedTab.hasSearchBar()) {
-            return false;
-        } else {
-            String s = this.searchBox.getValue();
-            if (this.searchBox.charTyped(codePoint, modifiers)) {
-                if (!Objects.equals(s, this.searchBox.getValue())) {
-                    this.refreshSearchResults();
-                }
+    private void onSearchChanged(String text) {
+        if (Objects.equals(text, lastSent)) return;
+        lastSent = text;
+        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), text));
+        rowOffest = 0;
+        scrollAmount = 0;
+        syncScrollOffset();
+    }
 
-                return true;
-            } else {
-                return false;
-            }
-        }
+    private void syncScrollOffset() {
+        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), rowOffest));
+        menu.setRowOffset(rowOffest);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        this.ignoreTextInput = false;
-        if (!selectedTab.hasSearchBar()) {
-            if (this.minecraft.options.keyChat.matches(keyCode, scanCode)) {
-                this.ignoreTextInput = true;
-                this.selectTab(CreativeModeTabs.searchTab());
-                return true;
-            } else {
-                return super.keyPressed(keyCode, scanCode, modifiers);
-            }
-        } else {
-            boolean flag = !this.isCreativeSlot(this.hoveredSlot) || this.hoveredSlot.hasItem();
-            boolean flag1 = InputConstants.getKey(keyCode, scanCode).getNumericKeyValue().isPresent();
-            if (flag && flag1 && this.checkHotbarKeyPressed(keyCode, scanCode)) {
-                this.ignoreTextInput = true;
-                return true;
-            } else {
-                String s = this.searchBox.getValue();
-                if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
-                    if (!Objects.equals(s, this.searchBox.getValue())) {
-                        this.refreshSearchResults();
-                    }
-
-                    return true;
-                } else {
-                    return this.searchBox.isFocused() && this.searchBox.isVisible() && keyCode != 256 ? true : super.keyPressed(keyCode, scanCode, modifiers);
-                }
-            }
-        }
+        if (searchBox != null && searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
+        if (searchBox != null && searchBox.isFocused() && keyCode != GLFW.GLFW_KEY_ESCAPE) return true;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (searchBox != null && searchBox.charTyped(codePoint, modifiers)) return true;
+        return super.charTyped(codePoint, modifiers);
+    }
 
-    private void refreshSearchResults() {
+    @Override
+    public void onClose() {
+        rowOffest = 0;
+        scrollAmount = 0;
+        if (searchBox != null) {
+            searchBox.setValue("");
+            lastSent = "";
+        }
 
-    }*/
+        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), ""));
+        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
+
+        super.onClose();
+    }
 }

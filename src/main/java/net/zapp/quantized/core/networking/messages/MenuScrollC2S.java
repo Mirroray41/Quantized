@@ -11,14 +11,14 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 
-public record MenuSettingC2SPacket(BlockPos pos, int newValue) implements CustomPacketPayload {
-    public static final Type<MenuSettingC2SPacket> TYPE =
+public record MenuScrollC2S(BlockPos pos, int newValue) implements CustomPacketPayload {
+    public static final Type<MenuScrollC2S> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath("quantized", "menu_setting_c2s"));
 
-    public static final StreamCodec<FriendlyByteBuf, MenuSettingC2SPacket> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, MenuScrollC2S> STREAM_CODEC =
             StreamCodec.of(
                     (buf, msg) -> { buf.writeBlockPos(msg.pos); buf.writeInt(msg.newValue); },
-                    buf -> new MenuSettingC2SPacket(buf.readBlockPos(), buf.readInt())
+                    buf -> new MenuScrollC2S(buf.readBlockPos(), buf.readInt())
             );
 
     @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }

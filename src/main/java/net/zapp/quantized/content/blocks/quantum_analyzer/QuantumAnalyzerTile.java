@@ -1,6 +1,7 @@
 package net.zapp.quantized.content.blocks.quantum_analyzer;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -41,9 +42,7 @@ import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
     // ---- Rendering init ----
@@ -54,8 +53,12 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     private static final int DISK_SLOT = 1;
 
     private static List<String> items = new ArrayList<>();
+    private List<String> filtered = new ArrayList<>();
+    private String filter = "";
+
 
     public int rowOffest = 0;
+    int viewers = 0;
 
     // ---- Energy/Fluids constants ----
     public static final int FE_CAPACITY = 1_000_000;
@@ -101,7 +104,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
                 case 2 -> powerConsumption;
                 case 3 -> energyM.getHandler().getEnergy();
                 case 4 -> energyM.getHandler().getMaxEnergyStored();
-                case 5 -> items.toArray().length;
+                case 5 -> filtered.size();
                 default -> 0;
             };
         }
@@ -139,38 +142,39 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
     // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
-        //if (level.isClientSide) return;
+        if (level.isClientSide) return;
 
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
         ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
 
         if (!disk.has(ModDataComponents.DRIVE_DATA)) {
-            System.out.println("No Drive Data");
             if (!(disk.getItem() instanceof DriveItem)) {
-                System.out.println("No Drive");
                 for (int i = 0 ; i < 15 ; i++) {
                     itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
                 }
-                items = new ArrayList<>();
+                items.clear();
+                filtered.clear();
                 return;
             }
             disk.set(ModDataComponents.DRIVE_DATA, new DriveRecord(8, 2, 0, new String[0], 0));
         }
 
         DriveRecord diskData = disk.get(ModDataComponents.DRIVE_DATA);
+        items = new ArrayList<>(Arrays.asList(diskData.items()));
+        rebuildFiltered();
 
         List<Item> driveItems = DriveItem.getStoredItems(disk);
         for (int i = 0; i < Math.min(15, driveItems.size()); i++) {
             itemM.getHandler().setStackInSlot(i + 2, new ItemStack(driveItems.get(i)));
         }
 
-        items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
 
         for (int i = 0 ; i < 15 ; i++) {
-            if (i < items.size() - (rowOffest * 5)) {
-                ResourceLocation location = ResourceLocation.parse(items.get(i + (rowOffest * 5)));
-                Item item = BuiltInRegistries.ITEM.get(location).get().value();
-                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(item));
+            int idx = i + (rowOffest * 5);
+            if (idx < filtered.size()) {
+                ResourceLocation rl = ResourceLocation.parse(filtered.get(idx));
+                Item it = BuiltInRegistries.ITEM.get(rl).get().value();
+                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(it));
             } else {
                 itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
             }
@@ -309,10 +313,69 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         return ROTATION;
     }
 
-    public List<ItemStack> getDriveItems() {
-        ItemStack drive = getItemHandler().getStackInSlot(DISK_SLOT);
-        if (drive.isEmpty()) return List.of();
-        if (!drive.has(ModDataComponents.DRIVE_DATA)) return List.of();
-        return DriveItem.getStoredItems(drive).stream().map(ItemStack::new).toList();
+    public void setFilter(String newFilter) {
+        String f = newFilter == null ? "" : newFilter.trim().toLowerCase(Locale.ROOT);
+        if (!Objects.equals(filter, f)) {
+            filter = f;
+            rebuildFiltered();
+            markDirtyAndUpdate();
+        }
+    }
+
+    public void rebuildFiltered() {
+        if (filter.isEmpty()) {
+            filtered = new ArrayList<>(items);
+        } else {
+            filtered = new ArrayList<>();
+            for (String s: items) {
+                if (s == null) continue;
+                String lc = s.toLowerCase(Locale.ROOT);
+                if (lc.contains(filter)) filtered.add(s);
+                else {
+                    try {
+                        ResourceLocation rl = ResourceLocation.parse(s);
+                        Optional<Holder.Reference<Item>> opt = BuiltInRegistries.ITEM.get(rl);
+                        if (opt.isPresent()) {
+                            Item it = opt.get().value();
+                            String name = it.getDescriptionId().toLowerCase(Locale.ROOT);
+                            if (name.contains(filter)) filtered.add(s);
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+
+            int rows = (int) Math.ceil(filtered.size() / 5.0);
+            if (rowOffest >= Math.max(0, rows - 3)) {
+                rowOffest = Math.max(0, rows - 3);
+            }
+        }
+    }
+
+    public void onMenuOpened() {
+        viewers++;
+    }
+
+    public void onMenuClosed() {
+        viewers = Math.max(0, viewers - 1);
+        if (viewers == 0) {
+            resetFilterAndScroll();
+        }
+    }
+
+    public void resetFilterAndScroll() {
+        filter = "";
+        rowOffest = 0;
+        rebuildFiltered();
+        for (int i = 0; i < 15; i++) {
+            int idx = i + (rowOffest * 5);
+            if (idx < filtered.size()) {
+                var rl = ResourceLocation.parse(filtered.get(idx));
+                var it = BuiltInRegistries.ITEM.get(rl).get().value();
+                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(it));
+            } else {
+                itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
+            }
+        }
+        markDirtyAndUpdate();
     }
 }

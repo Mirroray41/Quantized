@@ -8,10 +8,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.zapp.quantized.core.networking.messages.EnergyS2C;
-import net.zapp.quantized.core.networking.messages.FluidSyncS2C;
-import net.zapp.quantized.core.networking.messages.MenuSettingC2SPacket;
-import net.zapp.quantized.core.networking.messages.MenuSettingS2CPacket;
+import net.zapp.quantized.core.networking.messages.*;
 
 public final class ModMessages {
     private ModMessages() {}
@@ -22,7 +19,8 @@ public final class ModMessages {
         registrar.playToClient(EnergyS2C.ID, EnergyS2C.STREAM_CODEC);
         registrar.playToClient(FluidSyncS2C.ID, FluidSyncS2C.STREAM_CODEC);
 
-        registrar.playToServer(MenuSettingC2SPacket.TYPE, MenuSettingC2SPacket.STREAM_CODEC, MenuSettingC2SPacket::handle);
+        registrar.playToServer(MenuScrollC2S.TYPE, MenuScrollC2S.STREAM_CODEC, MenuScrollC2S::handle);
+        registrar.playToServer(MenuFilterC2SPacket.TYPE, MenuFilterC2SPacket.STREAM_CODEC, MenuFilterC2SPacket::handle);
     }
 
     public static void sendToServer(CustomPacketPayload message) {

@@ -32,6 +32,8 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         this.level = inv.player.level();
         this.data = data;
 
+        blockEntity.onMenuOpened();
+
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
@@ -42,6 +44,14 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         addItemList();
 
         addDataSlots(data);
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (!player.level().isClientSide) {
+            blockEntity.onMenuClosed();
+        }
     }
 
     public boolean isCrafting() {
