@@ -16,6 +16,7 @@ import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlock;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizer;
 
 import java.util.function.Function;
 
@@ -39,6 +40,11 @@ public class ModBlocks {
             (properties) -> new QuantumAnalyzer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(QuantumAnalyzer.ON) ? 15 : 0)));
+
+    public static final DeferredBlock<Block> QUANTUM_STABILIZER = registerBlock("quantum_stabilizer",
+            (properties) -> new QuantumStabilizer(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(QuantumStabilizer.ON) ? 15 : 0)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
             (properties) -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));

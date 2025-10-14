@@ -72,5 +72,8 @@
   "tooltip.quantized.machine_block.energy_stored": "Battery: %1$s/%2$s FE",
   "tooltip.quantized.machine_block.energy_usage": "Using: %1$s FE/t",
   "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB",
-  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working"
+  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
+  "block.quantized.tile.quantum_destabilizer": "Quantum Destabilizer",
+  "block.quantized.tile.quantum_analyzer": "Quantum Analyzer",
+  "block.quantized.tile.quantum_stabilizer": "Quantum Stabilizer"
 }

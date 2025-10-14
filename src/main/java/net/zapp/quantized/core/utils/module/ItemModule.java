@@ -4,13 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.apache.commons.lang3.function.TriConsumer;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.function.IntConsumer;
 
@@ -54,5 +53,9 @@ public class ItemModule implements Module {
     @Override
     public void load(ValueInput in, HolderLookup.Provider registries) {
         items.deserialize(in);
+    }
+
+    public boolean canOutput(int outputSlot, int outputAmount, Item outputItem) {
+        return items.insertItem(outputSlot, new ItemStack(outputItem, outputAmount), true).isEmpty();
     }
 }

@@ -19,14 +19,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyzerMenu> {
-    private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_analyzer/quantum_analyzer_screen.png");
-    private static final ResourceLocation PROGRESS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_analyzer/progress.png");
-    private static final ResourceLocation ENERGY_BAR_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
-    private static final ResourceLocation SCROLL_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/scroll.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/quantum_analyzer_screen.png");
+    private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/progress.png");
+    private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
+    private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
 
     protected int imageHeight = 180;
 

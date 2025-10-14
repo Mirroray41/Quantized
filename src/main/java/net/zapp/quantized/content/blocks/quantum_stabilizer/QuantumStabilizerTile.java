@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_destabilizer;
+package net.zapp.quantized.content.blocks.quantum_stabilizer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -21,172 +22,145 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.zapp.quantized.content.blocks.ProcessingCurves;
-import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
-import net.zapp.quantized.core.init.ModSounds;
-import net.zapp.quantized.core.utils.DataFluxPair;
+import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
+import net.zapp.quantized.core.utils.random.RandomUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
-    // ---- Rendering init ----
-    private static final float ROTATION = 5f;
+public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
+    public QuantumStabilizerTile(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
+    }
 
-    // ---- Slots ----
-    private static final int INPUT_SLOT = 0;
+    private static final int BIT_OUT_SLOT = 0;
+    private static final int BYTE_OUT_SLOT = 1;
 
-    // ---- Energy/Fluids constants ----
     public static final int FE_CAPACITY = 1_000_000;
-    public static final int TANK_CAPACITY = 8_000_000;
+    public static final int TANK_CAPACITY = 16_000;
 
-    // ---- Modules (storage-only) ----
-    private final String ownerName = "QuantumDestabilizerTile";
-    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(1) {
+    private final String ownerName = "QuantumStabilizerTile";
+    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
             markDirtyAndUpdate();
         }
-
-        @Override
-        @NotNull
-        public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if (DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack))) {
-                return super.insertItem(slot, stack, simulate);
-            }
-            return stack;
-        }
     });
+
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
-    private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), s -> markDirtyAndUpdate());
+    private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), i -> markDirtyAndUpdate());
 
-    // ---- Menu sync data ----
+
     private int progress = 0;
-    private int maxProgress = 72;
+    private int maxProgress = 20;
     private int powerConsumption = 16;
-
+    private int fluxConsumption = 16;
     private boolean wasWorking = false;
-    private FluidStack cachedOut = FluidStack.EMPTY;
 
     public final ContainerData data = new ContainerData() {
         @Override
-        public int get(int i) {
-            return switch (i) {
+        public int get(int index) {
+            return switch (index) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
                 case 2 -> powerConsumption;
-                case 3 -> energyM.getHandler().getEnergy();
-                case 4 -> energyM.getHandler().getMaxEnergyStored();
-                case 5 -> tankM.getHandler().getCapacity();
-                default -> 0;
+                case 3 -> fluxConsumption;
+                case 4 -> energyM.getHandler().getEnergy();
+                case 5 -> energyM.getHandler().getMaxEnergyStored();
+                case 6 -> tankM.getHandler().getCapacity();
+                default ->  0;
             };
         }
 
         @Override
-        public void set(int i, int value) {
-            switch (i) {
+        public void set(int index, int value) {
+            switch (index) {
                 case 0 -> progress = value;
                 case 1 -> maxProgress = value;
                 case 2 -> powerConsumption = value;
+                case 3 -> fluxConsumption = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 6;
+            return 7;
         }
     };
 
-    public QuantumDestabilizerTile(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), pos, state);
-    }
-
-    // ---- UI / Menu ----
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.quantized.tile.quantum_destabilizer");
+        return Component.translatable("block.quantized.tile.quantum_stabilizer");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new QuantumDestabilizerMenu(id, inv, this, this.data);
+        return new QuantumStabilizerMenu(id, inv, this, this.data);
     }
 
-    // --- Tick ---
+
+
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
-        DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
-        if (!DataFluxPair.isValid(df)) {
-            resetCraft();
-            setWorking(level, pos, state, false);
-            return;
-        }
-
-        maxProgress = ProcessingCurves.timeTicks(df.data());
-        powerConsumption = ProcessingCurves.powerPerTick(df.flux());
-        if (cachedOut.isEmpty() || cachedOut.getAmount() != df.flux()) {
-            cachedOut = new FluidStack(ModFluids.QUANTUM_FLUX.get(), df.flux());
-        }
-
-        boolean canPay = energyM.canPay(powerConsumption);
-        boolean canOut = tankM.getHandler().fill(cachedOut, IFluidHandler.FluidAction.SIMULATE) == cachedOut.getAmount();
-        boolean hasInput = !in.isEmpty();
+        boolean canPay = energyM.canPay(powerConsumption) && tankM.canPay(fluxConsumption);
+        boolean canOut = itemM.canOutput(BIT_OUT_SLOT, 1, ModItems.Q_BIT.get())
+                && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get());
+        boolean hasInput = tankM.getHandler().getFluidAmount() > fluxConsumption;
         boolean working = canPay && canOut && hasInput;
 
+        System.out.println(canPay + ", " + canOut + ", " + hasInput);
+
         setWorking(level, pos, state, working);
+        // We dont wanna be mean.
         if (!working) {
-            if (progress > 0) progress = Math.max(0, progress - 1);
             return;
         }
 
+
         progress++;
-        energyM.getHandler().extractEnergy(powerConsumption, false);
+        energyM.extractPower(powerConsumption);
+        tankM.drainFluid(fluxConsumption);
 
-            level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(),
-                    SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
+        level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1f, 1f + (float) progress / maxProgress);
 
-
+        // This machine is not perfect, sometimes you get nothing, other times you get more than you asked for.
         if (progress >= maxProgress) {
-            if (tankM.getHandler().fill(cachedOut, IFluidHandler.FluidAction.SIMULATE) == cachedOut.getAmount()) {
-                itemM.getHandler().extractItem(INPUT_SLOT, 1, false);
-                tankM.getHandler().fill(cachedOut, IFluidHandler.FluidAction.EXECUTE);
-            }
             progress = 0;
+            if (RandomUtils.percentChance(75)) {
+                if (RandomUtils.percentChance(5) && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get())) {
+                    itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), 1), false);
+                    level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
+                    return;
+                }
+
+                itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), 1), false);
+                level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 1f, 1f);
+                return;
+
+            }
+            level.playSound(null, pos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1f, 1f);
         }
     }
 
-    // ---- helpers ----
-    private void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
+    public void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
         if (wasWorking != working) {
             wasWorking = working;
-            BlockState ns = state.setValue(QuantumDestabilizer.ON, working);
+            BlockState ns = state.setValue(QuantumStabilizer.ON, working);
             setChanged(level, pos, ns);
             level.setBlock(pos, ns, 3);
         }
     }
 
-    private void resetCraft() {
-        progress = 0;
-        powerConsumption = 0;
-        maxProgress = 72;
-        cachedOut = FluidStack.EMPTY;
-    }
-
-
-    // ---- Drop items when broken ----
-    public void drops() {
+    private void drops() {
         if (level == null) return;
         SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
         for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
@@ -201,17 +175,15 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         super.preRemoveSideEffects(pos, state);
     }
 
-    // ---- Save / Load ----
+
     @Override
     protected void saveAdditional(ValueOutput out) {
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        // modules
         itemM.save(out, regs);
         energyM.save(out, regs);
         tankM.save(out, regs);
 
-        // local fields
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
@@ -223,17 +195,14 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         super.loadAdditional(in);
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        // modules
         itemM.load(in, regs);
         energyM.load(in, regs);
         tankM.load(in, regs);
 
-        // local fields
         progress = in.getIntOr("progress", 0);
-        maxProgress = in.getIntOr("maxProgress", 72);
+        maxProgress = in.getIntOr("maxProgress", 20);
     }
 
-    // ---- Network sync ----
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
@@ -250,7 +219,6 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
     }
-
     @Override
     public @NotNull EnergyModule getEnergyModule() {
         return energyM;
@@ -266,8 +234,4 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         return tankM;
     }
 
-    // ---- Rendering ----
-    public float getRotationSpeed() {
-        return ROTATION;
-    }
 }

@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_destabilizer;
+package net.zapp.quantized.content.blocks.quantum_stabilizer;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -24,23 +24,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlock;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumDestabilizer extends BaseEntityBlock {
-    public static final MapCodec<MachineBlock> CODEC = simpleCodec(MachineBlock::new);
+public class QuantumStabilizer extends BaseEntityBlock {
+    public static final MapCodec<QuantumStabilizer> CODEC = simpleCodec(QuantumStabilizer::new);
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
-    private static final VoxelShape SHAPE =
-            Shapes.or(Block.box(0, 0, 0, 16, 8, 16),
-                    Block.box(0, 8, 4, 2, 11, 12),
-                    Block.box(14, 8, 4, 16, 11, 12),
-                    Block.box(4, 8, 0, 12, 11, 2),
-                    Block.box(4, 8, 14, 12, 11, 16));
-
-    public QuantumDestabilizer(BlockBehaviour.Properties properties) {
+    public QuantumStabilizer(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(
                 this.stateDefinition.any()
@@ -60,7 +52,7 @@ public class QuantumDestabilizer extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new QuantumDestabilizerTile(blockPos, blockState);
+        return new QuantumStabilizerTile(blockPos, blockState);
     }
 
     @Override
@@ -70,7 +62,7 @@ public class QuantumDestabilizer extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return Shapes.block();
     }
 
 
@@ -79,8 +71,8 @@ public class QuantumDestabilizer extends BaseEntityBlock {
                                           Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof QuantumDestabilizerTile quantumDestabilizerTile) {
-                pPlayer.openMenu(new SimpleMenuProvider(quantumDestabilizerTile, Component.translatable("block.quantized.quantum_destabilizer")), pPos);
+            if(entity instanceof QuantumStabilizerTile quantumStabilizer) {
+                pPlayer.openMenu(new SimpleMenuProvider(quantumStabilizer, Component.translatable("block.quantized.quantum_analyzer")), pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -96,7 +88,7 @@ public class QuantumDestabilizer extends BaseEntityBlock {
             return null;
         }
 
-        return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(),
+        return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_STABILIZER_TILE.get(),
                 (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
     }
 }

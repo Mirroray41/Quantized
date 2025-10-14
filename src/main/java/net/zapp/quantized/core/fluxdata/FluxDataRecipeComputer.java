@@ -79,7 +79,7 @@ public final class FluxDataRecipeComputer {
 
     private static boolean resolveOutput(ResourceLocation outId, Map<ResourceLocation, List<RecipeInfo>> byOutput, Map<ResourceLocation, Boolean> memo, Set<ResourceLocation> inProgress) {
         // Cached already?
-        if (FluxDataRecipeComputer.isOutputCached(outId)) {
+        if (isOutputCached(outId)) {
             memo.put(outId, true);
             return true;
         }
@@ -143,17 +143,17 @@ public final class FluxDataRecipeComputer {
 
         for (RecipeInfo ri : ordered) {
             // Skip if someone else already solved it
-            if (FluxDataRecipeComputer.isOutputCached(outId)) return true;
+            if (isOutputCached(outId)) return true;
 
             // 1) Make sure every input item is resolved (if it has recipes)
             boolean inputsOk = true;
             for (ItemStack input : ri.slotOptions()) {
                 var inId = BuiltInRegistries.ITEM.getKey(input.getItem());
-                if (!FluxDataRecipeComputer.isOutputCached(inId)) {
+                if (!isOutputCached(inId)) {
                     // Recursively resolve that input; if no recipes exist, isOutputCached(inId)
                     // should already reflect "primitive" values from your base config.
                     boolean ok = resolveOutput(inId, byOutput, memo, inProgress);
-                    if (!ok && !FluxDataRecipeComputer.isOutputCached(inId)) {
+                    if (!ok && !isOutputCached(inId)) {
                         inputsOk = false;
                         break;
                     }
@@ -162,10 +162,10 @@ public final class FluxDataRecipeComputer {
             if (!inputsOk) continue;
 
             // 2) All inputs are available now — attempt to cache this output (no overwrite)
-            if (!FluxDataRecipeComputer.isOutputCached(ri) && FluxDataRecipeComputer.allSlotsCached(ri)) {
-                FluxDataRecipeComputer.cacheRecipe(ri);
+            if (!isOutputCached(ri) && allSlotsCached(ri)) {
+                cacheRecipe(ri);
             }
-            if (FluxDataRecipeComputer.isOutputCached(outId)) {
+            if (isOutputCached(outId)) {
                 memo.put(outId, true); // only remember wins
                 return true;
             }

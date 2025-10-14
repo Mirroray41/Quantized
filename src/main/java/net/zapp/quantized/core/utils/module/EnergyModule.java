@@ -33,4 +33,12 @@ public class EnergyModule implements Module {
         energy.setCapacity(in.getIntOr(moduleOwner + ".max_energy", energy.getMaxEnergyStored()));
         energy.setEnergy(in.getIntOr(moduleOwner + ".energy", 0));
     }
+
+    public boolean canPay(int powerConsumption) {
+        return energy.extractEnergy(powerConsumption, true) == powerConsumption;
+    }
+
+    public void extractPower(int toDrain) {
+        energy.extractEnergy(toDrain, false);
+    }
 }
