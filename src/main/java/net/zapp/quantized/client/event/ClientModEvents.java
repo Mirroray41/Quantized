@@ -19,6 +19,9 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockScreen;
+import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
+import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
+import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.renderer.QuantumDestabilizerRenderer;
 import net.zapp.quantized.core.init.ModBlockEntities;
@@ -47,12 +50,15 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), QuantumDestabilizerRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_ANALYZER_TILE.get(), QuantumAnalyzerRenderer::new);
+
     }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);
         event.register(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), QuantumDestabilizerScreen::new);
+        event.register(ModMenuTypes.QUANTUM_ANALYZER_MENU.get(), QuantumAnalyzerScreen::new);
     }
 
     @SubscribeEvent

@@ -69,7 +69,7 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     private void sortPacks(List<Pack> packs) {
-        packs.sort(Comparator.comparingInt(Pack::prio)
+        packs.sort(Comparator.comparingInt(Pack::priority)
                 .thenComparing(p -> p.id().toString()));
     }
 

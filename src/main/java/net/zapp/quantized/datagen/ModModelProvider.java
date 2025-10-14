@@ -67,6 +67,7 @@ public class ModModelProvider extends ModelProvider {
         blockModels.createTrivialCube(ModBlocks.STEEL_BLOCK.get());
         blockModels.createTrivialCube(ModBlocks.MACHINE_BLOCK.get());
         blockModels.createTrivialCube(ModBlocks.QUANTUM_DESTABILIZER.get());
+        blockModels.createTrivialCube(ModBlocks.QUANTUM_ANALYZER.get());
         blockModels.createTrivialCube(ModBlocks.QUANTUM_FLUX_BLOCK.get());
     }
 

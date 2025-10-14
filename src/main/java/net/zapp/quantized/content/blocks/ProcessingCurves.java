@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_destabilizer;
+package net.zapp.quantized.content.blocks;
 
 import net.zapp.quantized.core.utils.DataFluxPair;
 

@@ -119,40 +119,40 @@ public class FluxDataConfig {
 
     private static void addPredefinedItems(BiConsumer<String, DataFluxPair> itemDef) {
         itemDef.accept("minecraft:netherite_upgrade_smithing_template", new DataFluxPair(160, 57345));
-        itemDef.accept("minecraft:basalt", new DataFluxPair(16, 1));
-        itemDef.accept("minecraft:blackstone", new DataFluxPair(16, 1));
+        itemDef.accept("minecraft:basalt", new DataFluxPair(4, 1));
+        itemDef.accept("minecraft:blackstone", new DataFluxPair(4, 1));
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {
-        tagDef.accept("#minecraft:logs", new DataFluxPair(64, 32));
-        tagDef.accept("#minecraft:dirt", new DataFluxPair(16, 1));
+        tagDef.accept("#minecraft:logs", new DataFluxPair(16, 32));
+        tagDef.accept("#minecraft:dirt", new DataFluxPair(4, 1));
 
-        tagDef.accept("#c:ores/copper", new DataFluxPair(16, 32));
-        tagDef.accept("#c:ores/iron", new DataFluxPair(16, 256));
-        tagDef.accept("#c:ores/gold", new DataFluxPair(32, 1024));
-        tagDef.accept("#c:ores/diamond", new DataFluxPair(16, 8192));
-        tagDef.accept("#c:ores/netherite_scrap", new DataFluxPair(128, 16384));
-        tagDef.accept("#c:ores/redstone", new DataFluxPair(16, 320));
+        tagDef.accept("#c:ores/copper", new DataFluxPair(4, 32));
+        tagDef.accept("#c:ores/iron", new DataFluxPair(8, 256));
+        tagDef.accept("#c:ores/gold", new DataFluxPair(16, 1024));
+        tagDef.accept("#c:ores/diamond", new DataFluxPair(32, 8192));
+        tagDef.accept("#c:ores/netherite_scrap", new DataFluxPair(64, 16384));
+        tagDef.accept("#c:ores/redstone", new DataFluxPair(4, 320));
 
-        tagDef.accept("#c:dusts/redstone", new DataFluxPair(16, 64));
-
-
-        tagDef.accept("#c:ingots/copper", new DataFluxPair(16, 128));
-
-        tagDef.accept("#c:raw_materials/copper", new DataFluxPair(16, 32));
-        tagDef.accept("#c:raw_materials/iron", new DataFluxPair(16, 256));
-        tagDef.accept("#c:raw_materials/gold", new DataFluxPair(32, 1024));
+        tagDef.accept("#c:dusts/redstone", new DataFluxPair(4, 64));
 
 
-        tagDef.accept("#c:gems/diamond", new DataFluxPair(64, 8192));
-        tagDef.accept("#c:stones", new DataFluxPair(16, 1));
-        tagDef.accept("#c:cobblestones", new DataFluxPair(16, 1));
-        tagDef.accept("#c:netherracks", new DataFluxPair(16, 1));
-        tagDef.accept("#c:buckets/water", new DataFluxPair(32, 1536));
-        tagDef.accept("#c:buckets/lava", new DataFluxPair(32, 1536));
-        tagDef.accept("#c:buckets/milk", new DataFluxPair(32, 1536));
-        tagDef.accept("#c:buckets/powder_snow", new DataFluxPair(32, 1536));
-        tagDef.accept("#c:buckets/entity_water", new DataFluxPair(32, 1536));
+        tagDef.accept("#c:ingots/copper", new DataFluxPair(4, 128));
+
+        tagDef.accept("#c:raw_materials/copper", new DataFluxPair(4, 32));
+        tagDef.accept("#c:raw_materials/iron", new DataFluxPair(8, 256));
+        tagDef.accept("#c:raw_materials/gold", new DataFluxPair(16, 1024));
+
+
+        tagDef.accept("#c:gems/diamond", new DataFluxPair(32, 8192));
+        tagDef.accept("#c:stones", new DataFluxPair(1, 1));
+        tagDef.accept("#c:cobblestones", new DataFluxPair(1, 1));
+        tagDef.accept("#c:netherracks", new DataFluxPair(1, 1));
+        tagDef.accept("#c:buckets/water", new DataFluxPair(16, 1536));
+        tagDef.accept("#c:buckets/lava", new DataFluxPair(16, 1536));
+        tagDef.accept("#c:buckets/milk", new DataFluxPair(16, 1536));
+        tagDef.accept("#c:buckets/powder_snow", new DataFluxPair(16, 1536));
+        tagDef.accept("#c:buckets/entity_water", new DataFluxPair(16, 1536));
     }
 
     private static DataFluxPair asNumberPair(Object val) {

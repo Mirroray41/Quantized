@@ -25,7 +25,7 @@ public class FluxDataFixerUpper {
      * Gets the DataFluxPair associated with this Item
      * @param item The item to get the data flux pair for.
      * @return The DataFluxPair, this pair can be 0 meaning there was no definition for this item,
-     * either because it wasnt specified
+     * either because it wasn't specified
      * or because the item's corresponding tag was used to give it a value.
      */
     public static DataFluxPair getDataFlux(Item item) {
