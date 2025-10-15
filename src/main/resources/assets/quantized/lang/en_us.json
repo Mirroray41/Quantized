@@ -3,7 +3,7 @@
   "creativetab.quantized.data": "Quantized - Data",
   "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
   "block.quantized.quantum_analyzer": "Quantum Analyzer",
-
+  "block.quantized.quantum_fabricator": "Quantum Fabricator",
 
   "item.quantized.q_bit": "Q-Bit",
   "item.quantized.q_byte": "Q-Byte",

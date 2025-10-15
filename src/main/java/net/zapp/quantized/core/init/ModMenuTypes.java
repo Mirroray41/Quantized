@@ -12,6 +12,7 @@ import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorMenu;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
@@ -25,6 +26,10 @@ public class ModMenuTypes {
 
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumAnalyzerMenu>> QUANTUM_ANALYZER_MENU =
             registerMenuType("quantum_analyzer_menu", QuantumAnalyzerMenu::new);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<QuantumFabricatorMenu>> QUANTUM_FABRICATOR_MENU =
+            registerMenuType("quantum_fabricator_menu", QuantumFabricatorMenu::new);
+
 
     private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name,
                                                                                                               IContainerFactory<T> factory) {

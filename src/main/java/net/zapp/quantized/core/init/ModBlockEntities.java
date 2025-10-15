@@ -9,6 +9,7 @@ import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockTile;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorTile;
 
 import java.util.function.Supplier;
 
@@ -27,6 +28,10 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<QuantumAnalyzerTile>> QUANTUM_ANALYZER_TILE =
             BLOCK_ENTITY_TYPES.register("quantum_analyzer_tile", () -> new BlockEntityType<>(
                     QuantumAnalyzerTile::new, ModBlocks.QUANTUM_ANALYZER.get()));
+
+    public static final Supplier<BlockEntityType<QuantumFabricatorTile>> QUANTUM_FABRICATOR_TILE =
+            BLOCK_ENTITY_TYPES.register("quantum_fabricator_tile", () -> new BlockEntityType<>(
+                    QuantumFabricatorTile::new, ModBlocks.QUANTUM_FABRICATOR.get()));
 
 
     public static void register(IEventBus eventBus) {

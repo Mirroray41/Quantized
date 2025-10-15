@@ -78,6 +78,24 @@ public class ModEvents {
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.QUANTUM_ANALYZER_TILE.get(),
                 (be, side) -> be.getEnergyHandler());
 
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
+                (be, side) -> {
+                    ItemStackHandler handler = be.getItemHandler();
+                    if (side == Direction.UP) {
+                        return new RangedWrapper(handler, 0, 1);
+                    } else if (side == Direction.DOWN) {
+                        return new RangedWrapper(handler, 1, 2);
+                    } else {
+                        return new RangedWrapper(handler, 0, 2);
+                    }
+                });
+
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
+                (be, side) -> be.getEnergyHandler());
+
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
+                (be, side) -> be.getFluidHandler());
+
     }
 
     @SubscribeEvent

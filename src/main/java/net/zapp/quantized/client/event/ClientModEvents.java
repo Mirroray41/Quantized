@@ -24,6 +24,9 @@ import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.renderer.QuantumDestabilizerRenderer;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricator;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorScreen;
+import net.zapp.quantized.content.blocks.quantum_fabricator.renderer.QuantumFabricatorRenderer;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluidTypes;
 import net.zapp.quantized.core.init.ModMenuTypes;
@@ -51,6 +54,8 @@ public class ClientModEvents {
     public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), QuantumDestabilizerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_ANALYZER_TILE.get(), QuantumAnalyzerRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(), QuantumFabricatorRenderer::new);
+
 
     }
 
@@ -59,6 +64,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);
         event.register(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), QuantumDestabilizerScreen::new);
         event.register(ModMenuTypes.QUANTUM_ANALYZER_MENU.get(), QuantumAnalyzerScreen::new);
+        event.register(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), QuantumFabricatorScreen::new);
+
     }
 
     @SubscribeEvent
