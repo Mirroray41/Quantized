@@ -102,7 +102,7 @@ public class MachineBlockTile extends BlockEntity implements MenuProvider, HasEn
     // ---- UI / Menu ----
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.quantized.tile.name");
+        return Component.translatable("block.quantized.tile.machine_block");
     }
 
     @Override

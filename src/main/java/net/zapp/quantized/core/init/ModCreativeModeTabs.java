@@ -59,6 +59,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.COPPER_WIRE);
                         output.accept(ModItems.INDUCTOR);
                         output.accept(ModBlocks.QUANTUM_DESTABILIZER);
+                        output.accept(ModBlocks.QUANTUM_ANALYZER);
+                        output.accept(ModBlocks.QUANTUM_STABILIZER);
+                        output.accept(ModBlocks.FLUX_GENERATOR);
                     }).build());
 
 

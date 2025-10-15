@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_destabilizer;
+package net.zapp.quantized.content.blocks.quantum_stabilizer;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,25 +12,37 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
-public class QuantumDestabilizerMenu extends AbstractContainerMenu {
-    public final QuantumDestabilizerTile blockEntity;
+public class QuantumStabilizerMenu extends AbstractContainerMenu {
+    private final QuantumStabilizerTile blockEntity;
     private final Level level;
     private final ContainerData data;
 
-    public QuantumDestabilizerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+    public QuantumStabilizerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(7));
     }
 
-    public QuantumDestabilizerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), pContainerId);
-        this.blockEntity = (QuantumDestabilizerTile) entity;
+    public QuantumStabilizerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+        super(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), pContainerId);
+        this.blockEntity = (QuantumStabilizerTile) entity;
         this.level = inv.player.level();
         this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34));
+        // TODO: CHANGE THESE VALUES TO MATCH THE GUI
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 96, 34){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
         addDataSlots(data);
     }
 
@@ -47,8 +59,8 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     }
 
     public int getScaledEnergyBar() {
-        int energyStored = this.data.get(3);
-        int maxEnergy = this.data.get(4);
+        int energyStored = this.data.get(4);
+        int maxEnergy = this.data.get(5);
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
@@ -57,17 +69,20 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     public int getEnergyConsumption() {
         return this.data.get(2);
     }
-
-    public int getEnergyStored() {
+    public int getFluxConsumption() {
         return this.data.get(3);
     }
 
-    public int getEnergyCapacity() {
+    public int getEnergyStored() {
         return this.data.get(4);
     }
 
-    public int getFluidCapacity() {
+    public int getEnergyCapacity() {
         return this.data.get(5);
+    }
+
+    public int getFluidCapacity() {
+        return this.data.get(6);
     }
 
     public FluidStack getFluid() {
@@ -90,7 +105,7 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 1;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
@@ -127,7 +142,7 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ModBlocks.QUANTUM_DESTABILIZER.get());
+                pPlayer, ModBlocks.QUANTUM_STABILIZER.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:nether_star",
+    "C": "quantized:copper_wire",
+    "G": "quantized:steel_gear",
+    "I": "quantized:inductor",
+    "N": "quantized:steel_nugget",
+    "P": "quantized:steel_plate",
+    "R": "quantized:steel_rod"
+  },
+  "pattern": [
+    "INI",
+    "PBP",
+    "GRC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:quantum_destabilizer"
+  }
+}

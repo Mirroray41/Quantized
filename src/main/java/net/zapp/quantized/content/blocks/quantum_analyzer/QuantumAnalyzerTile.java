@@ -126,7 +126,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.quantized.quantum_analyzer.name");
+        return Component.translatable("block.quantized.tile.quantum_analyzer");
     }
 
     @Override

@@ -13,10 +13,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.flux_generator.FluxGenerator;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlock;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricator;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizer;
 
 import java.util.function.Function;
 
@@ -30,7 +32,6 @@ public class ModBlocks {
     public static final DeferredBlock<Block> MACHINE_BLOCK = registerBlock("machine_block",
             (properties) -> new MachineBlock(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
-
     public static final DeferredBlock<Block> QUANTUM_DESTABILIZER = registerBlock("quantum_destabilizer",
             (properties) -> new QuantumDestabilizer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
@@ -40,11 +41,19 @@ public class ModBlocks {
             (properties) -> new QuantumAnalyzer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(QuantumAnalyzer.ON) ? 15 : 0)));
-
     public static final DeferredBlock<Block> QUANTUM_FABRICATOR = registerBlock("quantum_fabricator",
             (properties) -> new QuantumFabricator(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(QuantumFabricator.ON) ? 15 : 0)));
+    public static final DeferredBlock<Block> QUANTUM_STABILIZER = registerBlock("quantum_stabilizer",
+            (properties) -> new QuantumStabilizer(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(QuantumStabilizer.ON) ? 15 : 0)));
+
+    public static final DeferredBlock<Block> FLUX_GENERATOR = registerBlock("flux_generator",
+            (properties) -> new FluxGenerator(properties
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(FluxGenerator.ON) ? 15 : 0)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
             (properties) -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));

@@ -6,10 +6,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorTile;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockTile;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorTile;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerTile;
 
 import java.util.function.Supplier;
 
@@ -28,10 +30,16 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<QuantumAnalyzerTile>> QUANTUM_ANALYZER_TILE =
             BLOCK_ENTITY_TYPES.register("quantum_analyzer_tile", () -> new BlockEntityType<>(
                     QuantumAnalyzerTile::new, ModBlocks.QUANTUM_ANALYZER.get()));
-
     public static final Supplier<BlockEntityType<QuantumFabricatorTile>> QUANTUM_FABRICATOR_TILE =
             BLOCK_ENTITY_TYPES.register("quantum_fabricator_tile", () -> new BlockEntityType<>(
                     QuantumFabricatorTile::new, ModBlocks.QUANTUM_FABRICATOR.get()));
+    public static final Supplier<BlockEntityType<QuantumStabilizerTile>> QUANTUM_STABILIZER_TILE =
+            BLOCK_ENTITY_TYPES.register("quantum_stabilizer_tile", () -> new BlockEntityType<>(
+                    QuantumStabilizerTile::new, ModBlocks.QUANTUM_STABILIZER.get()));
+
+    public static final Supplier<BlockEntityType<FluxGeneratorTile>> FLUX_GENERATOR_TILE =
+            BLOCK_ENTITY_TYPES.register("flux_generator_tile", () -> new BlockEntityType<>(
+                    FluxGeneratorTile::new, ModBlocks.FLUX_GENERATOR.get()));
 
 
     public static void register(IEventBus eventBus) {

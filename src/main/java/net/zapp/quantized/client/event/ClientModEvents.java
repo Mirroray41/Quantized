@@ -18,15 +18,15 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
 import net.zapp.quantized.content.blocks.machine_block.MachineBlockScreen;
-import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.renderer.QuantumDestabilizerRenderer;
-import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricator;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorScreen;
 import net.zapp.quantized.content.blocks.quantum_fabricator.renderer.QuantumFabricatorRenderer;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerScreen;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluidTypes;
 import net.zapp.quantized.core.init.ModMenuTypes;
@@ -65,7 +65,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), QuantumDestabilizerScreen::new);
         event.register(ModMenuTypes.QUANTUM_ANALYZER_MENU.get(), QuantumAnalyzerScreen::new);
         event.register(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), QuantumFabricatorScreen::new);
-
+        event.register(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), QuantumStabilizerScreen::new);
+        event.register(ModMenuTypes.FLUX_GENERATOR.get(), FluxGeneratorScreen::new);
     }
 
     @SubscribeEvent
