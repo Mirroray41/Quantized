@@ -69,11 +69,19 @@
   "tooltip.quantized.disk.item_more": "    §7And %1$s §7more...",
 
 
-  "tooltip.quantized.machine_block.energy_stored": "Battery: %1$s/%2$s FE",
-  "tooltip.quantized.machine_block.energy_usage": "Using: %1$s FE/t",
-  "tooltip.quantized.machine_block.fluid_stored": "%1$s/%2$s mB",
+  "tooltip.quantized.battery.energy_stored": "Battery: %1$s/%2$s FE",
+  "tooltip.quantized.battery.energy_usage": "Using: %1$s FE/t",
+  "tooltip.quantized.battery.energy_production": "Generating: %1$s FE/t",
+
+  "tooltip.quantized.tank.fluid_stored": "%1$s/%2$s mB",
+  "tooltip.quantized.tank.fluid_consumption": "Using: %1$s mB/t",
+
   "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
   "block.quantized.tile.quantum_destabilizer": "Quantum Destabilizer",
   "block.quantized.tile.quantum_analyzer": "Quantum Analyzer",
-  "block.quantized.tile.quantum_stabilizer": "Quantum Stabilizer"
+  "block.quantized.tile.quantum_stabilizer": "Quantum Stabilizer",
+  "block.quantized.flux_generator": "Flux Generator",
+  "block.quantized.quantum_stabilizer": "Quantum Stabilizer",
+  "block.quantized.tile.flux_generator": "Flux Generator",
+  "block.quantized.tile.machine_block": "Machine Block"
 }

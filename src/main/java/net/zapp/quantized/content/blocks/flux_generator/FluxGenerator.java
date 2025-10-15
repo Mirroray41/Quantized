@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_stabilizer;
+package net.zapp.quantized.content.blocks.flux_generator;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -27,12 +27,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumStabilizer extends BaseEntityBlock {
-    public static final MapCodec<QuantumStabilizer> CODEC = simpleCodec(QuantumStabilizer::new);
+public class FluxGenerator extends BaseEntityBlock {
+    public static final MapCodec<FluxGenerator> CODEC = simpleCodec(FluxGenerator::new);
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
-    public QuantumStabilizer(BlockBehaviour.Properties properties) {
+    public FluxGenerator(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(
                 this.stateDefinition.any()
@@ -52,7 +52,7 @@ public class QuantumStabilizer extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new QuantumStabilizerTile(blockPos, blockState);
+        return new FluxGeneratorTile(blockPos, blockState);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class QuantumStabilizer extends BaseEntityBlock {
                                           Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof QuantumStabilizerTile quantumStabilizer) {
-                pPlayer.openMenu(new SimpleMenuProvider(quantumStabilizer, Component.translatable("block.quantized.quantum_stabilizer")), pPos);
+            if(entity instanceof FluxGeneratorTile fluxGenerator) {
+                pPlayer.openMenu(new SimpleMenuProvider(fluxGenerator, Component.translatable("block.quantized.flux_generator")), pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -88,7 +88,7 @@ public class QuantumStabilizer extends BaseEntityBlock {
             return null;
         }
 
-        return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_STABILIZER_TILE.get(),
+        return createTickerHelper(blockEntityType, ModBlockEntities.FLUX_GENERATOR_TILE.get(),
                 (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
     }
 }

@@ -37,15 +37,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
-    public QuantumStabilizerTile(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
-    }
-
     private static final int BIT_OUT_SLOT = 0;
     private static final int BYTE_OUT_SLOT = 1;
 
-    public static final int FE_CAPACITY = 1_000_000;
-    public static final int TANK_CAPACITY = 16_000;
+    private static final int FE_CAPACITY = 1_000_000;
+    private static final int TANK_CAPACITY = 16_000;
 
     private final String ownerName = "QuantumStabilizerTile";
     private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(2) {
@@ -58,6 +54,9 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), i -> markDirtyAndUpdate());
 
+    public QuantumStabilizerTile(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
+    }
 
     private int progress = 0;
     private int maxProgress = 20;
@@ -106,8 +105,6 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         return new QuantumStabilizerMenu(id, inv, this, this.data);
     }
 
-
-
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
@@ -117,10 +114,8 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         boolean hasInput = tankM.getHandler().getFluidAmount() > fluxConsumption;
         boolean working = canPay && canOut && hasInput;
 
-        System.out.println(canPay + ", " + canOut + ", " + hasInput);
-
         setWorking(level, pos, state, working);
-        // We dont wanna be mean.
+        // We don't wanna be mean.
         if (!working) {
             return;
         }
@@ -151,7 +146,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         }
     }
 
-    public void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
+    private void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
         if (wasWorking != working) {
             wasWorking = working;
             BlockState ns = state.setValue(QuantumStabilizer.ON, working);

@@ -27,6 +27,7 @@ public class ModEvents {
         destabilizerCaps(event);
         analyzerCaps(event);
         stabilizerCaps(event);
+        fluxGeneratorCaps(event);
     }
 
     @SubscribeEvent

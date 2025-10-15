@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_stabilizer;
+package net.zapp.quantized.content.blocks.flux_generator;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,85 +8,64 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
-public class QuantumStabilizerMenu extends AbstractContainerMenu {
-    private final QuantumStabilizerTile blockEntity;
+public class FluxGeneratorMenu extends AbstractContainerMenu {
+    private final FluxGeneratorTile blockEntity;
     private final Level level;
     private final ContainerData data;
 
-    public QuantumStabilizerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(7));
+    public FluxGeneratorMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
-    public QuantumStabilizerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), pContainerId);
-        this.blockEntity = (QuantumStabilizerTile) entity;
+    public FluxGeneratorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+        super(ModMenuTypes.FLUX_GENERATOR.get(), pContainerId);
+        this.blockEntity = (FluxGeneratorTile) entity;
         this.level = inv.player.level();
         this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        // TODO: CHANGE THESE VALUES TO MATCH THE GUI
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
-            }
-        });
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 96, 34){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
-            }
-        });
         addDataSlots(data);
     }
 
-    public boolean isCrafting() {
-        return data.get(0) > 0;
-    }
-
-    public int getScaledArrowProgress() {
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(1);
-        int arrowPixelSize = 13;
-
-        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress + 10: 0;
-    }
-
-    public int getScaledEnergyBar() {
-        int energyStored = this.data.get(4);
-        int maxEnergy = this.data.get(5);
-        int arrowPixelSize = 54;
-
-        return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
-    }
-
-    public int getEnergyConsumption() {
-        return this.data.get(2);
-    }
     public int getFluxConsumption() {
-        return this.data.get(3);
+        return data.get(0);
+    }
+
+    public int getPowerProduction() {
+        return data.get(1);
+    }
+
+    public boolean isWorking() {
+        return data.get(2) == 1;
     }
 
     public int getEnergyStored() {
-        return this.data.get(4);
+        return data.get(3);
     }
 
     public int getEnergyCapacity() {
-        return this.data.get(5);
+        return data.get(4);
     }
 
     public int getFluidCapacity() {
-        return this.data.get(6);
+        return this.data.get(5);
     }
 
     public FluidStack getFluid() {
         return blockEntity.getFluidHandler().getFluid();
+    }
+
+    public int getScaledEnergyBar() {
+        int energyStored = this.data.get(3);
+        int maxEnergy = this.data.get(4);
+        int arrowPixelSize = 54;
+
+        return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -105,7 +84,7 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 0;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
@@ -119,11 +98,6 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
             if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
                     + TE_INVENTORY_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;  // EMPTY_ITEM
-            }
-        } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
-            // This is a TE slot so merge the stack into the players inventory
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;
             }
         } else {
             System.out.println("Invalid slotIndex:" + pIndex);
@@ -142,7 +116,7 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ModBlocks.QUANTUM_STABILIZER.get());
+                pPlayer, ModBlocks.FLUX_GENERATOR.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

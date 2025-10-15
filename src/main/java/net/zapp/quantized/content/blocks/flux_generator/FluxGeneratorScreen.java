@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_stabilizer;
+package net.zapp.quantized.content.blocks.flux_generator;
 
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
@@ -22,15 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStabilizerMenu> {
-    // TODO: CHANGE THIS WHEN TEXTURES ARE MADE
-    // private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/quantum_stabilizer_screen.png");
-    // private static final ResourceLocation PROGRESS_SPRITE = Quantized.id("textures/gui/quantum_stabilizer/progress_sprite.png");
+public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMenu> {
+    // TODO: UNCOMMENT WHEN TEXTURES ARE MADE.
+    // private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_gui.png");
+    // OPTIONAL THOUGH WOULD BE NICE
+    // private static final ResourceLocation WORKING_SPRITE = Quantized.id("textures/gui/flux_generator/working_sprite.png");
 
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
 
-    public QuantumStabilizerScreen(QuantumStabilizerMenu menu, Inventory playerInventory, Component title) {
+    public FluxGeneratorScreen(FluxGeneratorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -41,18 +42,18 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
 
         // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
-        // renderProgressArrow(guiGraphics, x, y);
+        // renderWorkingSprite(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
         renderFluidTank(guiGraphics, x, y);
-
     }
 
 
-    private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
-        if(menu.isCrafting()) {
-            // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
+    private void renderWorkingSprite(GuiGraphics guiGraphics, int x, int y) {
+        if(menu.isWorking()) {
+            // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WORKING_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
         }
     }
+
 
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
@@ -145,7 +146,7 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
         if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
-            components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_production", menu.getPowerProduction()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {

@@ -7,6 +7,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.utils.energy.EnergyInputWrapper;
+import net.zapp.quantized.core.utils.energy.EnergyOutputWrapper;
 import net.zapp.quantized.core.utils.fluid.FluidInputWrapper;
 import net.zapp.quantized.core.utils.fluid.FluidOutputWrapper;
 
@@ -79,6 +80,14 @@ public class TileCapabilities {
                 (be, side) -> new EnergyInputWrapper(be.getEnergyHandler()));
 
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.QUANTUM_STABILIZER_TILE.get(),
+                (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
+    }
+
+    protected static void fluxGeneratorCaps(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.FLUX_GENERATOR_TILE.get(),
+                (be, side) -> new EnergyOutputWrapper(be.getEnergyHandler()));
+
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUX_GENERATOR_TILE.get(),
                 (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
     }
 }

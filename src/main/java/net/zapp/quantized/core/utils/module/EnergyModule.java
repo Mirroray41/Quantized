@@ -38,6 +38,10 @@ public class EnergyModule implements Module {
         return energy.extractEnergy(powerConsumption, true) == powerConsumption;
     }
 
+    public boolean canInsert(int toInsert) {
+        return energy.getEnergyStored() + toInsert <= energy.getMaxEnergyStored();
+    }
+
     public void extractPower(int toDrain) {
         energy.extractEnergy(toDrain, false);
     }
