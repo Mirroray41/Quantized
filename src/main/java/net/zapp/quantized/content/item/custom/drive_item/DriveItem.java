@@ -28,13 +28,26 @@ public class DriveItem extends Item {
         this.maxPatternSize = maxPatternSize;
     }
 
+    public static List<String> getStoredItemNames(ItemStack drive) {
+        if (!(drive.getItem() instanceof DriveItem)) return List.of();
+        if (!drive.has(ModDataComponents.DRIVE_DATA)) {
+            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            return List.of();
+        }
+        DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
+        return Arrays.asList(diskData.items());
+    }
+
     public static List<Item> getStoredItems(ItemStack drive) {
         if (!(drive.getItem() instanceof DriveItem)) return List.of();
-
+        if (!drive.has(ModDataComponents.DRIVE_DATA)) {
+            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            return List.of();
+        }
         DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
         List<String> items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
         if (items.isEmpty()) return List.of();
-        List<Item> storedItems = new ArrayList<>(items.size());
+        List<Item> storedItems = new ArrayList<>();
         for (String s : items) {
             ResourceLocation id = ResourceLocation.tryParse(s);
             if (id == null) continue;

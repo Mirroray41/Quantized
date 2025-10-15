@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
+import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
 
 public record MenuFilterC2SPacket(BlockPos pos, String query) implements CustomPacketPayload {
     public static final Type<MenuFilterC2SPacket> TYPE =
@@ -27,8 +28,8 @@ public record MenuFilterC2SPacket(BlockPos pos, String query) implements CustomP
             if (player == null) return;
             var lvl = player.level();
             var be = lvl.getBlockEntity(pos);
-            if (be instanceof QuantumAnalyzerTile qa) {
-                qa.setFilter(query); // rebuilds and syncs count + slots
+            if (be instanceof HasDriveInterfaceModule di) {
+                di.setFilter(query); // rebuilds and syncs count + slots
             }
         });
     }

@@ -23,7 +23,7 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public QuantumFabricatorMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(8));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(10));
     }
 
     public QuantumFabricatorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {

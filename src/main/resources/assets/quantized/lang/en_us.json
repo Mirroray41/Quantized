@@ -83,5 +83,6 @@
   "block.quantized.flux_generator": "Flux Generator",
   "block.quantized.quantum_stabilizer": "Quantum Stabilizer",
   "block.quantized.tile.flux_generator": "Flux Generator",
-  "block.quantized.tile.machine_block": "Machine Block"
+  "block.quantized.tile.machine_block": "Machine Block",
+  "block.quantized.tile.quantum_fabricator": "Quantum Fabricator"
 }

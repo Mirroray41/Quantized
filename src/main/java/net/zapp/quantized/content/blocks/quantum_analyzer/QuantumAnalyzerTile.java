@@ -1,15 +1,12 @@
 package net.zapp.quantized.content.blocks.quantum_analyzer;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -18,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,27 +31,21 @@ import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
+import net.zapp.quantized.core.utils.module.DriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-
-public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
+public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasDriveInterfaceModule {
     private static final float ROTATION = 5f;
 
     private static final int INPUT_SLOT = 0;
     private static final int DISK_SLOT = 1;
 
-    private static List<String> items = new ArrayList<>();
-    private List<String> filtered = new ArrayList<>();
-    private String filter = "";
-
-
-    public int rowOffest = 0;
     int viewers = 0;
 
     public static final int FE_CAPACITY = 1_000_000;
@@ -64,6 +54,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(17) {
         @Override
         protected void onContentsChanged(int slot) {
+            if (slot == DISK_SLOT)
+                driveM.recacheDisks();
             markDirtyAndUpdate();
         }
 
@@ -73,6 +65,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             if (slot == DISK_SLOT) {
                 if (stack.getItem() instanceof DriveItem)
                     return super.insertItem(slot, stack, simulate);
+                return stack;
             } else {
                 if (DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack))) {
                     return super.insertItem(slot, stack, simulate);
@@ -82,7 +75,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         }
     });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
-
+    private final DriveInterfaceModule driveM = new DriveInterfaceModule(itemM.getHandler(), new int[]{DISK_SLOT}, DriveInterfaceModule.createSlotRange(2, 15), 3, 5, this::markDirtyAndUpdate);
     private int progress = 0;
     private int maxProgress = 72;
     public int powerConsumption = 16;
@@ -99,7 +92,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
                 case 2 -> powerConsumption;
                 case 3 -> energyM.getHandler().getEnergy();
                 case 4 -> energyM.getHandler().getMaxEnergyStored();
-                case 5 -> filtered.size();
+                case 5 -> driveM.getFilteredSize();
                 default -> 0;
             };
         }
@@ -110,7 +103,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
                 case 0 -> progress = value;
                 case 1 -> maxProgress = value;
                 case 2 -> powerConsumption = value;
-                case 6 -> rowOffest = value;
+                case 6 -> driveM.setRowOffset(value);
             }
         }
 
@@ -138,40 +131,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         if (level.isClientSide) return;
 
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
-        ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
-
-        if (!disk.has(ModDataComponents.DRIVE_DATA)) {
-            if (!(disk.getItem() instanceof DriveItem)) {
-                for (int i = 0 ; i < 15 ; i++) {
-                    itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
-                }
-                items.clear();
-                filtered.clear();
-                return;
-            }
-            disk.set(ModDataComponents.DRIVE_DATA, new DriveRecord(8, 2, 0, new String[0], 0));
-        }
-
-        DriveRecord diskData = disk.get(ModDataComponents.DRIVE_DATA);
-        items = new ArrayList<>(Arrays.asList(diskData.items()));
-        rebuildFiltered();
-
-        List<Item> driveItems = DriveItem.getStoredItems(disk);
-        for (int i = 0; i < Math.min(15, driveItems.size()); i++) {
-            itemM.getHandler().setStackInSlot(i + 2, new ItemStack(driveItems.get(i)));
-        }
-
-
-        for (int i = 0 ; i < 15 ; i++) {
-            int idx = i + (rowOffest * 5);
-            if (idx < filtered.size()) {
-                ResourceLocation rl = ResourceLocation.parse(filtered.get(idx));
-                Item it = BuiltInRegistries.ITEM.get(rl).get().value();
-                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(it));
-            } else {
-                itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
-            }
-        }
 
         DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
         if (!DataFluxPair.isValid(df)) {
@@ -180,11 +139,13 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             return;
         }
 
+//        driveM.recomputeItemSlots();
+
         maxProgress = ProcessingCurves.timeTicks(df.data());
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
-        boolean canPay = energyM.getHandler().extractEnergy(toConsume, true) == toConsume;
-        boolean canOut = diskData != null && diskData.dataUsed() + df.data() <= diskData.capacity() && df.data() <= diskData.maxSizePerItem() && !(driveItems.contains(in.getItem()));
+        boolean canPay = energyM.canPay(powerConsumption);
+        boolean canOut = driveM.canInsertIntoDrives(in.getItem());
         boolean hasInput = !in.isEmpty();
         boolean working = canPay && canOut && hasInput;
 
@@ -204,7 +165,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
 
         if (progress >= maxProgress) {
-            DriveItem.addItem(disk, in, df);
+            driveM.insertIntoDrives(in.getItem());
             progress = 0;
         }
     }
@@ -297,44 +258,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         return ROTATION;
     }
 
-    public void setFilter(String newFilter) {
-        String f = newFilter == null ? "" : newFilter.trim().toLowerCase(Locale.ROOT);
-        if (!Objects.equals(filter, f)) {
-            filter = f;
-            rebuildFiltered();
-            markDirtyAndUpdate();
-        }
-    }
-
-    public void rebuildFiltered() {
-        if (filter.isEmpty()) {
-            filtered = new ArrayList<>(items);
-        } else {
-            filtered = new ArrayList<>();
-            for (String s: items) {
-                if (s == null) continue;
-                String lc = s.toLowerCase(Locale.ROOT);
-                if (lc.contains(filter)) filtered.add(s);
-                else {
-                    try {
-                        ResourceLocation rl = ResourceLocation.parse(s);
-                        Optional<Holder.Reference<Item>> opt = BuiltInRegistries.ITEM.get(rl);
-                        if (opt.isPresent()) {
-                            Item it = opt.get().value();
-                            String name = it.getDescriptionId().toLowerCase(Locale.ROOT);
-                            if (name.contains(filter)) filtered.add(s);
-                        }
-                    } catch (Exception ignored) {}
-                }
-            }
-
-            int rows = (int) Math.ceil(filtered.size() / 5.0);
-            if (rowOffest >= Math.max(0, rows - 3)) {
-                rowOffest = Math.max(0, rows - 3);
-            }
-        }
-    }
-
     public void onMenuOpened() {
         viewers++;
     }
@@ -346,20 +269,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         }
     }
 
-    public void resetFilterAndScroll() {
-        filter = "";
-        rowOffest = 0;
-        rebuildFiltered();
-        for (int i = 0; i < 15; i++) {
-            int idx = i + (rowOffest * 5);
-            if (idx < filtered.size()) {
-                var rl = ResourceLocation.parse(filtered.get(idx));
-                var it = BuiltInRegistries.ITEM.get(rl).get().value();
-                itemM.getHandler().setStackInSlot(i + 2, new ItemStack(it));
-            } else {
-                itemM.getHandler().setStackInSlot(i + 2, ItemStack.EMPTY);
-            }
-        }
-        markDirtyAndUpdate();
+    @Override
+    public @NotNull DriveInterfaceModule getDriveInterfaceModule() {
+        return driveM;
     }
 }
