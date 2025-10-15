@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "quantized:copper_wire",
+    "G": "quantized:steel_gear",
+    "I": "quantized:inductor",
+    "P": "quantized:steel_plate",
+    "Q": "quantized:512_q_bytes",
+    "R": "quantized:steel_rod"
+  },
+  "pattern": [
+    "CIC",
+    "PQP",
+    "RGR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:quantum_analyzer"
+  }
+}
