@@ -86,7 +86,7 @@ public class DriveItem extends Item {
 
         initializeDriveData(stack);
         DriveRecord data = stack.get(ModDataComponents.DRIVE_DATA);
-        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.data",data.dataUsed(), data.capacity()));
+        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.data", data.dataUsed(), data.capacity()));
         tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.max_size",data.maxSizePerItem()));
         tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.count",data.count()));
         if (data.count() > 0) {

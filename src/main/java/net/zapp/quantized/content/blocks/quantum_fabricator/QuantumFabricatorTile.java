@@ -178,7 +178,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         maxProgress = ProcessingCurves.timeTicks(df.data());
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
-        boolean canPay = energyM.canPay(powerConsumption) && tankM.canPay(df.flux());
+        boolean canPay = energyM.canPay(toConsume) && tankM.canPay(df.flux());
         boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, selectedItem.getItem());
         boolean working = canPay && canOut;
         setWorking(level, pos, state, working);

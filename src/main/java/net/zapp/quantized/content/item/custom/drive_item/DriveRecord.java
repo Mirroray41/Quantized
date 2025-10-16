@@ -9,7 +9,7 @@ public record DriveRecord(int capacity, int maxSizePerItem, int dataUsed, String
     }
 
     public boolean canInsert(DataFluxPair df) {
-        if (dataUsed >= capacity) return false;
+        if (dataUsed + df.data() >= capacity) return false;
         if (df.data() > maxSizePerItem) return false;
         return true;
     }

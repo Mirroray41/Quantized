@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -21,6 +23,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.client.render.FluidTankRenderState;
+import net.zapp.quantized.client.render.ImageTextButton;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
 import net.zapp.quantized.core.networking.messages.ModifyAmountButtonC2S;
@@ -44,6 +47,8 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/scroll.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
+    private static final ResourceLocation BUTTON_IDLE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/button_texture.png");
 
     protected int imageHeight = 233;
     protected int imageWidth = 196;
@@ -121,13 +126,15 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         searchBox.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBox);
 
-        addRenderableWidget(Button.builder(Component.literal("+I").withColor(Color.GREEN.getRGB()),p -> syncAmountSelector(1, false)).pos(x + 135, y + 97).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("+X").withColor(Color.GREEN.getRGB()), p -> syncAmountSelector(10, false)).pos(x + 153, y + 97).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("+C").withColor(Color.GREEN.getRGB()), p -> syncAmountSelector(100, false)).pos(x + 171, y + 97).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("-I").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-1, false)).pos(x + 135, y + 115).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("-X").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-10, false)).pos(x + 153, y + 115).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("-C").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-100, false)).pos(x + 171, y + 115).size(16, 12).build());
-        addRenderableWidget(Button.builder(Component.literal("0"), p -> syncAmountSelector(0, true)).pos(x + 117, y + 106).size(16, 12).build());
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 135, y + 97, 16, 12, p -> syncAmountSelector(1, false), Component.literal("+I").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 153, y + 97, 16, 12, p -> syncAmountSelector(10, false), Component.literal("+X").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 171, y + 97, 16, 12, p -> syncAmountSelector(1, false), Component.literal("+C").withColor(Color.GREEN.getRGB())));
+
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 135, y + 115, 16, 12, p -> syncAmountSelector(-1, false), Component.literal("-I").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 153, y + 115, 16, 12, p -> syncAmountSelector(-10, false), Component.literal("-X").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 171, y + 115, 16, 12, p -> syncAmountSelector(-100, false), Component.literal("-C").withColor(Color.RED.getRGB())));
+
+        addRenderableWidget(new ImageTextButton(BUTTON_IDLE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(0, true), Component.literal("0").withColor(Color.WHITE.getRGB())));
     }
 
 

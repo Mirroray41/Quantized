@@ -144,7 +144,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         maxProgress = ProcessingCurves.timeTicks(df.data());
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
-        boolean canPay = energyM.canPay(powerConsumption);
+        boolean canPay = energyM.canPay(toConsume);
         boolean canOut = driveM.canInsertIntoDrives(in.getItem());
         boolean hasInput = !in.isEmpty();
         boolean working = canPay && canOut && hasInput;
