@@ -174,6 +174,7 @@ public class DriveInterfaceModule implements Module {
         return false;
     }
 
+
     public void insertIntoDrives(Item item) {
         DataFluxPair df = FluxDataFixerUpper.getDataFlux(item);
         if (!DataFluxPair.isValid(df)) return;
@@ -188,6 +189,33 @@ public class DriveInterfaceModule implements Module {
             }
         }
         recacheDisks();
+    }
+
+    public boolean canRemoveFromDrives(Item item) {
+        String key = item.toString();
+        for (DriveRecord record : driveData) {
+            if (record != null && record.containsItemString(key)) return true;
+        }
+        return false;
+    }
+
+    public boolean removeFromDrives(Item item) {
+        String key = item.toString();
+        for (int i = 0; i < driveData.length; i++) {
+            DriveRecord rec = driveData[i];
+            if (rec != null && rec.containsItemString(key)) {
+                int handlerIndex = i + driveSlots[0];
+                ItemStack drive = backingHandler.getStackInSlot(handlerIndex);
+                boolean changed = DriveItem.removeItem(drive, item);
+                if (changed) {
+                    backingHandler.setStackInSlot(handlerIndex, drive);
+                    recacheDisks();
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
     }
 
 }

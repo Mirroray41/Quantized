@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.utils.DataFluxPair;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class DriveItem extends Item {
@@ -65,7 +67,25 @@ public class DriveItem extends Item {
         
         DriveRecord newData = new DriveRecord(diskData.capacity(), diskData.maxSizePerItem(), diskData.dataUsed() + df.data(), itemStrs.toArray(new String[diskData.count() + 1]), diskData.count() + 1);
         drive.set(ModDataComponents.DRIVE_DATA, newData);
-        
+    }
+
+    public static boolean removeItem(ItemStack drive, Item toRemove) {
+        if (drive == null || drive.isEmpty() || !(drive.getItem() instanceof DriveItem)) return false;
+
+        DriveRecord rec = drive.get(ModDataComponents.DRIVE_DATA);
+        if (rec == null) rec = DriveRecord.blank();
+
+        String key = DriveRecord.keyOf(toRemove);
+        if (!rec.containsItemString(key)) return false;
+
+        DataFluxPair df = FluxDataFixerUpper.getDataFlux(toRemove);
+        int dfPerItem = DataFluxPair.isValid(df) ? df.data() : 0;
+
+        DriveRecord updated = rec.withItemRemoved(key, dfPerItem);
+        if (Objects.equals(updated, rec)) return false;
+
+        drive.set(ModDataComponents.DRIVE_DATA, updated);
+        return true;
     }
 
     @Override

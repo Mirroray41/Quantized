@@ -119,8 +119,28 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         this.data.set(6, rowOffset);
     }
 
+    public void removeItem(int slot) {
+        blockEntity.getDriveInterfaceModule().removeFromDrives(blockEntity.getItemHandler().getStackInSlot(slot - 36).getItem());
+    }
+
     @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 2 + 27 + 9 && clickType == ClickType.QUICK_MOVE) {
+            try {
+                this.doClick(slotId, button, clickType, player);
+                removeItem(slotId);
+            } catch (Exception exception) {
+                CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
+                CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
+                crashreportcategory.setDetail("Menu Type", () -> this.menuType != null ? BuiltInRegistries.MENU.getKey(this.menuType).toString() : "<no type>");
+                crashreportcategory.setDetail("Menu Class", () -> this.getClass().getCanonicalName());
+                crashreportcategory.setDetail("Slot Count", this.slots.size());
+                crashreportcategory.setDetail("Slot", slotId);
+                crashreportcategory.setDetail("Button", button);
+                crashreportcategory.setDetail("Type", clickType);
+                throw new ReportedException(crashreport);
+            }
+        }
         if (slotId < 2 + 27 + 9) {
             try {
                 this.doClick(slotId, button, clickType, player);

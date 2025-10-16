@@ -7,7 +7,9 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
@@ -97,7 +99,24 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        drawShiftSlotOverlay(guiGraphics);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    private void drawShiftSlotOverlay(GuiGraphics gg) {
+        Slot s = this.hoveredSlot;
+        if (s == null || !hasShiftDown()) return;
+
+        int x = this.leftPos + s.x;
+        int y = this.topPos + s.y;
+
+        gg.fill(x, y, x + 16, y + 16, 0x80FF0000);
+
+        int border = 0xA0FFFFFF;
+        gg.fill(x, y, x + 16, y + 1, border);
+        gg.fill(x, y + 15, x + 16, y + 16, border);
+        gg.fill(x, y, x + 1, y + 16, border);
+        gg.fill(x + 15, y, x + 16, y + 16, border);
     }
 
     @Override
@@ -182,9 +201,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
         }
         return super.charTyped(codePoint, modifiers);
     }
-
-
-
+    
     @Override
     public void onClose() {
         rowOffest = 0;
