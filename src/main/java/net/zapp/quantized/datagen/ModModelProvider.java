@@ -73,17 +73,11 @@ public class ModModelProvider extends ModelProvider {
     private static final List<Block> excludedBlocks = new ArrayList<>();
     private static final List<Item> excludedItems = new ArrayList<>();
     static {
-        excludedBlocks.add(ModBlocks.MACHINE_BLOCK.get());
         excludedBlocks.add(ModBlocks.QUANTUM_DESTABILIZER.get());
         excludedBlocks.add(ModBlocks.QUANTUM_ANALYZER.get());
         excludedBlocks.add(ModBlocks.QUANTUM_STABILIZER.get());
+        excludedBlocks.add(ModBlocks.QUANTUM_FABRICATOR.get());
         excludedBlocks.add(ModBlocks.FLUX_GENERATOR.get());
-
-//        excludedItems.add(ModBlocks.MACHINE_BLOCK.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_DESTABILIZER.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_ANALYZER.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_STABILIZER.get().asItem());
-//        excludedItems.add(ModBlocks.FLUX_GENERATOR.get().asItem());
     }
 
     @Override

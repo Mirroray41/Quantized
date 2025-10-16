@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.core.networking.messages.MenuFilterC2SPacket;
+import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
 import org.lwjgl.glfw.GLFW;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyzerMenu> {
     private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/quantum_analyzer_screen.png");
-    private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/progress.png");
+    private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
 
@@ -116,12 +116,17 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+        } else if (isHovering(31, 67, 24, 3, mouseX, mouseY)) {
+            List<Component> components = new ArrayList<>(1);
+            components.add(Component.translatable("tooltip.quantized.progress.progress_ticks", menu.getProgress(), menu.getMaxProgress(), menu.getProgressPercentage()));
+
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (isHovering(62, 30, 104, 54, mouseX, mouseY)) {
+        if (isHovering(62, 24, 104, 52, mouseX, mouseY)) {
             if (rows > 3 && scrollAmount - (scrollStep * scrollY) <= scrollHeight && scrollAmount - (scrollStep * scrollY) >= 0) {
                 rowOffest -= scrollY;
                 scrollAmount = rowOffest * scrollStep;
@@ -155,8 +160,17 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
                 if (getFocused() == searchBox) setFocused(null);
                 return true;
             }
+
+            if (minecraft != null && minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
+
+            if (checkHotbarKeyPressed(keyCode, scanCode)) {
+                return true;
+            }
+
+
             if (searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
-            if (this.checkHotbarKeyPressed(keyCode, scanCode)) return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -180,7 +194,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             lastSent = "";
         }
 
-        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), ""));
+        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), ""));
         ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
 
         super.onClose();
@@ -189,7 +203,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private void onSearchChanged(String text) {
         if (Objects.equals(text, lastSent)) return;
         lastSent = text;
-        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), text));
+        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), text));
         rowOffest = 0;
         scrollAmount = 0;
         syncScrollOffset();

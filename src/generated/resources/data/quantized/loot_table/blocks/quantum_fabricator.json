@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quantized:machine_block"
+          "name": "quantized:quantum_fabricator"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "quantized:blocks/machine_block"
+  "random_sequence": "quantized:blocks/quantum_fabricator"
 }

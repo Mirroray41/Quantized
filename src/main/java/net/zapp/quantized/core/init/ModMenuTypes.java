@@ -10,7 +10,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorMenu;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlockMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorMenu;
@@ -20,12 +19,9 @@ public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, Quantized.MOD_ID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<MachineBlockMenu>> MACHINE_BLOCK_MENU =
-            registerMenuType("machine_block_menu", MachineBlockMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumDestabilizerMenu>> QUANTUM_DESTABILIZER_MENU =
             registerMenuType("quantum_destabilizer_menu", QuantumDestabilizerMenu::new);
-
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumAnalyzerMenu>> QUANTUM_ANALYZER_MENU =
             registerMenuType("quantum_analyzer_menu", QuantumAnalyzerMenu::new);
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumFabricatorMenu>> QUANTUM_FABRICATOR_MENU =
@@ -35,8 +31,7 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<FluxGeneratorMenu>> FLUX_GENERATOR =
             registerMenuType("flux_generator_menu", FluxGeneratorMenu::new);
 
-    private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name,
-                                                                                                              IContainerFactory<T> factory) {
+    private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return MENUS.register(name, () -> IMenuTypeExtension.create(factory));
     }
 

@@ -14,7 +14,6 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGenerator;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlock;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricator;
@@ -28,15 +27,10 @@ public class ModBlocks {
     public static final DeferredBlock<Block> STEEL_BLOCK = registerBlock("steel_block",
             (properties) -> new Block(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
-
-    public static final DeferredBlock<Block> MACHINE_BLOCK = registerBlock("machine_block",
-            (properties) -> new MachineBlock(properties
-                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
     public static final DeferredBlock<Block> QUANTUM_DESTABILIZER = registerBlock("quantum_destabilizer",
             (properties) -> new QuantumDestabilizer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(QuantumDestabilizer.ON) ? 15 : 0)));
-
     public static final DeferredBlock<Block> QUANTUM_ANALYZER = registerBlock("quantum_analyzer",
             (properties) -> new QuantumAnalyzer(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()

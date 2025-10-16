@@ -24,12 +24,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlock;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumDestabilizer extends BaseEntityBlock {
-    public static final MapCodec<MachineBlock> CODEC = simpleCodec(MachineBlock::new);
+    public static final MapCodec<QuantumDestabilizer> CODEC = simpleCodec(QuantumDestabilizer::new);
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 

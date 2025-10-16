@@ -33,8 +33,8 @@ public record MenuScrollC2S(BlockPos pos, int newValue) implements CustomPacketP
             var level = sp.level();
             if (level.getBlockEntity(this.pos) instanceof HasDriveInterfaceModule di) {
                 switch (sp.containerMenu) {
-                    case QuantumAnalyzerMenu menu -> menu.setRowOffset(newValue);
-                    case QuantumFabricatorMenu menu -> menu.setRowOffset(newValue);
+                    case QuantumAnalyzerMenu qa -> qa.setRowOffset(newValue);
+                    case QuantumFabricatorMenu qf -> qf.setRowOffset(newValue);
                     default -> {}
                 }
             }

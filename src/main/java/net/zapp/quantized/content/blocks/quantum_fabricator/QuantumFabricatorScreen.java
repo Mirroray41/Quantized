@@ -3,6 +3,7 @@ package net.zapp.quantized.content.blocks.quantum_fabricator;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,18 +13,21 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.client.render.FluidTankRenderState;
-import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
-import net.zapp.quantized.core.networking.messages.MenuFilterC2SPacket;
+import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
+import net.zapp.quantized.core.networking.messages.ModifyAmountButtonC2S;
 import org.joml.Matrix3x2f;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +37,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     private static final ResourceLocation GUI_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/quantum_fabricator_screen.png");
     private static final ResourceLocation PROGRESS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/progress.png");
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
     private static final ResourceLocation SCROLL_TEXTURE =
@@ -76,8 +80,6 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             scrollStep = (float) scrollHeight / (rows - 3);
         }
 
-        //System.out.println(rows);
-
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SCROLL_TEXTURE, x + 174, y + 30 + Math.round(scrollAmount), 0, 0, 12, 15, 12, 15);
@@ -86,11 +88,12 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         renderProgressArrow(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
         renderFluidTank(guiGraphics, x, y);
+
     }
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_TEXTURE,x + 31, y + 73, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_TEXTURE,x + 86, y + 124, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
         }
     }
 
@@ -102,6 +105,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 181, y + 151, 10, 52);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 180, y + 150, 0, 0, 12, 54, 12, 54);
     }
+
 
 
     @Override
@@ -116,24 +120,42 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         searchBox.setMaxLength(128);
         searchBox.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBox);
+
+        addRenderableWidget(Button.builder(Component.literal("+I").withColor(Color.GREEN.getRGB()),p -> syncAmountSelector(1, false)).pos(x + 135, y + 97).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("+X").withColor(Color.GREEN.getRGB()), p -> syncAmountSelector(10, false)).pos(x + 153, y + 97).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("+C").withColor(Color.GREEN.getRGB()), p -> syncAmountSelector(100, false)).pos(x + 171, y + 97).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("-I").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-1, false)).pos(x + 135, y + 115).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("-X").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-10, false)).pos(x + 153, y + 115).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("-C").withColor(Color.RED.getRGB()), p -> syncAmountSelector(-100, false)).pos(x + 171, y + 115).size(16, 12).build());
+        addRenderableWidget(Button.builder(Component.literal("0"), p -> syncAmountSelector(0, true)).pos(x + 117, y + 106).size(16, 12).build());
     }
 
 
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
+        Item selected = menu.getSelected();
+        String name = selected != Items.AIR ? selected.getName().getString() : "";
+        if (menu.getAmount() == 0 || name.isEmpty())
+            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_none"), x + 75, y + 86, Color.WHITE.getRGB());
+        else if (menu.getAmount() == 1)
+            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_singular", menu.getAmount(), name), x + 75, y + 86, Color.WHITE.getRGB());
+        else
+            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_plural", menu.getAmount(), name), x + 75, y + 86, Color.WHITE.getRGB());
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2) - 6, this.titleLabelY - 35, 0xFF5e6469, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY + 33, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, this.titleLabelY - 35, 0xFF5e6469, false);
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 33, 0xFF5e6469, false);
     }
 
-    protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
-                                           int w, int h) {
+    protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y, int w, int h) {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(x, y);
         renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
@@ -186,14 +208,19 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
         if (isHovering(-6, 116, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getEnergyConsumption()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(170, 116, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
-            components.add(Component.translatable("tooltip.quantized.machine_block.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
+            components.add(Component.translatable("tooltip.quantized.tank.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
+
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+        } else if (isHovering(76, 90, 24, 3, mouseX, mouseY)) {
+            List<Component> components = new ArrayList<>(1);
+            components.add(Component.translatable("tooltip.quantized.progress.progress_ticks", menu.getProgress(), menu.getMaxProgress(), menu.getProgressPercentage()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }
@@ -201,7 +228,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (isHovering(62, 30, 104, 54, mouseX, mouseY)) {
+        if (isHovering(0, -4, 175, 54, mouseX, mouseY)) {
             if (rows > 3 && scrollAmount - (scrollStep * scrollY) <= scrollHeight && scrollAmount - (scrollStep * scrollY) >= 0) {
                 rowOffest -= scrollY;
                 scrollAmount = rowOffest * scrollStep;
@@ -235,8 +262,17 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
                 if (getFocused() == searchBox) setFocused(null);
                 return true;
             }
+
+            if (minecraft != null && minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
+
+            if (checkHotbarKeyPressed(keyCode, scanCode)) {
+                return true;
+            }
+
+
             if (searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
-            if (this.checkHotbarKeyPressed(keyCode, scanCode)) return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -260,7 +296,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             lastSent = "";
         }
 
-        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), ""));
+        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), ""));
         ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
 
         super.onClose();
@@ -269,7 +305,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     private void onSearchChanged(String text) {
         if (Objects.equals(text, lastSent)) return;
         lastSent = text;
-        ClientPacketDistributor.sendToServer(new MenuFilterC2SPacket(menu.blockEntity.getBlockPos(), text));
+        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), text));
         rowOffest = 0;
         scrollAmount = 0;
         syncScrollOffset();
@@ -278,6 +314,10 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     private void syncScrollOffset() {
         ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), rowOffest));
         menu.setRowOffset(rowOffest);
+    }
+
+    private void syncAmountSelector(int amount, boolean reset) {
+        ClientPacketDistributor.sendToServer(new ModifyAmountButtonC2S(menu.blockEntity.getBlockPos(), amount, reset));
     }
 
     protected int getTextLen(String text) {

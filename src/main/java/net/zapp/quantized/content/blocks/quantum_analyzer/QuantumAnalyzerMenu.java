@@ -14,8 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
+import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
+import net.zapp.quantized.core.utils.DataFluxPair;
 
 public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     public final QuantumAnalyzerTile blockEntity;
@@ -37,8 +40,18 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 35, 44));
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 35, 17));
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 35, 44){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack));
+            }
+        });
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 35, 17){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.getItem() instanceof DriveItem;
+            }
+        });
 
 
         addItemList();
@@ -72,6 +85,18 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
+    }
+
+    public int getProgress() {
+        return data.get(0);
+    }
+
+    public int getMaxProgress() {
+        return data.get(1);
+    }
+
+    public int getProgressPercentage() {
+        return (int) (((float)getProgress() / getMaxProgress()) * 100);
     }
 
     public int getEnergyConsumption() {
@@ -186,7 +211,17 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     private void addItemList() {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 5; ++l) {
-                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 2 + (i * 5) + l, 63 + (l * 18), 24 + (i * 18)));
+                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 2 + (i * 5) + l, 63 + (l * 18), 24 + (i * 18)){
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean mayPickup(Player playerIn) {
+                        return false;
+                    }
+                });
             }
         }
     }

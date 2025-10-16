@@ -22,7 +22,6 @@ import static net.zapp.quantized.core.event.TileCapabilities.*;
 public class ModEvents {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        machineBlockCaps(event);
         destabilizerCaps(event);
         analyzerCaps(event);
         stabilizerCaps(event);

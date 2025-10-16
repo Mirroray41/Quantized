@@ -163,6 +163,7 @@ public class DriveInterfaceModule implements Module {
     }
 
     public boolean canInsertIntoDrives(Item item) {
+        if (driveItems.isEmpty()) return false;
         DataFluxPair df = FluxDataFixerUpper.getDataFlux(item);
         if (!DataFluxPair.isValid(df)) return false;
         if (containsItem(item)) return false;

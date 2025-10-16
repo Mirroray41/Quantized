@@ -19,7 +19,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlockScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerScreen;
@@ -61,7 +60,6 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ModMenuTypes.MACHINE_BLOCK_MENU.get(), MachineBlockScreen::new);
         event.register(ModMenuTypes.QUANTUM_DESTABILIZER_MENU.get(), QuantumDestabilizerScreen::new);
         event.register(ModMenuTypes.QUANTUM_ANALYZER_MENU.get(), QuantumAnalyzerScreen::new);
         event.register(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), QuantumFabricatorScreen::new);

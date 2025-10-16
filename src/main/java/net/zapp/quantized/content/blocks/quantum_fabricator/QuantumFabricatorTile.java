@@ -15,7 +15,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,7 +70,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         @Override
         @NotNull
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if (slot == OUTPUT_SLOT || slot >= 7) return stack;
+            if (slot >= 7) return stack;
             if (stack.getItem() instanceof DriveItem) {
                 driveM.recacheDisks();
             }
@@ -92,12 +94,12 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     private int progress = 0;
     private int maxProgress = 72;
     public int powerConsumption = 16;
-    private int selectedSlot = 7;
     private int outputAmount = 0;
     int viewers = 0;
 
 
     private boolean wasWorking = false;
+    private ItemStack selectedItem = ItemStack.EMPTY;
     private ItemStack cachedOut = ItemStack.EMPTY;
 
     public final ContainerData data = new ContainerData() {
@@ -112,8 +114,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
                 case 5 -> tankM.getHandler().getCapacity();
                 case 6 -> driveM.getFilteredSize();
                 case 7 -> driveM.getRowOffset();
-                case 8 -> selectedSlot;
-                case 9 -> outputAmount;
+                case 8 -> outputAmount;
                 default -> 0;
             };
         }
@@ -125,14 +126,13 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
                 case 1 -> maxProgress = value;
                 case 2 -> powerConsumption = value;
                 case 7 -> driveM.setRowOffset(value);
-                case 8 -> selectedSlot = value;
-                case 9 -> outputAmount = value;
+                case 8 -> outputAmount = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 10;
+            return 9;
         }
     };
 
@@ -155,20 +155,20 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        // Disk data is recached whenever an item is inserted, the items list is also computed then and the items in the ghost slots are also set at that time.
-        // What we need to do is handle the scrolling, searching and the actual processing.
-        // Might wanna abstract that logic away
-
-        if (selectedSlot == -1 || outputAmount <= 0) return;
-
-        ItemStack selected = itemM.getHandler().getStackInSlot(selectedSlot);
-        if (selected.isEmpty()) return;
-        if (!selected.is(cachedOut.getItem())) {
+        if (selectedItem.isEmpty() || outputAmount <= 0 || driveM.getFilteredSize() == 0) {
             resetCraft();
-            cachedOut = selected;
+            return;
+        }
+        if (cachedOut.isEmpty()) {
+            resetCraft();
+            cachedOut = selectedItem;
+        }
+        else if (!selectedItem.is(cachedOut.getItem())) {
+            resetCraft();
+            cachedOut = selectedItem;
         }
 
-        DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(selected);
+        DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(selectedItem);
         if (!DataFluxPair.isValid(df)) {
             resetCraft();
             setWorking(level, pos, state, false);
@@ -179,9 +179,8 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
         boolean canPay = energyM.canPay(powerConsumption) && tankM.canPay(df.flux());
-        boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, itemM.getHandler().getStackInSlot(selectedSlot).getItem());
+        boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, selectedItem.getItem());
         boolean working = canPay && canOut;
-
         setWorking(level, pos, state, working);
         if (!working) {
             powerConsumption = 0; // Fixes people thinking the machine is using power even when it's not.
@@ -192,17 +191,12 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         progress++;
         energyM.extractPower(powerConsumption);
 
-        level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(),
-                SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
-
+        level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
         if (progress >= maxProgress) {
-            ItemStack toOutput = itemM.getHandler().getStackInSlot(selectedSlot).copy();
-            int amnt = toOutput.getMaxStackSize() - toOutput.getCount();
-            amnt = Math.min(amnt, outputAmount);
-            toOutput.setCount(amnt);
-            itemM.getHandler().insertItem(selectedSlot, toOutput, false);
-            outputAmount -= amnt;
+            tankM.drainFluid(df.flux());
+            itemM.getHandler().insertItem(OUTPUT_SLOT, selectedItem.copy(), false);
+            outputAmount--;
             progress = 0;
             driveM.recomputeItemSlots();
         }
@@ -255,9 +249,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         // local fields
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
-        out.putInt("selectedSlot", selectedSlot);
         out.putInt("outputAmount", outputAmount);
-
         super.saveAdditional(out);
     }
 
@@ -274,7 +266,6 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         // local fields
         progress = in.getIntOr("progress", 0);
         maxProgress = in.getIntOr("maxProgress", 72);
-        selectedSlot = in.getIntOr("selectedSlot", -1);
         outputAmount = in.getIntOr("outputAmount", 0);
     }
 
@@ -294,6 +285,14 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         if (level != null && !level.isClientSide) {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
+    }
+
+    public void selectItem(ItemStack item) {
+        selectedItem = item;
+    }
+
+    public ItemStack getSelectedItem() {
+        return selectedItem;
     }
 
     @Override

@@ -76,6 +76,13 @@
   "tooltip.quantized.tank.fluid_stored": "%1$s/%2$s mB",
   "tooltip.quantized.tank.fluid_consumption": "Using: %1$s mB/t",
 
+  "tooltip.quantized.button.amount_queued_none": "Nothing Queued",
+  "tooltip.quantized.button.amount_queued_singular": "Queued: %1$s %2$s",
+  "tooltip.quantized.button.amount_queued_plural": "Queued: %1$s %2$ss",
+  "tooltip.quantized.progress.progress_ticks": "Progress: %1$s/%2$st (%3$s%%)",
+
+
+
   "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
   "block.quantized.tile.quantum_destabilizer": "Quantum Destabilizer",
   "block.quantized.tile.quantum_analyzer": "Quantum Analyzer",

@@ -139,7 +139,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             return;
         }
 
-//        driveM.recomputeItemSlots();
+
 
         maxProgress = ProcessingCurves.timeTicks(df.data());
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
