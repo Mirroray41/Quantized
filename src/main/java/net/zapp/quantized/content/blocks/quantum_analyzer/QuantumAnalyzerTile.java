@@ -149,6 +149,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         boolean hasInput = !in.isEmpty();
         boolean working = canPay && canOut && hasInput;
 
+        System.out.println(canPay + ", " + canOut + ", " + hasInput);
+
         setWorking(level, pos, state, working);
         if (!working) {
             if (progress > 0) progress = Math.max(0, progress - 1);
