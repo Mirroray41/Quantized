@@ -19,14 +19,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyzerMenu> {
-    private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_analyzer/quantum_analyzer_screen.png");
-    private static final ResourceLocation PROGRESS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_analyzer/progress.png");
-    private static final ResourceLocation ENERGY_BAR_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
-    private static final ResourceLocation SCROLL_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/scroll.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/quantum_analyzer_screen.png");
+    private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/quantum_analyzer/progress.png");
+    private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
+    private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
 
     protected int imageHeight = 180;
 
@@ -99,9 +95,9 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
 
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -116,8 +112,8 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
 
         if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getEnergyConsumption()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }

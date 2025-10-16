@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.function.IntConsumer;
@@ -41,5 +42,13 @@ public class TankModule implements Module {
     public void load(ValueInput in, HolderLookup.Provider registries) {
         tank.setFluid(in.read(moduleOwner + ".fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY));
         tank.setCapacity(in.getIntOr(moduleOwner + ".fluid_capacity", tank.getCapacity()));
+    }
+
+    public boolean canPay(int amount) {
+        return tank.drain(amount, IFluidHandler.FluidAction.SIMULATE).getAmount() == amount;
+    }
+
+    public void drainFluid(int toDrain) {
+        tank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
     }
 }

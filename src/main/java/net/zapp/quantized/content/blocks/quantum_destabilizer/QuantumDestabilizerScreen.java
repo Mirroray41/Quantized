@@ -23,14 +23,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDestabilizerMenu> {
-    private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/quantum_destabilizer_screen.png");
-    private static final ResourceLocation SPIRAL_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_destabilizer/spiral_progress.png");
-    private static final ResourceLocation ENERGY_BAR_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
-    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_destabilizer/quantum_destabilizer_screen.png");
+    private static final ResourceLocation SPIRAL_TEXTURE = Quantized.id("textures/gui/quantum_destabilizer/spiral_progress.png");
+    private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
+    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
 
     public QuantumDestabilizerScreen(QuantumDestabilizerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -143,14 +139,14 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
 
         if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
-            components.add(Component.translatable("tooltip.quantized.machine_block.energy_usage", menu.getEnergyConsumption()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
+            components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
-            components.add(Component.translatable("tooltip.quantized.machine_block.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
+            components.add(Component.translatable("tooltip.quantized.tank.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
 
             guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_block",
+    "C": "quantized:copper_wire",
+    "G": "quantized:steel_gear",
+    "M": "minecraft:comparator",
+    "P": "quantized:steel_plate",
+    "R": "quantized:steel_rod"
+  },
+  "pattern": [
+    "CMC",
+    "PAP",
+    "RGR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:quantum_stabilizer"
+  }
+}

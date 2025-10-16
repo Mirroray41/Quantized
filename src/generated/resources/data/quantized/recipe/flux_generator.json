@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "quantized:steel_block",
+    "C": "quantized:copper_wire",
+    "G": "quantized:steel_gear",
+    "I": "quantized:inductor",
+    "N": "minecraft:netherite_ingot",
+    "P": "quantized:steel_plate",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "CRC",
+    "PNP",
+    "IBG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:flux_generator"
+  }
+}

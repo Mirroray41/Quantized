@@ -133,6 +133,56 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('N', Items.GOLD_NUGGET)
                 .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
 
+        shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_DESTABILIZER.get())
+                .pattern("INI")
+                .pattern("PBP")
+                .pattern("GRC")
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .define('I', ModItems.INDUCTOR.get())
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('B', Items.NETHER_STAR)
+                .define('G', ModItems.STEEL_GEAR.get())
+                .define('R', ModItems.STEEL_ROD.get())
+                .define('C', ModItems.COPPER_WIRE.get())
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.FLUX_GENERATOR.get())
+                .pattern("CRC")
+                .pattern("PNP")
+                .pattern("IBG")
+                .define('C', ModItems.COPPER_WIRE.get())
+                .define('R', Items.REDSTONE)
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('N', Items.NETHERITE_INGOT)
+                .define('I', ModItems.INDUCTOR.get())
+                .define('B', ModBlocks.STEEL_BLOCK.get())
+                .define('G', ModItems.STEEL_GEAR.get())
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_NUGGET.get())).save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_STABILIZER.get())
+                .pattern("CMC")
+                .pattern("PAP")
+                .pattern("RGR")
+                .define('C', ModItems.COPPER_WIRE.get())
+                .define('M', Items.COMPARATOR)
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('A', Items.AMETHYST_BLOCK)
+                .define('R', ModItems.STEEL_ROD.get())
+                .define('G', ModItems.STEEL_GEAR.get())
+                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT.get())).save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_ANALYZER.get())
+                .pattern("CIC")
+                .pattern("PQP")
+                .pattern("RGR")
+                .define('C', ModItems.COPPER_WIRE.get())
+                .define('I', ModItems.INDUCTOR.get())
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('Q', ModItems.Q_BYTES_512.get())
+                .define('R', ModItems.STEEL_ROD.get())
+                .define('G', ModItems.STEEL_GEAR.get())
+                .unlockedBy("has_q_bytes", has(ModItems.Q_BYTE.get())).save(output);
+
         driveUnpackRecipe(ModItems.DRIVE_8.get(), ModItems.Q_BYTES_8.get());
         driveUnpackRecipe(ModItems.DRIVE_64.get(), ModItems.Q_BYTES_64.get());
         driveUnpackRecipe(ModItems.DRIVE_512.get(), ModItems.Q_BYTES_512.get());
