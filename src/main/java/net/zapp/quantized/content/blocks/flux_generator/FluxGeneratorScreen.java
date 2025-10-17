@@ -68,13 +68,13 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY, 0xFF5e6469, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
     }
 
     protected int getTextLen(String text) {
@@ -127,7 +127,7 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = this.minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
+                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
                 guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
                         RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
                         new Matrix3x2f(guiGraphics.pose()),

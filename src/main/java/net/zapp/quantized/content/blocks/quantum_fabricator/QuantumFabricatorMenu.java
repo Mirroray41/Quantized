@@ -38,7 +38,7 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 68){
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 68){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -149,39 +149,47 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
         blockEntity.selectItem(ItemStack.EMPTY);
     }
 
+    public Slot getQueuedItemSlot() {
+        ItemStack selected = blockEntity.getSelectedItem();
+        int amount = getAmount();
+        if (selected.isEmpty() || amount <= 0) return null;
+        Item selectedItem = selected.getItem();
+
+        int slot = -1;
+        for (int i = 7; i < 34; i++) {
+            if (blockEntity.getItemHandler().getStackInSlot(i).is(selectedItem)) {
+                slot = i;
+                break;
+            }
+        }
+        if (slot == -1) return null;
+        return getSlot(slot + 36);
+    }
+
 
     @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
-
-        if (slotId < 7 + 27 + 9) {
-            try {
-                this.doClick(slotId, button, clickType, player);
-            } catch (Exception exception) {
-                CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
-                CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
-                crashreportcategory.setDetail("Menu Type", () -> this.menuType != null ? BuiltInRegistries.MENU.getKey(this.menuType).toString() : "<no type>");
-                crashreportcategory.setDetail("Menu Class", () -> this.getClass().getCanonicalName());
-                crashreportcategory.setDetail("Slot Count", this.slots.size());
-                crashreportcategory.setDetail("Slot", slotId);
-                crashreportcategory.setDetail("Button", button);
-                crashreportcategory.setDetail("Type", clickType);
-                throw new ReportedException(crashreport);
-            }
-        } else if (slotId <= 33 + 27 + 9) {
-            try {
+        try {
+            if (slotId < 7 + 27 + 9) {
+                doClick(slotId, button, clickType, player);
+            } else if (slotId <= 33 + 27 + 9) {
                 selectItem(slotId);
-            } catch (Exception exception) {
-                CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
-                CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
-                crashreportcategory.setDetail("Menu Type", () -> this.menuType != null ? BuiltInRegistries.MENU.getKey(this.menuType).toString() : "<no type>");
-                crashreportcategory.setDetail("Menu Class", () -> this.getClass().getCanonicalName());
-                crashreportcategory.setDetail("Slot Count", this.slots.size());
-                crashreportcategory.setDetail("Slot", slotId);
-                crashreportcategory.setDetail("Button", button);
-                crashreportcategory.setDetail("Type", clickType);
-                throw new ReportedException(crashreport);
             }
+        } catch (Exception exception) {
+            createCrashReport(exception, slotId, button, clickType);
         }
+    }
+
+    private void createCrashReport(Exception exception, int slotId, int button, ClickType clickType) throws ReportedException {
+        CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
+        CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
+        crashreportcategory.setDetail("Menu Type", () -> menuType != null ? BuiltInRegistries.MENU.getKey(menuType).toString() : "<no type>");
+        crashreportcategory.setDetail("Menu Class", () -> getClass().getCanonicalName());
+        crashreportcategory.setDetail("Slot Count", slots.size());
+        crashreportcategory.setDetail("Slot", slotId);
+        crashreportcategory.setDetail("Button", button);
+        crashreportcategory.setDetail("Type", clickType);
+        throw new ReportedException(crashreport);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -243,21 +251,21 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 117 + i * 18));
+                addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 117 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 175));
+            addSlot(new Slot(playerInventory, i, 8 + i * 18, 175));
         }
     }
 
     private void addDiskList() {
         for (int i = 0; i < 2; ++i) {
             for (int l = 0; l < 3; ++l) {
-                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1 + (i * 3) + l, 8 + (l * 18), 60 + (i * 18)){
+                addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1 + (i * 3) + l, 8 + (l * 18), 60 + (i * 18)){
                     @Override
                     public boolean mayPlace(ItemStack stack) {
                         return stack.getItem() instanceof DriveItem;
@@ -270,7 +278,7 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     private void addItemList() {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 7 + (i * 9) + l, 1 + (l * 18), -4 + (i * 18)){
+                addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 7 + (i * 9) + l, 1 + (l * 18), -4 + (i * 18)){
                     @Override
                     public boolean mayPlace(ItemStack stack) {
                         return false;

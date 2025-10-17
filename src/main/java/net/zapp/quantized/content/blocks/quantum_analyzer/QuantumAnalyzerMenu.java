@@ -40,13 +40,13 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 35, 44){
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 35, 44){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack));
             }
         });
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 35, 17){
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 35, 17){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof DriveItem;
@@ -72,16 +72,16 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     }
 
     public int getScaledArrowProgress() {
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(1);
+        int progress = data.get(0);
+        int maxProgress = data.get(1);
         int arrowPixelSize = 24;
 
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress: 0;
     }
 
     public int getScaledEnergyBar() {
-        int energyStored = this.data.get(3);
-        int maxEnergy = this.data.get(4);
+        int energyStored = data.get(3);
+        int maxEnergy = data.get(4);
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
@@ -100,23 +100,23 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     }
 
     public int getEnergyConsumption() {
-        return this.data.get(2);
+        return data.get(2);
     }
 
     public int getEnergyStored() {
-        return this.data.get(3);
+        return data.get(3);
     }
 
     public int getEnergyCapacity() {
-        return this.data.get(4);
+        return data.get(4);
     }
 
     public int getItemCount() {
-        return this.data.get(5);
+        return data.get(5);
     }
 
     public void setRowOffset(int rowOffset) {
-        this.data.set(6, rowOffset);
+        data.set(6, rowOffset);
     }
 
     public void removeItem(int slot) {
@@ -125,37 +125,28 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
-        if (slotId >= 2 + 27 + 9 && clickType == ClickType.QUICK_MOVE) {
-            try {
-                this.doClick(slotId, button, clickType, player);
+        try {
+            if (slotId >= 2 + 27 + 9 && clickType == ClickType.QUICK_MOVE) {
+                doClick(slotId, button, clickType, player);
                 removeItem(slotId);
-            } catch (Exception exception) {
-                CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
-                CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
-                crashreportcategory.setDetail("Menu Type", () -> this.menuType != null ? BuiltInRegistries.MENU.getKey(this.menuType).toString() : "<no type>");
-                crashreportcategory.setDetail("Menu Class", () -> this.getClass().getCanonicalName());
-                crashreportcategory.setDetail("Slot Count", this.slots.size());
-                crashreportcategory.setDetail("Slot", slotId);
-                crashreportcategory.setDetail("Button", button);
-                crashreportcategory.setDetail("Type", clickType);
-                throw new ReportedException(crashreport);
+            } else if (slotId < 2 + 27 + 9) {
+                doClick(slotId, button, clickType, player);
             }
+        } catch (Exception exception) {
+            createCrashReport(exception, slotId, button, clickType);
         }
-        if (slotId < 2 + 27 + 9) {
-            try {
-                this.doClick(slotId, button, clickType, player);
-            } catch (Exception exception) {
-                CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
-                CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
-                crashreportcategory.setDetail("Menu Type", () -> this.menuType != null ? BuiltInRegistries.MENU.getKey(this.menuType).toString() : "<no type>");
-                crashreportcategory.setDetail("Menu Class", () -> this.getClass().getCanonicalName());
-                crashreportcategory.setDetail("Slot Count", this.slots.size());
-                crashreportcategory.setDetail("Slot", slotId);
-                crashreportcategory.setDetail("Button", button);
-                crashreportcategory.setDetail("Type", clickType);
-                throw new ReportedException(crashreport);
-            }
-        }
+    }
+
+    private void createCrashReport(Exception exception, int slotId, int button, ClickType clickType) throws ReportedException {
+        CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
+        CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
+        crashreportcategory.setDetail("Menu Type", () -> menuType != null ? BuiltInRegistries.MENU.getKey(menuType).toString() : "<no type>");
+        crashreportcategory.setDetail("Menu Class", () -> getClass().getCanonicalName());
+        crashreportcategory.setDetail("Slot Count", slots.size());
+        crashreportcategory.setDetail("Slot", slotId);
+        crashreportcategory.setDetail("Button", button);
+        crashreportcategory.setDetail("Type", clickType);
+        throw new ReportedException(crashreport);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -217,21 +208,21 @@ public class QuantumAnalyzerMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 91 + i * 18));
+                addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 91 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 149));
+            addSlot(new Slot(playerInventory, i, 8 + i * 18, 149));
         }
     }
 
     private void addItemList() {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 5; ++l) {
-                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 2 + (i * 5) + l, 63 + (l * 18), 24 + (i * 18)){
+                addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 2 + (i * 5) + l, 63 + (l * 18), 24 + (i * 18)){
                     @Override
                     public boolean mayPlace(ItemStack stack) {
                         return false;

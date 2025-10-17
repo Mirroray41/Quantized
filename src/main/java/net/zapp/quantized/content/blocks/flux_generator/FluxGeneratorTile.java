@@ -85,7 +85,7 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new FluxGeneratorMenu(id, inv, this, this.data);
+        return new FluxGeneratorMenu(id, inv, this, data);
     }
 
 

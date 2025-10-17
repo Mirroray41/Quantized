@@ -100,29 +100,29 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         drawShiftSlotOverlay(guiGraphics);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void drawShiftSlotOverlay(GuiGraphics gg) {
-        Slot s = this.hoveredSlot;
+    private void drawShiftSlotOverlay(GuiGraphics guiGraphics) {
+        Slot s = hoveredSlot;
         if (s == null || !hasShiftDown()) return;
 
-        int x = this.leftPos + s.x;
-        int y = this.topPos + s.y;
+        int x = leftPos + s.x;
+        int y = topPos + s.y;
 
-        gg.fill(x, y, x + 16, y + 16, 0x80FF0000);
+        guiGraphics.fill(x, y, x + 16, y + 16, 0x80FF0000);
 
         int border = 0xA0FFFFFF;
-        gg.fill(x, y, x + 16, y + 1, border);
-        gg.fill(x, y + 15, x + 16, y + 16, border);
-        gg.fill(x, y, x + 1, y + 16, border);
-        gg.fill(x + 15, y, x + 16, y + 16, border);
+        guiGraphics.fill(x, y, x + 16, y + 1, border);
+        guiGraphics.fill(x, y + 15, x + 16, y + 16, border);
+        guiGraphics.fill(x, y, x + 1, y + 16, border);
+        guiGraphics.fill(x + 15, y, x + 16, y + 16, border);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY - 7, 0xFF5e6469, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY + 7, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY - 7, 0xFF5e6469, false);
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 7, 0xFF5e6469, false);
     }
 
     @Override

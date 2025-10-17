@@ -163,13 +163,12 @@ public class DriveInterfaceModule implements Module {
     }
 
     public boolean canInsertIntoDrives(Item item) {
-        //if (driveItems.isEmpty()) return false;
         DataFluxPair df = FluxDataFixerUpper.getDataFlux(item);
         if (!DataFluxPair.isValid(df)) return false;
         if (containsItem(item)) return false;
-        for (int i = 0; i < driveData.length; i++) {
-            DriveRecord record = driveData[i];
-            if (record.canInsert(df)) return true;
+        for (DriveRecord record : driveData) {
+            if (record != null && record.canInsert(df)) return true;
+
         }
         return false;
     }
@@ -191,15 +190,7 @@ public class DriveInterfaceModule implements Module {
         recacheDisks();
     }
 
-    public boolean canRemoveFromDrives(Item item) {
-        String key = item.toString();
-        for (DriveRecord record : driveData) {
-            if (record != null && record.containsItemString(key)) return true;
-        }
-        return false;
-    }
-
-    public boolean removeFromDrives(Item item) {
+    public void removeFromDrives(Item item) {
         String key = item.toString();
         for (int i = 0; i < driveData.length; i++) {
             DriveRecord rec = driveData[i];
@@ -210,12 +201,11 @@ public class DriveInterfaceModule implements Module {
                 if (changed) {
                     backingHandler.setStackInSlot(handlerIndex, drive);
                     recacheDisks();
-                    return true;
+                    return;
                 }
                 break;
             }
         }
-        return false;
     }
 
 }

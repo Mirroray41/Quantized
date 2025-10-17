@@ -124,7 +124,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new QuantumAnalyzerMenu(id, inv, this, this.data);
+        driveM.recacheDisks();
+        return new QuantumAnalyzerMenu(id, inv, this, data);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {

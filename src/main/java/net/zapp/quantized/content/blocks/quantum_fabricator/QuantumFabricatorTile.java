@@ -148,7 +148,8 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new QuantumFabricatorMenu(id, inv, this, this.data);
+        driveM.recacheDisks();
+        return new QuantumFabricatorMenu(id, inv, this, data);
     }
 
     // --- Tick ---

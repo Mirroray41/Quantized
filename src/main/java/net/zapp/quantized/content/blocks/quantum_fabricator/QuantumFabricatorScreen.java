@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
@@ -134,7 +135,21 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(0, true), Component.literal("0").withColor(Color.WHITE.getRGB())));
     }
 
+    private void drawQueuedOverlay(GuiGraphics guiGraphics) {
+        Slot s = menu.getQueuedItemSlot();
+        if (s == null) return;
 
+        int x = leftPos + s.x;
+        int y = topPos + s.y;
+
+        guiGraphics.fill(x, y, x + 16, y + 16, new Color(30, 180, 0, 150).getRGB());
+
+        int border = 0xA0FFFFFF;
+        guiGraphics.fill(x, y, x + 16, y + 1, border);
+        guiGraphics.fill(x, y + 15, x + 16, y + 16, border);
+        guiGraphics.fill(x, y, x + 1, y + 16, border);
+        guiGraphics.fill(x + 15, y, x + 16, y + 16, border);
+    }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -147,15 +162,17 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         if (menu.getAmount() == 0 || name.isEmpty())
             guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_none"), x + 75, y + 86, Color.WHITE.getRGB());
         else if (menu.getAmount() == 1)
-            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_singular", menu.getAmount(), name), x + 75, y + 86, Color.WHITE.getRGB());
+            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_singular", menu.getAmount(), name), x + 65, y + 86, Color.WHITE.getRGB());
         else
-            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_plural", menu.getAmount(), name), x + 75, y + 86, Color.WHITE.getRGB());
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_plural", menu.getAmount(), name), x + 55, y + 86, Color.WHITE.getRGB());
+
+        drawQueuedOverlay(guiGraphics);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, this.titleLabelY - 35, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, titleLabelY - 35, 0xFF5e6469, false);
         guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 33, 0xFF5e6469, false);
     }
 
@@ -194,7 +211,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = this.minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
+                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
                 guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
                         RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
                         new Matrix3x2f(guiGraphics.pose()),

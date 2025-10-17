@@ -34,10 +34,7 @@ public class QuantumAnalyzer extends BaseEntityBlock {
 
     public QuantumAnalyzer(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(
-                this.stateDefinition.any()
-                        .setValue(ON, false)
-        );
+        registerDefaultState(stateDefinition.any().setValue(ON, false));
     }
 
     @Override
