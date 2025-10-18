@@ -32,6 +32,13 @@ public class QuantumStabilizer extends BaseEntityBlock {
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
+    private static final VoxelShape SHAPE =
+            Shapes.or(Block.box(0, 0, 0, 16, 8, 16),
+                    Block.box(0, 8, 4, 2, 11, 12),
+                    Block.box(14, 8, 4, 16, 11, 12),
+                    Block.box(4, 8, 0, 12, 11, 2),
+                    Block.box(4, 8, 14, 12, 11, 16));
+
     public QuantumStabilizer(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(
@@ -62,7 +69,7 @@ public class QuantumStabilizer extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
+        return SHAPE;
     }
 
 

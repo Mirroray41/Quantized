@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMenu> {
     // TODO: UNCOMMENT WHEN TEXTURES ARE MADE.
-    // private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_gui.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_screen.png");
     // OPTIONAL THOUGH WOULD BE NICE
     // private static final ResourceLocation WORKING_SPRITE = Quantized.id("textures/gui/flux_generator/working_sprite.png");
 
@@ -40,7 +40,7 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         // renderWorkingSprite(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);

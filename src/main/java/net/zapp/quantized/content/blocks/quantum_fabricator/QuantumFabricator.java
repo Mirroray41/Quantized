@@ -32,6 +32,15 @@ public class QuantumFabricator extends BaseEntityBlock {
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
+    private static final VoxelShape SHAPE =
+            Shapes.or(Block.box(0, 0, 0, 16, 2, 16),
+                    Block.box(0, 14, 0, 16, 16, 16),
+                    Block.box(0, 2, 0, 2, 14, 2),
+                    Block.box(0, 2, 14, 2, 14, 16),
+                    Block.box(14, 2, 0, 16, 14, 2),
+                    Block.box(14, 2, 14, 16, 14, 16),
+                    Block.box(1, 1, 1, 15, 15, 15));
+
     public QuantumFabricator(Properties properties) {
         super(properties);
         this.registerDefaultState(
@@ -62,7 +71,7 @@ public class QuantumFabricator extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
+        return SHAPE;
     }
 
 

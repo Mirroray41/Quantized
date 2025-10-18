@@ -32,6 +32,18 @@ public class QuantumAnalyzer extends BaseEntityBlock {
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
+    private static final VoxelShape SHAPE =
+            Shapes.or(Block.box(0, 0, 1, 16, 1, 15),
+                    Block.box(1, 0, 0, 15, 1, 1),
+                    Block.box(1, 0, 15, 15, 1, 16),
+                    Block.box(0, 15, 1, 16, 16, 15),
+                    Block.box(1, 15, 0, 15, 16, 1),
+                    Block.box(1, 15, 15, 15, 16, 16),
+                    Block.box(1, 1, 2, 2, 15, 14),
+                    Block.box(2, 1, 1, 14, 15, 2),
+                    Block.box(14, 1, 2, 15, 15, 14),
+                    Block.box(2, 1, 14, 14, 15, 15));
+
     public QuantumAnalyzer(BlockBehaviour.Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(ON, false));
@@ -59,7 +71,7 @@ public class QuantumAnalyzer extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
+        return SHAPE;
     }
 
 

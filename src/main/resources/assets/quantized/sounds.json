@@ -4,7 +4,7 @@
     "sounds": [
       {
         "name": "quantized:quantum_destabilizer_work",
-        "volume": 0.7
+        "volume": 0.4
       }
     ]
   },
@@ -13,7 +13,7 @@
     "sounds": [
       {
         "name": "quantized:quantum_analyzer_work",
-        "volume": 0.7
+        "volume": 0.4
       }
     ]
   },
@@ -22,7 +22,7 @@
     "sounds": [
       {
         "name": "quantized:quantum_fabricator_work",
-        "volume": 0.7
+        "volume": 0.4
       }
     ]
   },
@@ -31,7 +31,7 @@
     "sounds": [
       {
         "name": "quantized:quantum_stabilizer_work",
-        "volume": 0.7
+        "volume": 0.4
       }
     ]
   }

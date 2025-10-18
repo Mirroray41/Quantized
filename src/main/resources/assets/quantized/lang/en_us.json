@@ -1,9 +1,6 @@
 {
   "creativetab.quantized.misc": "Quantized",
   "creativetab.quantized.data": "Quantized - Data",
-  "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
-  "block.quantized.quantum_analyzer": "Quantum Analyzer",
-  "block.quantized.quantum_fabricator": "Quantum Fabricator",
 
   "item.quantized.q_bit": "Q-Bit",
   "item.quantized.q_byte": "Q-Byte",
@@ -88,13 +85,23 @@
 
 
 
-  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
+  "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
   "block.quantized.tile.quantum_destabilizer": "Quantum Destabilizer",
+  "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
+
+  "block.quantized.quantum_analyzer": "Quantum Analyzer",
   "block.quantized.tile.quantum_analyzer": "Quantum Analyzer",
-  "block.quantized.tile.quantum_stabilizer": "Quantum Stabilizer",
-  "block.quantized.flux_generator": "Flux Generator",
+  "sound.quantized.quantum_analyzer.work": "Quantum Analyzer Working",
+
   "block.quantized.quantum_stabilizer": "Quantum Stabilizer",
+  "block.quantized.tile.quantum_stabilizer": "Quantum Stabilizer",
+  "sound.quantized.quantum_stabilizer.work": "Quantum Stabilizer Working",
+
+  "block.quantized.flux_generator": "Flux Generator",
   "block.quantized.tile.flux_generator": "Flux Generator",
-  "block.quantized.tile.machine_block": "Machine Block",
-  "block.quantized.tile.quantum_fabricator": "Quantum Fabricator"
+  "sound.quantized.flux_generator.work": "lux Generator Working",
+
+  "block.quantized.quantum_fabricator": "Quantum Fabricator",
+  "block.quantized.tile.quantum_fabricator": "Quantum Fabricator",
+  "sound.quantized.quantum_fabricator.work": "Quantum Fabricator Working"
 }

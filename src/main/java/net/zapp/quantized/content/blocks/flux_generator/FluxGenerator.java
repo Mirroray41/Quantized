@@ -32,6 +32,15 @@ public class FluxGenerator extends BaseEntityBlock {
 
     public static final BooleanProperty ON = BooleanProperty.create("on");
 
+    private static final VoxelShape SHAPE =
+            Shapes.or(Block.box(0, 0, 0, 3, 16, 16),
+                    Block.box(13, 0, 0, 16, 16, 16),
+                    Block.box(3, 1, 1, 13, 5, 3),
+                    Block.box(3, 13, 1, 13, 15, 3),
+                    Block.box(3, 1, 13, 13, 3, 15),
+                    Block.box(3, 13, 13, 13, 15, 15),
+                    Block.box(2, 2, 2, 12, 12, 12));
+
     public FluxGenerator(BlockBehaviour.Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(ON, false));
@@ -59,7 +68,7 @@ public class FluxGenerator extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.block();
+        return SHAPE;
     }
 
 
