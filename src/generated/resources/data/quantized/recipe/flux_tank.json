@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": "quantized:steel_nugget",
+    "P": "quantized:steel_plate",
+    "T": "minecraft:tinted_glass"
+  },
+  "pattern": [
+    "PNP",
+    "PTP",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:flux_tank"
+  }
+}

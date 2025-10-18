@@ -35,6 +35,12 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.COPPER_WIRE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.INDUCTOR.get(), ModelTemplates.FLAT_ITEM);
 
+        itemModels.generateFlatItem(ModItems.ATTRACTION_CORE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.REPULSION_CORE.get(), ModelTemplates.FLAT_ITEM);
+
+        itemModels.generateFlatItem(ModItems.CARBON_SILICON_BATTERY.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.FLUX_TANK.get(), ModelTemplates.FLAT_ITEM);
+
         itemModels.generateFlatItem(ModItems.Q_BYTES_8.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.Q_BYTES_64.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.Q_BYTES_512.get(), ModelTemplates.FLAT_ITEM);
@@ -73,17 +79,11 @@ public class ModModelProvider extends ModelProvider {
     private static final List<Block> excludedBlocks = new ArrayList<>();
     private static final List<Item> excludedItems = new ArrayList<>();
     static {
-        excludedBlocks.add(ModBlocks.MACHINE_BLOCK.get());
         excludedBlocks.add(ModBlocks.QUANTUM_DESTABILIZER.get());
         excludedBlocks.add(ModBlocks.QUANTUM_ANALYZER.get());
         excludedBlocks.add(ModBlocks.QUANTUM_STABILIZER.get());
+        excludedBlocks.add(ModBlocks.QUANTUM_FABRICATOR.get());
         excludedBlocks.add(ModBlocks.FLUX_GENERATOR.get());
-
-//        excludedItems.add(ModBlocks.MACHINE_BLOCK.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_DESTABILIZER.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_ANALYZER.get().asItem());
-//        excludedItems.add(ModBlocks.QUANTUM_STABILIZER.get().asItem());
-//        excludedItems.add(ModBlocks.FLUX_GENERATOR.get().asItem());
     }
 
     @Override

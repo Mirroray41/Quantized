@@ -20,7 +20,8 @@ public final class ModMessages {
         registrar.playToClient(FluidSyncS2C.ID, FluidSyncS2C.STREAM_CODEC);
 
         registrar.playToServer(MenuScrollC2S.TYPE, MenuScrollC2S.STREAM_CODEC, MenuScrollC2S::handle);
-        registrar.playToServer(MenuFilterC2SPacket.TYPE, MenuFilterC2SPacket.STREAM_CODEC, MenuFilterC2SPacket::handle);
+        registrar.playToServer(MenuFilterC2S.TYPE, MenuFilterC2S.STREAM_CODEC, MenuFilterC2S::handle);
+        registrar.playToServer(ModifyAmountButtonC2S.TYPE, ModifyAmountButtonC2S.STREAM_CODEC, ModifyAmountButtonC2S::handle);
     }
 
     public static void sendToServer(CustomPacketPayload message) {

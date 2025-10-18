@@ -62,13 +62,13 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY, 0xFF5e6469, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
     }
 
     protected int getTextLen(String text) {
@@ -121,7 +121,7 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = this.minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
+                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
                 guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
                         RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
                         new Matrix3x2f(guiGraphics.pose()),

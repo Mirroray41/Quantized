@@ -28,6 +28,22 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+    maven {
+        // location of the maven that hosts JEI files before January 2023
+        name = "Progwml6's maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 base {
@@ -130,7 +146,10 @@ dependencies {
     localRuntime "curse.maven:energized-power-782147:6927412"
     localRuntime "curse.maven:pipez-443900:6945397"
     localRuntime "curse.maven:jei-238222:7025033"
-    localRuntime "curse.maven:configured-457570:6802490"
+    // compile against the JEI API but do not include it at runtime
+    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
+    // at runtime, use the full JEI jar for NeoForge
+    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

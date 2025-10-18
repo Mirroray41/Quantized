@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_steel_ingot": {
+    "has_attraction_core": {
       "conditions": {
         "items": [
           {
-            "items": "quantized:steel_ingot"
+            "items": "quantized:attraction_core"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_steel_ingot"
+      "has_attraction_core"
     ]
   ],
   "rewards": {

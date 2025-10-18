@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:coal",
+    "N": "quantized:steel_nugget",
+    "P": "quantized:steel_plate",
+    "Q": "minecraft:quartz"
+  },
+  "pattern": [
+    "QPN",
+    "PCP",
+    "NPQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:carbon_silicon_battery"
+  }
+}

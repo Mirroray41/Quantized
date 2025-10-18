@@ -30,7 +30,7 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34));
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34));
         addDataSlots(data);
     }
 
@@ -39,35 +39,35 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     }
 
     public int getScaledArrowProgress() {
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(1);
+        int progress = data.get(0);
+        int maxProgress = data.get(1);
         int arrowPixelSize = 13;
 
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress + 10: 0;
     }
 
     public int getScaledEnergyBar() {
-        int energyStored = this.data.get(3);
-        int maxEnergy = this.data.get(4);
+        int energyStored = data.get(3);
+        int maxEnergy = data.get(4);
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
     }
 
     public int getEnergyConsumption() {
-        return this.data.get(2);
+        return data.get(2);
     }
 
     public int getEnergyStored() {
-        return this.data.get(3);
+        return data.get(3);
     }
 
     public int getEnergyCapacity() {
-        return this.data.get(4);
+        return data.get(4);
     }
 
     public int getFluidCapacity() {
-        return this.data.get(5);
+        return data.get(5);
     }
 
     public FluidStack getFluid() {
@@ -133,14 +133,14 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
+                addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
 }

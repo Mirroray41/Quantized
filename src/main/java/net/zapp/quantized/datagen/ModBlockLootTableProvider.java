@@ -26,10 +26,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(ModBlocks.STEEL_BLOCK.get());
-        dropSelf(ModBlocks.MACHINE_BLOCK.get());
         dropSelf(ModBlocks.QUANTUM_DESTABILIZER.get());
         dropSelf(ModBlocks.QUANTUM_ANALYZER.get());
         dropSelf(ModBlocks.QUANTUM_STABILIZER.get());
+        dropSelf(ModBlocks.QUANTUM_FABRICATOR.get());
         dropSelf(ModBlocks.FLUX_GENERATOR.get());
     }
 

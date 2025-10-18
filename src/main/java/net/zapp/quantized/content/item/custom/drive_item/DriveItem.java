@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.utils.DataFluxPair;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class DriveItem extends Item {
@@ -23,18 +25,31 @@ public class DriveItem extends Item {
     private final int maxPatternSize;
 
     public DriveItem(Properties properties, int capacity, int maxPatternSize) {
-        super(properties);
+        super(properties.stacksTo(1));
         this.capacity = capacity;
         this.maxPatternSize = maxPatternSize;
     }
 
+    public static List<String> getStoredItemNames(ItemStack drive) {
+        if (!(drive.getItem() instanceof DriveItem)) return List.of();
+        if (!drive.has(ModDataComponents.DRIVE_DATA)) {
+            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            return List.of();
+        }
+        DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
+        return Arrays.asList(diskData.items());
+    }
+
     public static List<Item> getStoredItems(ItemStack drive) {
         if (!(drive.getItem() instanceof DriveItem)) return List.of();
-
+        if (!drive.has(ModDataComponents.DRIVE_DATA)) {
+            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            return List.of();
+        }
         DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
         List<String> items = new ArrayList<>(Arrays.stream(diskData.items()).toList());
         if (items.isEmpty()) return List.of();
-        List<Item> storedItems = new ArrayList<>(items.size());
+        List<Item> storedItems = new ArrayList<>();
         for (String s : items) {
             ResourceLocation id = ResourceLocation.tryParse(s);
             if (id == null) continue;
@@ -52,7 +67,25 @@ public class DriveItem extends Item {
         
         DriveRecord newData = new DriveRecord(diskData.capacity(), diskData.maxSizePerItem(), diskData.dataUsed() + df.data(), itemStrs.toArray(new String[diskData.count() + 1]), diskData.count() + 1);
         drive.set(ModDataComponents.DRIVE_DATA, newData);
-        
+    }
+
+    public static boolean removeItem(ItemStack drive, Item toRemove) {
+        if (drive == null || drive.isEmpty() || !(drive.getItem() instanceof DriveItem)) return false;
+
+        DriveRecord rec = drive.get(ModDataComponents.DRIVE_DATA);
+        if (rec == null) rec = DriveRecord.blank();
+
+        String key = DriveRecord.keyOf(toRemove);
+        if (!rec.containsItemString(key)) return false;
+
+        DataFluxPair df = FluxDataFixerUpper.getDataFlux(toRemove);
+        int dfPerItem = DataFluxPair.isValid(df) ? df.data() : 0;
+
+        DriveRecord updated = rec.withItemRemoved(key, dfPerItem);
+        if (Objects.equals(updated, rec)) return false;
+
+        drive.set(ModDataComponents.DRIVE_DATA, updated);
+        return true;
     }
 
     @Override
@@ -73,7 +106,7 @@ public class DriveItem extends Item {
 
         initializeDriveData(stack);
         DriveRecord data = stack.get(ModDataComponents.DRIVE_DATA);
-        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.data",data.dataUsed(), data.capacity()));
+        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.data", data.dataUsed(), data.capacity()));
         tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.max_size",data.maxSizePerItem()));
         tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.count",data.count()));
         if (data.count() > 0) {

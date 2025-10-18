@@ -121,11 +121,15 @@ public class FluxDataConfig {
         itemDef.accept("minecraft:netherite_upgrade_smithing_template", new DataFluxPair(160, 57345));
         itemDef.accept("minecraft:basalt", new DataFluxPair(4, 1));
         itemDef.accept("minecraft:blackstone", new DataFluxPair(4, 1));
+        itemDef.accept("minecraft:bamboo", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:clay_ball", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:prismarine_shard", new DataFluxPair(4, 16));
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {
-        tagDef.accept("#minecraft:logs", new DataFluxPair(16, 32));
-        tagDef.accept("#minecraft:dirt", new DataFluxPair(4, 1));
+        tagDef.accept("#minecraft:logs", new DataFluxPair(4, 16));
+        tagDef.accept("#minecraft:dirt", new DataFluxPair(1, 1));
+        tagDef.accept("#c:sands", new DataFluxPair(1, 1));
 
         tagDef.accept("#c:ores/copper", new DataFluxPair(4, 32));
         tagDef.accept("#c:ores/iron", new DataFluxPair(8, 256));
@@ -145,14 +149,19 @@ public class FluxDataConfig {
 
 
         tagDef.accept("#c:gems/diamond", new DataFluxPair(32, 8192));
+        tagDef.accept("#c:gems/prismarine", new DataFluxPair(4, 32));
+
         tagDef.accept("#c:stones", new DataFluxPair(1, 1));
         tagDef.accept("#c:cobblestones", new DataFluxPair(1, 1));
         tagDef.accept("#c:netherracks", new DataFluxPair(1, 1));
+
         tagDef.accept("#c:buckets/water", new DataFluxPair(16, 1536));
         tagDef.accept("#c:buckets/lava", new DataFluxPair(16, 1536));
         tagDef.accept("#c:buckets/milk", new DataFluxPair(16, 1536));
         tagDef.accept("#c:buckets/powder_snow", new DataFluxPair(16, 1536));
         tagDef.accept("#c:buckets/entity_water", new DataFluxPair(16, 1536));
+
+        tagDef.accept("#c:clumps/resin", new DataFluxPair(1, 4));
     }
 
     private static DataFluxPair asNumberPair(Object val) {

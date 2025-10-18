@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMenu> {
     // TODO: UNCOMMENT WHEN TEXTURES ARE MADE.
-    // private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_gui.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_screen.png");
     // OPTIONAL THOUGH WOULD BE NICE
     // private static final ResourceLocation WORKING_SPRITE = Quantized.id("textures/gui/flux_generator/working_sprite.png");
 
@@ -40,7 +40,7 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         // renderWorkingSprite(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
@@ -68,13 +68,13 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, (imageWidth / 2) - (getTextLen(this.title.getString()) / 2), this.titleLabelY, 0xFF5e6469, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY, 0xFF5e6469, false);
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
     }
 
     protected int getTextLen(String text) {
@@ -127,7 +127,7 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = this.minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
+                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
                 guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
                         RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
                         new Matrix3x2f(guiGraphics.pose()),

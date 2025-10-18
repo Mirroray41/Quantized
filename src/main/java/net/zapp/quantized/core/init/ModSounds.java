@@ -17,6 +17,25 @@ public class ModSounds {
             SoundEvent::createVariableRangeEvent
     );
 
+    public static final Holder<SoundEvent> QUANTUM_ANALYZER_WORK = SOUND_EVENTS.register(
+            "quantum_analyzer_work",
+            // Takes in the registry name
+            SoundEvent::createVariableRangeEvent
+    );
+
+    public static final Holder<SoundEvent> QUANTUM_FABRICATOR_WORK = SOUND_EVENTS.register(
+            "quantum_fabricator_work",
+            // Takes in the registry name
+            SoundEvent::createVariableRangeEvent
+    );
+
+    public static final Holder<SoundEvent> QUANTUM_STABILIZER_WORK = SOUND_EVENTS.register(
+            "quantum_stabilizer_work",
+            // Takes in the registry name
+            SoundEvent::createVariableRangeEvent
+    );
+
+
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);
     }

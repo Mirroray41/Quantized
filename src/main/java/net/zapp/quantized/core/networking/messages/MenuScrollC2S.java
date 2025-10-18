@@ -10,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorMenu;
+import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
 
 public record MenuScrollC2S(BlockPos pos, int newValue) implements CustomPacketPayload {
     public static final Type<MenuScrollC2S> TYPE =
@@ -27,13 +29,13 @@ public record MenuScrollC2S(BlockPos pos, int newValue) implements CustomPacketP
         ctx.enqueueWork(() -> {
             Player player = ctx.player();
             if (!(player instanceof ServerPlayer sp)) return;
-            if (sp == null) return;
 
             var level = sp.level();
-            if (level.getBlockEntity(this.pos) instanceof QuantumAnalyzerTile be) {
-                if (sp.containerMenu instanceof QuantumAnalyzerMenu menu) {
-                    menu.setRowOffset(this.newValue);
-                    be.setChanged();
+            if (level.getBlockEntity(this.pos) instanceof HasDriveInterfaceModule di) {
+                switch (sp.containerMenu) {
+                    case QuantumAnalyzerMenu qa -> qa.setRowOffset(newValue);
+                    case QuantumFabricatorMenu qf -> qf.setRowOffset(newValue);
+                    default -> {}
                 }
             }
         });

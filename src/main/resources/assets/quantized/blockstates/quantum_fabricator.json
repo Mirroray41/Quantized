@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "on=false": {
+      "model": "quantized:block/quantum_fabricator"
+    },
+    "on=true": {
+      "model": "quantized:block/quantum_fabricator_on"
+    }
+  }
+}

@@ -119,7 +119,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new QuantumDestabilizerMenu(id, inv, this, this.data);
+        return new QuantumDestabilizerMenu(id, inv, this, data);
     }
 
     // --- Tick ---
@@ -148,6 +148,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         setWorking(level, pos, state, working);
         if (!working) {
             if (progress > 0) progress = Math.max(0, progress - 1);
+            powerConsumption = 0;
             return;
         }
 
