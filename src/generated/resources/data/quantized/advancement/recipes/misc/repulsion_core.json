@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_512_q_bytes": {
+    "has_inductor": {
       "conditions": {
         "items": [
           {
-            "items": "quantized:512_q_bytes"
+            "items": "quantized:inductor"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quantized:quantum_analyzer"
+        "recipe": "quantized:repulsion_core"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_512_q_bytes"
+      "has_inductor"
     ]
   ],
   "rewards": {
     "recipes": [
-      "quantized:quantum_analyzer"
+      "quantized:repulsion_core"
     ]
   }
 }

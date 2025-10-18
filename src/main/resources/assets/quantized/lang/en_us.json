@@ -42,6 +42,11 @@
   "item.quantized.copper_wire": "Copper Wire",
   "item.quantized.inductor": "Inductor",
 
+  "item.quantized.repulsion_core": "Repulsion Core",
+  "item.quantized.attraction_core": "Attraction Core",
+  "item.quantized.carbon_silicon_battery": "Carbon Silicon Battery",
+  "item.quantized.flux_tank": "Flux Tank",
+
   "item.quantized.mallet": "Mallet",
   "item.quantized.wire_cutters": "Wire Cutters",
 

@@ -35,6 +35,12 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.COPPER_WIRE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.INDUCTOR.get(), ModelTemplates.FLAT_ITEM);
 
+        itemModels.generateFlatItem(ModItems.ATTRACTION_CORE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.REPULSION_CORE.get(), ModelTemplates.FLAT_ITEM);
+
+        itemModels.generateFlatItem(ModItems.CARBON_SILICON_BATTERY.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.FLUX_TANK.get(), ModelTemplates.FLAT_ITEM);
+
         itemModels.generateFlatItem(ModItems.Q_BYTES_8.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.Q_BYTES_64.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.Q_BYTES_512.get(), ModelTemplates.FLAT_ITEM);

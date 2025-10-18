@@ -2,19 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:carbon_silicon_battery",
+    "C": "minecraft:end_crystal",
     "I": "quantized:inductor",
+    "N": "quantized:steel_nugget",
     "P": "quantized:steel_plate",
-    "T": "quantized:flux_tank",
-    "W": "quantized:copper_wire"
+    "R": "minecraft:redstone_block"
   },
   "pattern": [
-    "PIP",
-    "TWB",
-    "PIP"
+    "PPN",
+    "RCI",
+    "PPN"
   ],
   "result": {
     "count": 1,
-    "id": "quantized:flux_generator"
+    "id": "quantized:attraction_core"
   }
 }

@@ -124,6 +124,47 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('W', ModItems.COPPER_WIRE.get())
                 .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
 
+        shaped(RecipeCategory.MISC, ModItems.ATTRACTION_CORE.get())
+                .pattern("PPN")
+                .pattern("RCI")
+                .pattern("PPN")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('R', Items.REDSTONE_BLOCK)
+                .define('C', Items.END_CRYSTAL)
+                .define('I', ModItems.INDUCTOR.get())
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_inductor", has(ModItems.INDUCTOR)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.REPULSION_CORE.get())
+                .pattern("NPP")
+                .pattern("ICG")
+                .pattern("NPP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('G', Items.GLOWSTONE)
+                .define('C', Items.END_CRYSTAL)
+                .define('I', ModItems.INDUCTOR.get())
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_inductor", has(ModItems.INDUCTOR)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.CARBON_SILICON_BATTERY.get())
+                .pattern("QPN")
+                .pattern("PCP")
+                .pattern("NPQ")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('Q', Items.QUARTZ)
+                .define('C', Items.COAL)
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_steel_plate", has(ModItems.STEEL_PLATE)).save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.FLUX_TANK.get())
+                .pattern("PNP")
+                .pattern("PTP")
+                .pattern("PPP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('T', Items.TINTED_GLASS)
+                .define('N', ModItems.STEEL_NUGGET.get())
+                .unlockedBy("has_steel_plate", has(ModItems.STEEL_PLATE)).save(output);
+
         shaped(RecipeCategory.MISC, ModItems.DRIVE_CASING.get())
                 .pattern("SNS")
                 .pattern("SGS")
@@ -134,54 +175,59 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_copper_wire", has(ModItems.COPPER_WIRE)).save(output);
 
         shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_DESTABILIZER.get())
-                .pattern("INI")
-                .pattern("PBP")
-                .pattern("GRC")
-                .define('N', ModItems.STEEL_NUGGET.get())
-                .define('I', ModItems.INDUCTOR.get())
+                .pattern("PWP")
+                .pattern("TRB")
+                .pattern("PWP")
                 .define('P', ModItems.STEEL_PLATE.get())
-                .define('B', Items.NETHER_STAR)
-                .define('G', ModItems.STEEL_GEAR.get())
-                .define('R', ModItems.STEEL_ROD.get())
-                .define('C', ModItems.COPPER_WIRE.get())
-                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT)).save(output);
+                .define('W', ModItems.COPPER_WIRE.get())
+                .define('T', ModItems.FLUX_TANK.get())
+                .define('R', ModItems.REPULSION_CORE.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .unlockedBy("has_repulsion_core", has(ModItems.REPULSION_CORE)).save(output);
 
         shaped(RecipeCategory.MISC, ModBlocks.FLUX_GENERATOR.get())
-                .pattern("CRC")
-                .pattern("PNP")
-                .pattern("IBG")
-                .define('C', ModItems.COPPER_WIRE.get())
-                .define('R', Items.REDSTONE)
+                .pattern("PIP")
+                .pattern("TWB")
+                .pattern("PIP")
                 .define('P', ModItems.STEEL_PLATE.get())
-                .define('N', Items.NETHERITE_INGOT)
+                .define('W', ModItems.COPPER_WIRE.get())
+                .define('T', ModItems.FLUX_TANK.get())
                 .define('I', ModItems.INDUCTOR.get())
-                .define('B', ModBlocks.STEEL_BLOCK.get())
-                .define('G', ModItems.STEEL_GEAR.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
                 .unlockedBy("has_steel_ingot", has(ModItems.STEEL_NUGGET.get())).save(output);
 
         shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_STABILIZER.get())
-                .pattern("CMC")
-                .pattern("PAP")
-                .pattern("RGR")
-                .define('C', ModItems.COPPER_WIRE.get())
-                .define('M', Items.COMPARATOR)
+                .pattern("PWP")
+                .pattern("TAB")
+                .pattern("PWP")
                 .define('P', ModItems.STEEL_PLATE.get())
-                .define('A', Items.AMETHYST_BLOCK)
-                .define('R', ModItems.STEEL_ROD.get())
-                .define('G', ModItems.STEEL_GEAR.get())
-                .unlockedBy("has_steel_ingot", has(ModItems.STEEL_INGOT.get())).save(output);
+                .define('W', ModItems.COPPER_WIRE.get())
+                .define('T', ModItems.FLUX_TANK.get())
+                .define('A', ModItems.ATTRACTION_CORE.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .unlockedBy("has_attraction_core", has(ModItems.ATTRACTION_CORE)).save(output);
 
         shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_ANALYZER.get())
-                .pattern("CIC")
-                .pattern("PQP")
-                .pattern("RGR")
-                .define('C', ModItems.COPPER_WIRE.get())
-                .define('I', ModItems.INDUCTOR.get())
+                .pattern("PWP")
+                .pattern("5B5")
+                .pattern("PWP")
                 .define('P', ModItems.STEEL_PLATE.get())
-                .define('Q', ModItems.Q_BYTES_512.get())
-                .define('R', ModItems.STEEL_ROD.get())
-                .define('G', ModItems.STEEL_GEAR.get())
-                .unlockedBy("has_q_bytes", has(ModItems.Q_BYTE.get())).save(output);
+                .define('W', ModItems.COPPER_WIRE.get())
+                .define('5', ModItems.Q_BYTES_512.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .unlockedBy("has_512_q_bytes", has(ModItems.Q_BYTES_512)).save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_FABRICATOR.get())
+                .pattern("PRP")
+                .pattern("T5B")
+                .pattern("PAP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('T', ModItems.FLUX_TANK.get())
+                .define('A', ModItems.ATTRACTION_CORE.get())
+                .define('R', ModItems.REPULSION_CORE.get())
+                .define('5', ModItems.Q_BYTES_512.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .unlockedBy("has_battery", has(ModItems.CARBON_SILICON_BATTERY)).save(output);
 
         driveUnpackRecipe(ModItems.DRIVE_8.get(), ModItems.Q_BYTES_8.get());
         driveUnpackRecipe(ModItems.DRIVE_64.get(), ModItems.Q_BYTES_64.get());

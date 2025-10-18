@@ -25,7 +25,7 @@ public class DriveItem extends Item {
     private final int maxPatternSize;
 
     public DriveItem(Properties properties, int capacity, int maxPatternSize) {
-        super(properties);
+        super(properties.stacksTo(1));
         this.capacity = capacity;
         this.maxPatternSize = maxPatternSize;
     }

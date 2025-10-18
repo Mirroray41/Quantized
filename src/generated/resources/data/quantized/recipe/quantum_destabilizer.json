@@ -2,18 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:nether_star",
-    "C": "quantized:copper_wire",
-    "G": "quantized:steel_gear",
-    "I": "quantized:inductor",
-    "N": "quantized:steel_nugget",
+    "B": "quantized:carbon_silicon_battery",
     "P": "quantized:steel_plate",
-    "R": "quantized:steel_rod"
+    "R": "quantized:repulsion_core",
+    "T": "quantized:flux_tank",
+    "W": "quantized:copper_wire"
   },
   "pattern": [
-    "INI",
-    "PBP",
-    "GRC"
+    "PWP",
+    "TRB",
+    "PWP"
   ],
   "result": {
     "count": 1,

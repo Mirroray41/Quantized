@@ -58,6 +58,10 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.WIRE_CUTTERS);
                         output.accept(ModItems.COPPER_WIRE);
                         output.accept(ModItems.INDUCTOR);
+                        output.accept(ModItems.REPULSION_CORE);
+                        output.accept(ModItems.ATTRACTION_CORE);
+                        output.accept(ModItems.CARBON_SILICON_BATTERY);
+                        output.accept(ModItems.FLUX_TANK);
                         output.accept(ModBlocks.QUANTUM_DESTABILIZER);
                         output.accept(ModBlocks.QUANTUM_ANALYZER);
                         output.accept(ModBlocks.QUANTUM_STABILIZER);

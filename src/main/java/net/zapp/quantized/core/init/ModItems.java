@@ -94,6 +94,19 @@ public class ModItems {
     public static final DeferredItem<Item> INDUCTOR = ITEMS.registerItem("inductor",
             Item::new, new Item.Properties());
 
+    public static final DeferredItem<Item> REPULSION_CORE = ITEMS.registerItem("repulsion_core",
+            Item::new, new Item.Properties());
+
+    public static final DeferredItem<Item> ATTRACTION_CORE = ITEMS.registerItem("attraction_core",
+            Item::new, new Item.Properties());
+
+    public static final DeferredItem<Item> FLUX_TANK = ITEMS.registerItem("flux_tank",
+            Item::new, new Item.Properties());
+
+    public static final DeferredItem<Item> CARBON_SILICON_BATTERY = ITEMS.registerItem("carbon_silicon_battery",
+            Item::new, new Item.Properties());
+
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

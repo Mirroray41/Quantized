@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_512_q_bytes": {
+    "has_battery": {
       "conditions": {
         "items": [
           {
-            "items": "quantized:512_q_bytes"
+            "items": "quantized:carbon_silicon_battery"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "quantized:quantum_analyzer"
+        "recipe": "quantized:quantum_fabricator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_512_q_bytes"
+      "has_battery"
     ]
   ],
   "rewards": {
     "recipes": [
-      "quantized:quantum_analyzer"
+      "quantized:quantum_fabricator"
     ]
   }
 }

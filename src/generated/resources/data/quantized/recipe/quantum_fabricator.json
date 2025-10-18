@@ -2,19 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "5": "quantized:512_q_bytes",
+    "A": "quantized:attraction_core",
     "B": "quantized:carbon_silicon_battery",
-    "I": "quantized:inductor",
     "P": "quantized:steel_plate",
-    "T": "quantized:flux_tank",
-    "W": "quantized:copper_wire"
+    "R": "quantized:repulsion_core",
+    "T": "quantized:flux_tank"
   },
   "pattern": [
-    "PIP",
-    "TWB",
-    "PIP"
+    "PRP",
+    "T5B",
+    "PAP"
   ],
   "result": {
     "count": 1,
-    "id": "quantized:flux_generator"
+    "id": "quantized:quantum_fabricator"
   }
 }

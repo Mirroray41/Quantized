@@ -2,17 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": "minecraft:amethyst_block",
-    "C": "quantized:copper_wire",
-    "G": "quantized:steel_gear",
-    "M": "minecraft:comparator",
+    "A": "quantized:attraction_core",
+    "B": "quantized:carbon_silicon_battery",
     "P": "quantized:steel_plate",
-    "R": "quantized:steel_rod"
+    "T": "quantized:flux_tank",
+    "W": "quantized:copper_wire"
   },
   "pattern": [
-    "CMC",
-    "PAP",
-    "RGR"
+    "PWP",
+    "TAB",
+    "PWP"
   ],
   "result": {
     "count": 1,
