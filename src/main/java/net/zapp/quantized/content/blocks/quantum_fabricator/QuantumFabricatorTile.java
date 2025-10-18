@@ -95,6 +95,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     private int maxProgress = 72;
     public int powerConsumption = 16;
     private int outputAmount = 0;
+    private int selectedSlot = -1;
     int viewers = 0;
 
 
@@ -115,6 +116,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
                 case 6 -> driveM.getFilteredSize();
                 case 7 -> driveM.getRowOffset();
                 case 8 -> outputAmount;
+                case 9 -> selectedSlot;
                 default -> 0;
             };
         }
@@ -127,12 +129,13 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
                 case 2 -> powerConsumption = value;
                 case 7 -> driveM.setRowOffset(value);
                 case 8 -> outputAmount = value;
+                case 9 -> selectedSlot = value;
             }
         }
 
         @Override
         public int getCount() {
-            return 9;
+            return 10;
         }
     };
 
@@ -198,6 +201,10 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
             tankM.drainFluid(df.flux());
             itemM.getHandler().insertItem(OUTPUT_SLOT, selectedItem.copy(), false);
             outputAmount--;
+            if (outputAmount == 0) {
+                selectedSlot = -1;
+                selectedItem = ItemStack.EMPTY;
+            }
             progress = 0;
             driveM.recomputeItemSlots();
         }
@@ -251,12 +258,14 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
         out.putInt("outputAmount", outputAmount);
+        driveM.recacheDisks();
         super.saveAdditional(out);
     }
 
     @Override
     protected void loadAdditional(ValueInput in) {
         super.loadAdditional(in);
+        driveM.recacheDisks();
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         // modules
@@ -276,6 +285,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         return saveWithoutMetadata(registries);
     }
 
+
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -288,9 +298,20 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         }
     }
 
-    public void selectItem(ItemStack item) {
-        selectedItem = item;
+    public void selectItem(int slot) {
+        if (slot == -1) {
+            selectedSlot = -1;
+            selectedItem = ItemStack.EMPTY;
+            outputAmount = 0;
+            resetCraft();
+            markDirtyAndUpdate();
+            return;
+        }
+        selectedSlot = slot;
+        selectedItem = itemM.getHandler().getStackInSlot(slot);
+        markDirtyAndUpdate();
     }
+
 
     public ItemStack getSelectedItem() {
         return selectedItem;

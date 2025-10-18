@@ -14,8 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -62,24 +60,21 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     private AbstractWidget cancelButton;
 
     private float scrollAmount = 0;
-
     private float scrollStep = 1;
-
     private int rowOffest;
-
     private int rows;
 
     private EditBox searchBox;
     private String lastSent = "";
 
     private int count = 0;
-    private boolean isWorking = false;
+    private Slot queued = null;
+
+    // NEW: track which action button is currently shown and keep it in sync each frame
+    private boolean showingCancel = false;
 
     public QuantumFabricatorScreen(QuantumFabricatorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-
     }
 
     @Override
@@ -88,42 +83,31 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         int y = (height - imageHeight) / 2;
 
         rows = menu.getItemCount() / 9;
-
-        if (menu.getItemCount() % 9 != 0) {
-            rows++;
-        }
-
-        if (rows > 3) {
-            scrollStep = (float) scrollHeight / (rows - 3);
-        }
+        if (menu.getItemCount() % 9 != 0) rows++;
+        if (rows > 3) scrollStep = (float) scrollHeight / (rows - 3);
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
-
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SCROLL_TEXTURE, x + 174, y + 30 + Math.round(scrollAmount), 0, 0, 12, 15, 12, 15);
-
 
         renderProgressArrow(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
         renderFluidTank(guiGraphics, x, y);
-
     }
 
-    private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
-        if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_TEXTURE,x + 86, y + 124, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
+    private void renderProgressArrow(GuiGraphics g, int x, int y) {
+        if (menu.isCrafting()) {
+            g.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_TEXTURE, x + 86, y + 124, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
         }
     }
 
-    private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 4, y + 150 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
+    private void renderEnergyBar(GuiGraphics g, int x, int y) {
+        g.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE, x + 4, y + 150 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
-    private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
-        renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 181, y + 151, 10, 52);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 180, y + 150, 0, 0, 12, 54, 12, 54);
+    private void renderFluidTank(GuiGraphics g, int x, int y) {
+        renderFluidMeterContent(g, menu.getFluid(), menu.getFluidCapacity(), x + 181, y + 151, 10, 52);
+        g.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 180, y + 150, 0, 0, 12, 54, 12, 54);
     }
-
-
 
     @Override
     protected void init() {
@@ -138,75 +122,94 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         searchBox.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBox);
 
-        sendButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(false), Component.literal("✔").withColor(Color.GREEN.getRGB()));
-        cancelButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(true), Component.literal("✘").withColor(Color.RED.getRGB()));
+        sendButton   = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(false), Component.literal("✔").withColor(Color.GREEN.getRGB()));
+        cancelButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(true ), Component.literal("✘").withColor(Color.RED.getRGB()));
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> modifyCount(1), Component.literal("+I").withColor(Color.GREEN.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> modifyCount(10), Component.literal("+X").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> modifyCount(1),   Component.literal("+I").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> modifyCount(10),  Component.literal("+X").withColor(Color.GREEN.getRGB())));
         addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 97, 16, 12, p -> modifyCount(100), Component.literal("+C").withColor(Color.GREEN.getRGB())));
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> modifyCount(-1), Component.literal("-I").withColor(Color.RED.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> modifyCount(-10), Component.literal("-X").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> modifyCount(-1),   Component.literal("-I").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> modifyCount(-10),  Component.literal("-X").withColor(Color.RED.getRGB())));
         addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 115, 16, 12, p -> modifyCount(-100), Component.literal("-C").withColor(Color.RED.getRGB())));
 
-        if (menu.getAmount() > 0) {
+        boolean hasWork = (menu.getAmount() > 0) || menu.isCrafting();
+        if (hasWork) {
             addRenderableWidget(cancelButton);
+            showingCancel = true;
         } else {
             addRenderableWidget(sendButton);
+            showingCancel = false;
         }
+
+
     }
 
-    private void drawQueuedOverlay(GuiGraphics guiGraphics) {
-        Slot s = menu.getQueuedItemSlot();
-        if (s == null || (count == 0 && menu.getAmount() == 0)) return;
-
-        int x = leftPos + s.x;
-        int y = topPos + s.y;
-
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SELECTED_TEXTURE, x-3, y-3, 0, 0, 22, 22, 22, 22);
+    private void drawQueuedOverlay(GuiGraphics g) {
+        if (queued == null) return;
+        int x = leftPos + queued.x;
+        int y = topPos + queued.y;
+        g.blit(RenderPipelines.GUI_TEXTURED, SELECTED_TEXTURE, x - 3, y - 3, 0, 0, 22, 22, 22, 22);
     }
+
+    private void updateSendCancelButton() {
+        boolean hasWork = (menu.getAmount() > 0) || menu.isCrafting();
+        if (hasWork == showingCancel) return;
+
+        if (hasWork) {
+            removeWidget(sendButton);
+            addRenderableWidget(cancelButton);
+        } else {
+            removeWidget(cancelButton);
+            addRenderableWidget(sendButton);
+        }
+        showingCancel = hasWork;
+    }
+
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.render(g, mouseX, mouseY, partialTick);
+
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
         int amnt = menu.getAmount() > 0 ? menu.getAmount() : count;
-        guiGraphics.drawCenteredString(font, Component.literal("" + amnt), x + 98, y + 86, 0xFFeaf2f8);
+        g.drawCenteredString(font, Component.literal("" + amnt), x + 98, y + 86, 0xFFeaf2f8);
 
+        this.queued = computeQueuedSlot();
+        drawQueuedOverlay(g);
 
-        drawQueuedOverlay(guiGraphics);
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        // keep the button reflecting actual selection state
+        updateSendCancelButton();
+
+        renderTooltip(g, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, titleLabelY - 35, 0xFF5e6469, false);
-        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 33, 0xFF5e6469, false);
+    protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
+        g.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, titleLabelY - 35, 0xFF5e6469, false);
+        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 33, 0xFF5e6469, false);
     }
 
-    protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y, int w, int h) {
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(x, y);
-        renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
-        guiGraphics.pose().popMatrix();
+    protected void renderFluidMeterContent(GuiGraphics g, FluidStack fluidStack, int tankCapacity, int x, int y, int w, int h) {
+        g.pose().pushMatrix();
+        g.pose().translate(x, y);
+        renderFluidStack(g, fluidStack, tankCapacity, w, h);
+        g.pose().popMatrix();
     }
 
-    private void renderFluidStack(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int w, int h) {
-        if (fluidStack.isEmpty())
-            return;
+    private void renderFluidStack(GuiGraphics g, FluidStack fluidStack, int tankCapacity, int w, int h) {
+        if (fluidStack.isEmpty()) return;
 
         Fluid fluid = fluidStack.getFluid();
-        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid);
-        ResourceLocation stillFluidImageId = fluidTypeExtensions.getStillTexture(fluidStack);
-        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).
-                apply(stillFluidImageId);
+        IClientFluidTypeExtensions fx = IClientFluidTypeExtensions.of(fluid);
+        ResourceLocation stillFluidImageId = fx.getStillTexture(fluidStack);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(stillFluidImageId);
 
-        int fluidColorTint = fluidTypeExtensions.getTintColor(fluidStack);
-
-        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity) ?
-                0 : (h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0) ? 0 :
+        int tint = fx.getTintColor(fluidStack);
+        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity)
+                ? 0 : (h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0) ? 0 :
                 (Math.min(fluidStack.getAmount(), tankCapacity - 1) * h / tankCapacity + 1)));
 
         for (int yOffset = h; yOffset > fluidMeterPos; yOffset -= 16) {
@@ -214,46 +217,43 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
                 int width = Math.min(w - xOffset, 16);
                 int height = Math.min(yOffset - fluidMeterPos, 16);
 
-                float u0 = stillFluidSprite.getU0();
-                float u1 = stillFluidSprite.getU1();
-                float v0 = stillFluidSprite.getV0();
-                float v1 = stillFluidSprite.getV1();
+                float u0 = sprite.getU0();
+                float u1 = sprite.getU1();
+                float v0 = sprite.getV0();
+                float v1 = sprite.getV1();
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
-                guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
-                        RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
-                        new Matrix3x2f(guiGraphics.pose()),
+                GpuTextureView tex = minecraft.getTextureManager().getTexture(sprite.atlasLocation()).getTextureView();
+                g.guiRenderState.submitGuiElement(new FluidTankRenderState(
+                        RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(tex),
+                        new Matrix3x2f(g.pose()),
                         xOffset, yOffset, width, height,
-                        u0, u1, v0, v1, fluidColorTint,
-                        guiGraphics.scissorStack.peek()
+                        u0, u1, v0, v1, tint,
+                        g.scissorStack.peek()
                 ));
             }
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderTooltip(guiGraphics, mouseX, mouseY);
+    protected void renderTooltip(GuiGraphics g, int mouseX, int mouseY) {
+        super.renderTooltip(g, mouseX, mouseY);
 
         if (isHovering(-6, 116, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
             components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
-
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            g.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(170, 116, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
             components.add(Component.translatable("tooltip.quantized.tank.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
-
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            g.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(76, 90, 24, 3, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(1);
             components.add(Component.translatable("tooltip.quantized.progress.progress_ticks", menu.getProgress(), menu.getMaxProgress(), menu.getProgressPercentage()));
-
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            g.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -284,7 +284,6 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         return handled;
     }
 
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (searchBox != null && searchBox.isFocused()) {
@@ -293,16 +292,8 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
                 if (getFocused() == searchBox) setFocused(null);
                 return true;
             }
-
-            if (minecraft != null && minecraft.options.keyInventory.matches(keyCode, scanCode)) {
-                return true;
-            }
-
-            if (checkHotbarKeyPressed(keyCode, scanCode)) {
-                return true;
-            }
-
-
+            if (minecraft != null && minecraft.options.keyInventory.matches(keyCode, scanCode)) return true;
+            if (checkHotbarKeyPressed(keyCode, scanCode)) return true;
             if (searchBox.keyPressed(keyCode, scanCode, modifiers)) return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -310,13 +301,9 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        if (searchBox != null && searchBox.isFocused() && searchBox.charTyped(codePoint, modifiers)) {
-            return true;
-        }
+        if (searchBox != null && searchBox.isFocused() && searchBox.charTyped(codePoint, modifiers)) return true;
         return super.charTyped(codePoint, modifiers);
     }
-
-
 
     @Override
     public void onClose() {
@@ -326,10 +313,8 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             searchBox.setValue("");
             lastSent = "";
         }
-
         ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), ""));
         ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
-
         super.onClose();
     }
 
@@ -349,21 +334,26 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     private void modifyCount(int count) {
         this.count = Math.max(this.count + count, 0);
-        isWorking = false;
     }
 
     private void syncAmountSelector(boolean reset) {
         ClientPacketDistributor.sendToServer(new ModifyAmountButtonC2S(menu.blockEntity.getBlockPos(), count, reset));
-        isWorking = !reset;
-        count = 0;
+
         if (reset) {
+            queued = null;
+            menu.unselectItem();
             removeWidget(cancelButton);
             addRenderableWidget(sendButton);
+            showingCancel = false;
         } else {
             removeWidget(sendButton);
             addRenderableWidget(cancelButton);
+            showingCancel = true;
         }
+
+        count = 0;
     }
+
 
     protected int getTextLen(String text) {
         int out = 0;
@@ -377,5 +367,13 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             }
         }
         return out;
+    }
+
+    private Slot computeQueuedSlot() {
+        if (hoveredSlot != null) {
+            int idx = menu.slots.indexOf(hoveredSlot);
+            if (idx >= 7+36 && idx <= 33+36) return hoveredSlot;
+        }
+        return menu.getQueuedItemSlot();
     }
 }

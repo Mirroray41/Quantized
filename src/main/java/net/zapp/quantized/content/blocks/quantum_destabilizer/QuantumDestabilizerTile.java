@@ -148,6 +148,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         setWorking(level, pos, state, working);
         if (!working) {
             if (progress > 0) progress = Math.max(0, progress - 1);
+            powerConsumption = 0;
             return;
         }
 

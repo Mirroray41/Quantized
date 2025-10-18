@@ -24,11 +24,11 @@ import java.util.Optional;
 
 public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStabilizerMenu> {
     // TODO: CHANGE THIS WHEN TEXTURES ARE MADE
-    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/quantum_stabilizer_screen.png");
-    private static final ResourceLocation PROGRESS_SPRITE = Quantized.id("textures/gui/quantum_stabilizer/spiral_progress.png");
+    public static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/quantum_stabilizer_screen.png");
+    public static final ResourceLocation PROGRESS_SPRITE = Quantized.id("textures/gui/quantum_stabilizer/spiral_progress.png");
 
-    private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
-    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
+    public static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
+    public static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
 
     public QuantumStabilizerScreen(QuantumStabilizerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

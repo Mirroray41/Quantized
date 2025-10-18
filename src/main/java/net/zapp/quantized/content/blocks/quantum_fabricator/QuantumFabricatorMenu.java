@@ -24,7 +24,7 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public QuantumFabricatorMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(9));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(10));
     }
 
     public QuantumFabricatorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -121,13 +121,8 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     }
 
     public void modifyAmount(int amount) {
-        int cur = data.get(8);
-        data.set(8, Math.max(0, cur + amount));
+        data.set(8, amount);
 
-    }
-
-    public void resetAmount() {
-        data.set(8, 0);
     }
 
     public int getAmount() {
@@ -136,30 +131,25 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
 
     public void selectItem(int slotId) {
         if (blockEntity.getDriveInterfaceModule().getFilteredSize() == 0) return;
-        int slot = slotId - 27 - 9;
+        int slot = slotId - 36;
         if (slot < 7 || slot > 33) return;
-        ItemStack selected = blockEntity.getItemHandler().getStackInSlot(slot).copy();
-        blockEntity.selectItem(selected);
+        data.set(9, slot);
+        blockEntity.selectItem(slot);
+    }
+
+
+    public void resetAmount() {
+        data.set(8, 0);
     }
 
     public void unselectItem() {
-        blockEntity.selectItem(ItemStack.EMPTY);
+        data.set(9, -1);
+        blockEntity.selectItem(-1);
     }
 
     public Slot getQueuedItemSlot() {
-        ItemStack selected = blockEntity.getSelectedItem();
-        if (selected.isEmpty()) return null;
-        Item selectedItem = selected.getItem();
-
-        int slot = -1;
-        for (int i = 7; i < 34; i++) {
-            if (blockEntity.getItemHandler().getStackInSlot(i).is(selectedItem)) {
-                slot = i;
-                break;
-            }
-        }
-        if (slot == -1) return null;
-        return getSlot(slot + 36);
+        if (data.get(9) == -1) return null;
+        return getSlot(data.get(9) + 36);
     }
 
 
@@ -169,12 +159,16 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
             if (slotId < 7 + 27 + 9) {
                 doClick(slotId, button, clickType, player);
             } else if (slotId <= 33 + 27 + 9) {
-                selectItem(slotId);
+                if (clickType == ClickType.PICKUP) {
+                    selectItem(slotId);
+                }
             }
+            broadcastChanges();
         } catch (Exception exception) {
             createCrashReport(exception, slotId, button, clickType);
         }
     }
+
 
     private void createCrashReport(Exception exception, int slotId, int button, ClickType clickType) throws ReportedException {
         CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
@@ -288,4 +282,5 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
             }
         }
     }
+
 }

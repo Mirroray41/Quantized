@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -59,10 +58,13 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
     }
 
+    private static final int DEFAULT_POWER_CONSUME = 16;
+    private static final int DEFAULT_FLUX_CONSUME = 16;
+
     private int progress = 0;
     private int maxProgress = 20;
-    private int powerConsumption = 16;
-    private int fluxConsumption = 16;
+    private int powerConsumption = DEFAULT_POWER_CONSUME;
+    private int fluxConsumption = DEFAULT_FLUX_CONSUME;
     private boolean wasWorking = false;
 
     public final ContainerData data = new ContainerData() {
@@ -118,8 +120,13 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         setWorking(level, pos, state, working);
         // We don't wanna be mean.
         if (!working) {
+            powerConsumption = 0;
+            fluxConsumption = 0;
             return;
         }
+
+        powerConsumption = DEFAULT_POWER_CONSUME;
+        fluxConsumption = DEFAULT_FLUX_CONSUME;
 
 
         progress++;

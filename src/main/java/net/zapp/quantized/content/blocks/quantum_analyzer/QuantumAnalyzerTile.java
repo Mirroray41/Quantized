@@ -215,12 +215,15 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
+        driveM.recacheDisks();
         super.saveAdditional(out);
     }
 
     @Override
     protected void loadAdditional(ValueInput in) {
         super.loadAdditional(in);
+        driveM.recacheDisks();
+
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         itemM.load(in, regs);
