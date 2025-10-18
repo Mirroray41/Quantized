@@ -94,7 +94,7 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
         pushEnergy(level, pos);
 
-        boolean canPay = tankM.canPay(fluxConsumption);
+        boolean canPay = tankM.canPay(DEFAULT_FLUX_CONSUMPTION);
         boolean canOutput = energyM.canInsert(powerProduction);
         boolean canWork = canPay && canOutput;
 

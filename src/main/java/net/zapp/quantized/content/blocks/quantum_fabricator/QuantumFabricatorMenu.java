@@ -123,6 +123,7 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     public void modifyAmount(int amount) {
         int cur = data.get(8);
         data.set(8, Math.max(0, cur + amount));
+
     }
 
     public void resetAmount() {
@@ -141,18 +142,13 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
         blockEntity.selectItem(selected);
     }
 
-    public Item getSelected() {
-        return blockEntity.getSelectedItem().getItem();
-    }
-
     public void unselectItem() {
         blockEntity.selectItem(ItemStack.EMPTY);
     }
 
     public Slot getQueuedItemSlot() {
         ItemStack selected = blockEntity.getSelectedItem();
-        int amount = getAmount();
-        if (selected.isEmpty() || amount <= 0) return null;
+        if (selected.isEmpty()) return null;
         Item selectedItem = selected.getItem();
 
         int slot = -1;

@@ -25,6 +25,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/progress.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
+    private static final ResourceLocation DELETE = Quantized.id("textures/gui/quantum_analyzer/delete.png");
 
     protected int imageHeight = 180;
 
@@ -99,24 +100,18 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        drawShiftSlotOverlay(guiGraphics);
+        drawShiftSlotOverlay(guiGraphics, mouseX, mouseY);
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void drawShiftSlotOverlay(GuiGraphics guiGraphics) {
+    private void drawShiftSlotOverlay(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Slot s = hoveredSlot;
         if (s == null || !hasShiftDown()) return;
 
         int x = leftPos + s.x;
         int y = topPos + s.y;
 
-        guiGraphics.fill(x, y, x + 16, y + 16, 0x80FF0000);
-
-        int border = 0xA0FFFFFF;
-        guiGraphics.fill(x, y, x + 16, y + 1, border);
-        guiGraphics.fill(x, y + 15, x + 16, y + 16, border);
-        guiGraphics.fill(x, y, x + 1, y + 16, border);
-        guiGraphics.fill(x + 15, y, x + 16, y + 16, border);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DELETE, x, y, 0, 0, 5, 5, 5, 5);
     }
 
     @Override

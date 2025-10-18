@@ -43,25 +43,25 @@ public class ModItems {
             Item::new, new Item.Properties());
 
     public static final DeferredItem<Item> DRIVE_8 = ITEMS.registerItem("8_qb_drive",
-            properties -> new DriveItem(properties, 8, 2), new Item.Properties());
+            properties -> new DriveItem(properties, 8, 4), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_64 = ITEMS.registerItem("64_qb_drive",
-            properties -> new DriveItem(properties, 64, 4), new Item.Properties());
+            properties -> new DriveItem(properties, 64, 8), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_512 = ITEMS.registerItem("512_qb_drive",
-            properties -> new DriveItem(properties, 512, 8), new Item.Properties());
+            properties -> new DriveItem(properties, 512, 16), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_4K = ITEMS.registerItem("4_kqb_drive",
-            properties -> new DriveItem(properties, 4096, 16), new Item.Properties());
+            properties -> new DriveItem(properties, 4096, 32), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_32K = ITEMS.registerItem("32_kqb_drive",
-            properties -> new DriveItem(properties, 32768, 32), new Item.Properties());
+            properties -> new DriveItem(properties, 32768, 64), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_256K = ITEMS.registerItem("256_kqb_drive",
-            properties -> new DriveItem(properties, 262144, 64), new Item.Properties());
+            properties -> new DriveItem(properties, 262144, 128), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_2M = ITEMS.registerItem("2_mqb_drive",
-            properties -> new DriveItem(properties, 2097152, 128), new Item.Properties());
+            properties -> new DriveItem(properties, 2097152, 256), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_16M = ITEMS.registerItem("16_mqb_drive",
-            properties -> new DriveItem(properties, 16777216, 256), new Item.Properties());
+            properties -> new DriveItem(properties, 16777216, 512), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_128M = ITEMS.registerItem("128_mqb_drive",
-            properties -> new DriveItem(properties, 134217728, 512), new Item.Properties());
+            properties -> new DriveItem(properties, 134217728, 1024), new Item.Properties());
     public static final DeferredItem<Item> DRIVE_1G = ITEMS.registerItem("1_gqb_drive",
-            properties -> new DriveItem(properties, 1073741824, 1024), new Item.Properties());
+            properties -> new DriveItem(properties, 1073741824, 2048), new Item.Properties());
 
     public static final DeferredItem<Item> DRIVE_CASING = ITEMS.registerItem("drive_casing",
             Item::new, new Item.Properties());

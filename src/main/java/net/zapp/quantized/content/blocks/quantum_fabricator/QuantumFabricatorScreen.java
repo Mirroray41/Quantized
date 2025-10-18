@@ -3,6 +3,7 @@ package net.zapp.quantized.content.blocks.quantum_fabricator;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -49,12 +50,16 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/button.png");
     private static final ResourceLocation BUTTON_PRESSED_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/button_pressed.png");
-
+    private static final ResourceLocation SELECTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/selected.png");
 
     protected int imageHeight = 233;
     protected int imageWidth = 196;
 
     private final int scrollHeight = 37;
+
+    private AbstractWidget sendButton;
+    private AbstractWidget cancelButton;
 
     private float scrollAmount = 0;
 
@@ -67,8 +72,14 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     private EditBox searchBox;
     private String lastSent = "";
 
+    private int count = 0;
+    private boolean isWorking = false;
+
     public QuantumFabricatorScreen(QuantumFabricatorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
     }
 
     @Override
@@ -127,31 +138,32 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         searchBox.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBox);
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> syncAmountSelector(1, false), Component.literal("+I").withColor(Color.GREEN.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> syncAmountSelector(10, false), Component.literal("+X").withColor(Color.GREEN.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 97, 16, 12, p -> syncAmountSelector(100, false), Component.literal("+C").withColor(Color.GREEN.getRGB())));
+        sendButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(false), Component.literal("✔").withColor(Color.GREEN.getRGB()));
+        cancelButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(true), Component.literal("✘").withColor(Color.RED.getRGB()));
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> syncAmountSelector(-1, false), Component.literal("-I").withColor(Color.RED.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> syncAmountSelector(-10, false), Component.literal("-X").withColor(Color.RED.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 115, 16, 12, p -> syncAmountSelector(-100, false), Component.literal("-C").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> modifyCount(1), Component.literal("+I").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> modifyCount(10), Component.literal("+X").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 97, 16, 12, p -> modifyCount(100), Component.literal("+C").withColor(Color.GREEN.getRGB())));
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(0, true), Component.literal("0").withColor(Color.WHITE.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> modifyCount(-1), Component.literal("-I").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> modifyCount(-10), Component.literal("-X").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 115, 16, 12, p -> modifyCount(-100), Component.literal("-C").withColor(Color.RED.getRGB())));
+
+        if (menu.getAmount() > 0) {
+            addRenderableWidget(cancelButton);
+        } else {
+            addRenderableWidget(sendButton);
+        }
     }
 
     private void drawQueuedOverlay(GuiGraphics guiGraphics) {
         Slot s = menu.getQueuedItemSlot();
-        if (s == null) return;
+        if (s == null || (count == 0 && menu.getAmount() == 0)) return;
 
         int x = leftPos + s.x;
         int y = topPos + s.y;
 
-        guiGraphics.fill(x, y, x + 16, y + 16, new Color(30, 180, 0, 150).getRGB());
-
-        int border = 0xA0FFFFFF;
-        guiGraphics.fill(x, y, x + 16, y + 1, border);
-        guiGraphics.fill(x, y + 15, x + 16, y + 16, border);
-        guiGraphics.fill(x, y, x + 1, y + 16, border);
-        guiGraphics.fill(x + 15, y, x + 16, y + 16, border);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SELECTED_TEXTURE, x-3, y-3, 0, 0, 22, 22, 22, 22);
     }
 
     @Override
@@ -160,14 +172,9 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        Item selected = menu.getSelected();
-        String name = selected != Items.AIR ? selected.getName().getString() : "";
-        if (menu.getAmount() == 0 || name.isEmpty())
-            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_none"), x + 75, y + 86, Color.WHITE.getRGB());
-        else if (menu.getAmount() == 1)
-            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_singular", menu.getAmount(), name), x + 65, y + 86, Color.WHITE.getRGB());
-        else
-            guiGraphics.drawString(font, Component.translatable("tooltip.quantized.button.amount_queued_plural", menu.getAmount(), name), x + 55, y + 86, Color.WHITE.getRGB());
+        int amnt = menu.getAmount() > 0 ? menu.getAmount() : count;
+        guiGraphics.drawCenteredString(font, Component.literal("" + amnt), x + 98, y + 86, 0xFFeaf2f8);
+
 
         drawQueuedOverlay(guiGraphics);
         renderTooltip(guiGraphics, mouseX, mouseY);
@@ -340,8 +347,22 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         menu.setRowOffset(rowOffest);
     }
 
-    private void syncAmountSelector(int amount, boolean reset) {
-        ClientPacketDistributor.sendToServer(new ModifyAmountButtonC2S(menu.blockEntity.getBlockPos(), amount, reset));
+    private void modifyCount(int count) {
+        this.count = Math.max(this.count + count, 0);
+        isWorking = false;
+    }
+
+    private void syncAmountSelector(boolean reset) {
+        ClientPacketDistributor.sendToServer(new ModifyAmountButtonC2S(menu.blockEntity.getBlockPos(), count, reset));
+        isWorking = !reset;
+        count = 0;
+        if (reset) {
+            removeWidget(cancelButton);
+            addRenderableWidget(sendButton);
+        } else {
+            removeWidget(sendButton);
+            addRenderableWidget(cancelButton);
+        }
     }
 
     protected int getTextLen(String text) {

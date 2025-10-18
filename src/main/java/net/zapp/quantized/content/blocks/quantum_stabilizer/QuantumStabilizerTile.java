@@ -26,6 +26,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModItems;
+import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
@@ -125,7 +126,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         energyM.extractPower(powerConsumption);
         tankM.drainFluid(fluxConsumption);
 
-        level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1f, 1f + (float) progress / maxProgress);
+        level.playSound(null, pos, ModSounds.QUANTUM_STABILIZER_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / maxProgress);
 
         // This machine is not perfect, sometimes you get nothing, other times you get more than you asked for.
         if (progress >= maxProgress) {
@@ -133,16 +134,10 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
             if (RandomUtils.percentChance(75)) {
                 if (RandomUtils.percentChance(5) && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get())) {
                     itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), 1), false);
-                    level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                     return;
                 }
-
                 itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), 1), false);
-                level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 1f, 1f);
-                return;
-
             }
-            level.playSound(null, pos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1f, 1f);
         }
     }
 

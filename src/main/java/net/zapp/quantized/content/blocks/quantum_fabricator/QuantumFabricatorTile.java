@@ -156,7 +156,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        if (selectedItem.isEmpty() || outputAmount <= 0 || driveM.getFilteredSize() == 0) {
+        if (selectedItem.isEmpty() || outputAmount <= 0) {
             resetCraft();
             return;
         }
