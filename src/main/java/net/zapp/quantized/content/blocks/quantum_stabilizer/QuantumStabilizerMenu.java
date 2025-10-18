@@ -30,14 +30,13 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        // TODO: CHANGE THESE VALUES TO MATCH THE GUI
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34){
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 71, 34){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
             }
         });
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 96, 34){
+        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 89, 34){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -53,9 +52,9 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
     public int getScaledArrowProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);
-        int arrowPixelSize = 13;
+        int arrowPixelSize = 15;
 
-        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress + 10: 0;
+        return maxProgress != 0 && progress != 0 ? 24 - progress * arrowPixelSize / maxProgress: 48;
     }
 
     public int getScaledEnergyBar() {

@@ -192,7 +192,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         progress++;
         energyM.extractPower(powerConsumption);
 
-        level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
+        level.playSound(null, pos, ModSounds.QUANTUM_FABRICATOR_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
         if (progress >= maxProgress) {
             tankM.drainFluid(df.flux());

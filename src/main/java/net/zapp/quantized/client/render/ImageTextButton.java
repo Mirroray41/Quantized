@@ -10,25 +10,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.zapp.quantized.Quantized;
 
 public class ImageTextButton extends Button {
-    private final ResourceLocation TEX;
+    private final ResourceLocation TEXTURE;
+    private final ResourceLocation TEXTURE_PRESSED;
+
     // full texture size (pixels) — set these to your PNG's actual size
     private final int TEX_W;
     private final int TEX_H;
 
-    public ImageTextButton(ResourceLocation tex, int x, int y, int width, int height, OnPress onPress, Component message) {
+    private boolean pressed;
+
+    public ImageTextButton(ResourceLocation texture, ResourceLocation texturePressed, int x, int y, int width, int height, OnPress onPress, Component message) {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
-        TEX = tex;
+        TEXTURE = texture;
+        TEXTURE_PRESSED = texturePressed;
         TEX_W = width;
         TEX_H = height;
     }
 
-    public ImageTextButton(ResourceLocation tex, int x, int y, int width, int height, OnPress onPress) {
-        this(tex, x, y, width, height, onPress, CommonComponents.EMPTY);
+    public ImageTextButton(ResourceLocation texture, ResourceLocation texturePressed, int x, int y, int width, int height, OnPress onPress) {
+        this(texture, texturePressed, x, y, width, height, onPress, CommonComponents.EMPTY);
     }
 
     @Override
     protected void renderWidget(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        gfx.blit(RenderPipelines.GUI_TEXTURED, TEX, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
+        if (!pressed) {
+            gfx.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
+        } else {
+            gfx.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_PRESSED, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
+            pressed = false;
+        }
 
         var font = Minecraft.getInstance().font;
 
@@ -40,6 +50,12 @@ public class ImageTextButton extends Button {
         gfx.pose().translate(0, 0);
         gfx.drawCenteredString(font, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, color);
         gfx.pose().popMatrix();
+    }
+
+    @Override
+    public void onPress() {
+        super.onPress();
+        this.pressed = true;
     }
 }
 

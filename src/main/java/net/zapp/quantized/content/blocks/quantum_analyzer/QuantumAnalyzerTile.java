@@ -163,7 +163,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         progress++;
         energyM.getHandler().extractEnergy(powerConsumption, false);
 
-        level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(),
+        level.playSound(null, pos, ModSounds.QUANTUM_ANALYZER_WORK.value(),
                 SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
 

@@ -24,8 +24,8 @@ import java.util.Optional;
 
 public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStabilizerMenu> {
     // TODO: CHANGE THIS WHEN TEXTURES ARE MADE
-    // private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/quantum_stabilizer_screen.png");
-    // private static final ResourceLocation PROGRESS_SPRITE = Quantized.id("textures/gui/quantum_stabilizer/progress_sprite.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/quantum_stabilizer_screen.png");
+    private static final ResourceLocation PROGRESS_SPRITE = Quantized.id("textures/gui/quantum_stabilizer/spiral_progress.png");
 
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
@@ -39,9 +39,9 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
-        // renderProgressArrow(guiGraphics, x, y);
+        renderProgressArrow(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
         renderFluidTank(guiGraphics, x, y);
 
@@ -50,7 +50,7 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            // guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 48, 48);
         }
     }
 
