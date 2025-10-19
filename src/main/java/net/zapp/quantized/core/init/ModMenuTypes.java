@@ -9,6 +9,7 @@ import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.coal_generator.CoalGeneratorMenu;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
@@ -30,6 +31,8 @@ public class ModMenuTypes {
             registerMenuType("quantum_stabilizer_menu", QuantumStabilizerMenu::new);
     public static final DeferredHolder<MenuType<?>, MenuType<FluxGeneratorMenu>> FLUX_GENERATOR =
             registerMenuType("flux_generator_menu", FluxGeneratorMenu::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<CoalGeneratorMenu>> COAL_GENERATOR =
+            registerMenuType("coal_generator_menu", CoalGeneratorMenu::new);
 
     private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return MENUS.register(name, () -> IMenuTypeExtension.create(factory));

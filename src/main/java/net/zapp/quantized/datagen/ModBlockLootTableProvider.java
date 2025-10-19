@@ -31,6 +31,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.QUANTUM_STABILIZER.get());
         dropSelf(ModBlocks.QUANTUM_FABRICATOR.get());
         dropSelf(ModBlocks.FLUX_GENERATOR.get());
+        dropSelf(ModBlocks.COAL_GENERATOR.get());
     }
 
     protected LootTable.Builder createMultipleOreDrops(Block pBlock, Item item, float minDrops, float maxDrops) {

@@ -85,6 +85,8 @@
   "tooltip.quantized.button.amount_queued_plural": "Queued: %1$s %2$ss",
   "tooltip.quantized.progress.progress_ticks": "Progress: %1$s/%2$st (%3$s%%)",
 
+  "tooltip.quantized.burning.info": "Burn Ticks: %1$s/%2$st",
+
   "block.quantized.quantum_destabilizer": "Quantum Destabilizer",
   "block.quantized.tile.quantum_destabilizer": "Quantum Destabilizer",
   "sound.quantized.quantum_destabilizer.work": "Quantum Destabilizer Working",
@@ -106,5 +108,7 @@
   "sound.quantized.quantum_fabricator.work": "Quantum Fabricator Working",
 
   "block.quantized.tile.machine_block": "Machine Block",
-  "jei.quantized.qbit_crafting.title": "Quantum Stabilization"
+  "jei.quantized.qbit_crafting.title": "Quantum Stabilization",
+  "block.quantized.tile.coal_generator": "Coal Generator",
+  "block.quantized.coal_generator": "Coal Generator"
 }

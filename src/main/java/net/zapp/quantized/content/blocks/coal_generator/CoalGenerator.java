@@ -1,0 +1,82 @@
+package net.zapp.quantized.content.blocks.coal_generator;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorTile;
+import net.zapp.quantized.core.init.ModBlockEntities;
+import org.jetbrains.annotations.Nullable;
+
+public class CoalGenerator extends BaseEntityBlock {
+    public static final MapCodec<net.zapp.quantized.content.blocks.flux_generator.FluxGenerator> CODEC = simpleCodec(net.zapp.quantized.content.blocks.flux_generator.FluxGenerator::new);
+
+    public static final BooleanProperty ON = BooleanProperty.create("on");
+
+
+    public CoalGenerator(BlockBehaviour.Properties properties) {
+        super(properties);
+        registerDefaultState(stateDefinition.any().setValue(ON, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
+        stateBuilder.add(ON);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new CoalGeneratorTile(blockPos, blockState);
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
+        if (!pLevel.isClientSide()) {
+            BlockEntity entity = pLevel.getBlockEntity(pPos);
+            if(entity instanceof CoalGeneratorTile coalGenerator) {
+                pPlayer.openMenu(new SimpleMenuProvider(coalGenerator, Component.translatable("block.quantized.coal_generator")), pPos);
+            } else {
+                throw new IllegalStateException("Our Container provider is missing!");
+            }
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if(level.isClientSide()) {
+            return null;
+        }
+
+        return createTickerHelper(blockEntityType, ModBlockEntities.COAL_GENERATOR.get(),
+                (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
+    }
+}

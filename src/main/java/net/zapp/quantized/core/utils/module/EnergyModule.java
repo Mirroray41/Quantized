@@ -1,8 +1,15 @@
 package net.zapp.quantized.core.utils.module;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.zapp.quantized.core.utils.energy.CustomEnergyStorage;
 
 public class EnergyModule implements Module {
@@ -44,5 +51,19 @@ public class EnergyModule implements Module {
 
     public void extractPower(int toDrain) {
         energy.extractEnergy(toDrain, false);
+    }
+
+    public void pushEnergy(Level level, BlockPos pos) {
+        for (Direction side : Direction.values()) {
+            BlockPos nPos = pos.relative(side);
+            BlockState nState = level.getBlockState(nPos);
+            BlockEntity nBE = level.getBlockEntity(nPos);
+
+            IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, nPos, nState, nBE, side.getOpposite());
+            if (storage != null) {
+                int received = storage.receiveEnergy(getHandler().getEnergy(), false);
+                extractPower(received);
+            }
+        }
     }
 }

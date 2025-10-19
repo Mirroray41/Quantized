@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMenu> {
-    // TODO: UNCOMMENT WHEN TEXTURES ARE MADE.
     private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_screen.png");
     // OPTIONAL THOUGH WOULD BE NICE
     // private static final ResourceLocation WORKING_SPRITE = Quantized.id("textures/gui/flux_generator/working_sprite.png");

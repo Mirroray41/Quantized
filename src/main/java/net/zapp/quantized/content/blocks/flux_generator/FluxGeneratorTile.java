@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,8 +66,8 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
         }
     };
 
-    private static final int DEFAULT_FLUX_CONSUMPTION = 16;
-    private static final int DEFAULT_POWER_PRODUCTION = 200;
+    private static final int DEFAULT_FLUX_CONSUMPTION = 32;
+    private static final int DEFAULT_POWER_PRODUCTION = 500;
 
     private boolean isWorking;
     private int fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
@@ -92,18 +93,20 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        pushEnergy(level, pos);
+        energyM.pushEnergy(level, pos);
 
         boolean canPay = tankM.canPay(DEFAULT_FLUX_CONSUMPTION);
-        boolean canOutput = energyM.canInsert(powerProduction);
+        boolean canOutput = energyM.canInsert(DEFAULT_POWER_PRODUCTION);
         boolean canWork = canPay && canOutput;
 
         setWorking(level, pos, state, canWork);
 
         if (!canWork) {
             fluxConsumption = 0;
+            powerProduction = 0;
             return;
         }
+        powerProduction = DEFAULT_POWER_PRODUCTION;
         fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
 
         energyM.getHandler().receiveEnergy(powerProduction, false);
@@ -111,19 +114,7 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
         // level.playSound(null, pos, PRODUCTION_SOUND, SoundSource.BLOCKS, 1f, 1f);
     }
 
-    private void pushEnergy(Level level, BlockPos pos) {
-        for (Direction side : Direction.values()) {
-            BlockPos nPos = pos.relative(side);
-            BlockState nState = level.getBlockState(nPos);
-            BlockEntity nBE = level.getBlockEntity(nPos);
 
-            IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, nPos, nState, nBE, side.getOpposite());
-            if (storage != null) {
-                int received = storage.receiveEnergy(energyM.getHandler().getEnergy(), false);
-                energyM.extractPower(received);
-            }
-        }
-    }
 
     private void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
         if (wasWorking != working) {

@@ -90,4 +90,13 @@ public class TileCapabilities {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
                 (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
     }
+
+    protected static void coalGeneratorCaps(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
+                (be, side) -> be.getItemHandler());
+
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.FLUX_GENERATOR_TILE.get(),
+                (be, side) -> new EnergyOutputWrapper(be.getEnergyHandler()));
+
+    }
 }

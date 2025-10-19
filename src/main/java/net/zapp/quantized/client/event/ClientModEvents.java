@@ -18,6 +18,7 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.coal_generator.CoalGeneratorScreen;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
@@ -65,6 +66,7 @@ public class ClientModEvents {
         event.register(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), QuantumFabricatorScreen::new);
         event.register(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), QuantumStabilizerScreen::new);
         event.register(ModMenuTypes.FLUX_GENERATOR.get(), FluxGeneratorScreen::new);
+        event.register(ModMenuTypes.COAL_GENERATOR.get(), CoalGeneratorScreen::new);
     }
 
     @SubscribeEvent
