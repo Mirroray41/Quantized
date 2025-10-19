@@ -148,8 +148,19 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
     }
 
     public Slot getQueuedItemSlot() {
-        if (data.get(9) == -1) return null;
-        return getSlot(data.get(9) + 36);
+        ItemStack target = blockEntity.getSelectedItem();
+        if (target == null || target.isEmpty()) return null;
+
+        for (Slot s : this.slots) {
+            int handlerIndex = s.getSlotIndex();
+            if (handlerIndex >= 7 && handlerIndex <= 33) {
+                ItemStack shown = s.getItem();
+                if (!shown.isEmpty() && ItemStack.isSameItemSameComponents(shown, target)) {
+                    return s;
+                }
+            }
+        }
+        return null;
     }
 
 
