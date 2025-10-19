@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.content.blocks.coal_generator.CoalGeneratorScreen;
+import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineScreen;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.renderer.QuantumAnalyzerRenderer;
@@ -27,6 +27,7 @@ import net.zapp.quantized.content.blocks.quantum_destabilizer.renderer.QuantumDe
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorScreen;
 import net.zapp.quantized.content.blocks.quantum_fabricator.renderer.QuantumFabricatorRenderer;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerScreen;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.renderer.QuantumStabilizerRenderer;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluidTypes;
 import net.zapp.quantized.core.init.ModMenuTypes;
@@ -55,7 +56,7 @@ public class ClientModEvents {
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), QuantumDestabilizerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_ANALYZER_TILE.get(), QuantumAnalyzerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(), QuantumFabricatorRenderer::new);
-
+        event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), QuantumStabilizerRenderer::new);
 
     }
 
@@ -65,8 +66,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.QUANTUM_ANALYZER_MENU.get(), QuantumAnalyzerScreen::new);
         event.register(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), QuantumFabricatorScreen::new);
         event.register(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), QuantumStabilizerScreen::new);
-        event.register(ModMenuTypes.FLUX_GENERATOR.get(), FluxGeneratorScreen::new);
-        event.register(ModMenuTypes.COAL_GENERATOR.get(), CoalGeneratorScreen::new);
+        event.register(ModMenuTypes.FLUX_GENERATOR_MENU.get(), FluxGeneratorScreen::new);
+        event.register(ModMenuTypes.STERLING_ENGINE_MENU.get(), SterlingEngineScreen::new);
     }
 
     @SubscribeEvent

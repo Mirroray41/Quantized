@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "quantized:coal_generator"
+          "name": "quantized:sterling_engine"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "quantized:blocks/coal_generator"
+  "random_sequence": "quantized:blocks/sterling_engine"
 }

@@ -54,7 +54,7 @@ public class QuantumStabilizerMenu extends AbstractContainerMenu {
         int maxProgress = this.data.get(1);
         int arrowPixelSize = 15;
 
-        return maxProgress != 0 && progress != 0 ? 24 - progress * arrowPixelSize / maxProgress: 48;
+        return maxProgress != 0 && progress != 0 ? 24 - progress * arrowPixelSize / maxProgress: 24;
     }
 
     public int getScaledEnergyBar() {

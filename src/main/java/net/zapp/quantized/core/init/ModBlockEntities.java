@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.content.blocks.coal_generator.CoalGeneratorTile;
+import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineTile;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorTile;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
@@ -31,9 +31,9 @@ public class ModBlockEntities {
     public static final Supplier<BlockEntityType<QuantumStabilizerTile>> QUANTUM_STABILIZER_TILE =
             BLOCK_ENTITY_TYPES.register("quantum_stabilizer_tile", () -> new BlockEntityType<>(
                     QuantumStabilizerTile::new, ModBlocks.QUANTUM_STABILIZER.get()));
-    public static final Supplier<BlockEntityType<CoalGeneratorTile>> COAL_GENERATOR =
-            BLOCK_ENTITY_TYPES.register("coal_generator_tile", () -> new BlockEntityType<>(
-                    CoalGeneratorTile::new, ModBlocks.COAL_GENERATOR.get()));
+    public static final Supplier<BlockEntityType<SterlingEngineTile>> STERLING_ENGINE_TILE =
+            BLOCK_ENTITY_TYPES.register("sterling_engine_tile", () -> new BlockEntityType<>(
+                    SterlingEngineTile::new, ModBlocks.STERLING_ENGINE.get()));
     public static final Supplier<BlockEntityType<FluxGeneratorTile>> FLUX_GENERATOR_TILE =
             BLOCK_ENTITY_TYPES.register("flux_generator_tile", () -> new BlockEntityType<>(
                     FluxGeneratorTile::new, ModBlocks.FLUX_GENERATOR.get()));

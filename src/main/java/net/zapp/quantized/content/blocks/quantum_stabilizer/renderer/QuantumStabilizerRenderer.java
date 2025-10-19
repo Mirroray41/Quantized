@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.quantum_destabilizer.renderer;
+package net.zapp.quantized.content.blocks.quantum_stabilizer.renderer;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,21 +17,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerTile;
+import net.zapp.quantized.core.init.ModItems;
 
-public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumDestabilizerTile> {
+public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumStabilizerTile> {
     private float rotation;
 
 
-    public QuantumDestabilizerRenderer(BlockEntityRendererProvider.Context context) {
+    public QuantumStabilizerRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(QuantumDestabilizerTile pBlockEntity, float pPartialTick, PoseStack pPoseStack,
+    public void render(QuantumStabilizerTile pBlockEntity, float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay, Vec3 vec3) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        ItemStack stack = pBlockEntity.getItemHandler().getStackInSlot(0);
+        ItemStack stack = ModItems.Q_BIT.toStack();
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.5f, 0.75f, 0.5f);
@@ -52,11 +54,11 @@ public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumD
         return LightTexture.pack(bLight, sLight);
     }
 
-    private float getScale(QuantumDestabilizerTile blockEntity) {
-        return (float) (0.5 - (0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1))));
+    private float getScale(QuantumStabilizerTile blockEntity) {
+        return (float)(0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1)));
     }
 
-    private float getRotation(QuantumDestabilizerTile blockEntity) {
+    private float getRotation(QuantumStabilizerTile blockEntity) {
         float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
 
         //System.out.println((float) blockEntity.data.get(0) / blockEntity.data.get(1));

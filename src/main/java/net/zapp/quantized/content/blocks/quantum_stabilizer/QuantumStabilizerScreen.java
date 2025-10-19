@@ -49,9 +49,7 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
 
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
-        if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 48, 48);
-        }
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), 24 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 48, 48);
     }
 
 

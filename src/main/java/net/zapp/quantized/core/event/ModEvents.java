@@ -27,7 +27,7 @@ public class ModEvents {
         stabilizerCaps(event);
         fluxGeneratorCaps(event);
         fabricatorCaps(event);
-        coalGeneratorCaps(event);
+        sterlingEngineCaps(event);
     }
 
     @SubscribeEvent

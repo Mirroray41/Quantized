@@ -83,7 +83,7 @@ public class ModModelProvider extends ModelProvider {
         excludedBlocks.add(ModBlocks.QUANTUM_STABILIZER.get());
         excludedBlocks.add(ModBlocks.QUANTUM_FABRICATOR.get());
         excludedBlocks.add(ModBlocks.FLUX_GENERATOR.get());
-        excludedBlocks.add(ModBlocks.COAL_GENERATOR.get());
+        excludedBlocks.add(ModBlocks.STERLING_ENGINE.get());
     }
 
     @Override

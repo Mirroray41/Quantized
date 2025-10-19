@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "quantized:block/coal_generator"
+    "model": "quantized:block/sterling_engine"
   }
 }

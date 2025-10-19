@@ -37,6 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
+    // ---- Rendering init ----
+    private static final float ROTATION = 5f;
+
     private static final int BIT_OUT_SLOT = 0;
     private static final int BYTE_OUT_SLOT = 1;
 
@@ -111,7 +114,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        boolean canPay = energyM.canPay(powerConsumption) && tankM.canPay(fluxConsumption);
+        boolean canPay = energyM.canPay(DEFAULT_POWER_CONSUME) && tankM.canPay(DEFAULT_FLUX_CONSUME);
         boolean canOut = itemM.canOutput(BIT_OUT_SLOT, 1, ModItems.Q_BIT.get())
                 && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get());
         boolean hasInput = tankM.getHandler().getFluidAmount() > fluxConsumption;
@@ -229,6 +232,10 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
+    }
+
+    public float getRotationSpeed() {
+        return ROTATION;
     }
 
 }

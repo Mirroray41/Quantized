@@ -62,11 +62,12 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.ATTRACTION_CORE);
                         output.accept(ModItems.CARBON_SILICON_BATTERY);
                         output.accept(ModItems.FLUX_TANK);
-                        output.accept(ModBlocks.QUANTUM_DESTABILIZER);
-                        output.accept(ModBlocks.QUANTUM_ANALYZER);
-                        output.accept(ModBlocks.QUANTUM_STABILIZER);
-                        output.accept(ModBlocks.QUANTUM_FABRICATOR);
+                        output.accept(ModBlocks.STERLING_ENGINE);
                         output.accept(ModBlocks.FLUX_GENERATOR);
+                        output.accept(ModBlocks.QUANTUM_DESTABILIZER);
+                        output.accept(ModBlocks.QUANTUM_STABILIZER);
+                        output.accept(ModBlocks.QUANTUM_ANALYZER);
+                        output.accept(ModBlocks.QUANTUM_FABRICATOR);
                     }).build());
 
 

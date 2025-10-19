@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "quantized:carbon_silicon_battery",
+    "G": "quantized:steel_gear",
+    "I": "quantized:inductor",
+    "L": "minecraft:blast_furnace",
+    "P": "quantized:steel_plate",
+    "W": "minecraft:water_bucket"
+  },
+  "pattern": [
+    "PGP",
+    "BWI",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:sterling_engine"
+  }
+}

@@ -13,7 +13,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.content.blocks.coal_generator.CoalGenerator;
+import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngine;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGenerator;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
@@ -48,10 +48,10 @@ public class ModBlocks {
             (properties) -> new FluxGenerator(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(FluxGenerator.ON) ? 15 : 0)));
-    public static final DeferredBlock<Block> COAL_GENERATOR = registerBlock("coal_generator",
-            (properties) -> new CoalGenerator(properties
+    public static final DeferredBlock<Block> STERLING_ENGINE = registerBlock("sterling_engine",
+            (properties) -> new SterlingEngine(properties
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
-                    .lightLevel(state -> state.getValue(CoalGenerator.ON) ? 15 : 0)));
+                    .lightLevel(state -> state.getValue(SterlingEngine.LIT) ? 15 : 0)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
             (properties) -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));

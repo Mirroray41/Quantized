@@ -21,7 +21,7 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     }
 
     public FluxGeneratorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.FLUX_GENERATOR.get(), pContainerId);
+        super(ModMenuTypes.FLUX_GENERATOR_MENU.get(), pContainerId);
         this.blockEntity = (FluxGeneratorTile) entity;
         this.level = inv.player.level();
         this.data = data;

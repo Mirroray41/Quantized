@@ -107,8 +107,9 @@
   "block.quantized.tile.quantum_fabricator": "Quantum Fabricator",
   "sound.quantized.quantum_fabricator.work": "Quantum Fabricator Working",
 
+  "block.quantized.tile.sterling_engine": "Sterling Engine",
+  "block.quantized.sterling_engine": "Sterling Engine",
+
   "block.quantized.tile.machine_block": "Machine Block",
-  "jei.quantized.qbit_crafting.title": "Quantum Stabilization",
-  "block.quantized.tile.coal_generator": "Coal Generator",
-  "block.quantized.coal_generator": "Coal Generator"
+  "jei.quantized.qbit_crafting.title": "Quantum Stabilization"
 }

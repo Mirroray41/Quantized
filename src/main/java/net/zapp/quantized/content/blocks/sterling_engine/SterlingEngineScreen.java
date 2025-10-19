@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.coal_generator;
+package net.zapp.quantized.content.blocks.sterling_engine;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CoalGeneratorScreen extends AbstractContainerScreen<CoalGeneratorMenu> {
-    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/coal_generator/coal_generator_gui.png");
+public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngineMenu> {
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/sterling_engine/sterling_engine_screen.png");
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
-    // private static final ResourceLocation FIRE_SPRITE = Whatever
 
-    public CoalGeneratorScreen(CoalGeneratorMenu menu, Inventory playerInventory, Component title) {
+    private static final ResourceLocation FIRE_TEXTURE = Quantized.id("textures/gui/sterling_engine/fire.png");
+    private static final ResourceLocation TEMPERATURE_GAGE = Quantized.id("textures/gui/sterling_engine/temp_progress.png");
+
+
+    public SterlingEngineScreen(SterlingEngineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -29,8 +32,16 @@ public class CoalGeneratorScreen extends AbstractContainerScreen<CoalGeneratorMe
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         renderEnergyBar(guiGraphics, x, y);
-        // renderFire(guiGraphics, x, y);
+        renderFire(guiGraphics, x, y);
     }
+
+    private void renderFire(GuiGraphics guiGraphics, int x, int y) {
+        if(menu.isWorking()) {
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FIRE_TEXTURE, x + 80, y + 26, 0, 0, 14, 14, 14, 14);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEMPERATURE_GAGE,x + 155, y + 17 + 52 - menu.getScaledFire(), 0, 52 - menu.getScaledFire(), 10, menu.getScaledFire(), 10, 52);
+        }
+    }
+
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);

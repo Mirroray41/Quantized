@@ -1,10 +1,11 @@
 {
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:translucent",
 	"texture_size": [32, 32],
-    "render_type": "minecraft:translucent",
 	"textures": {
 		"0": "quantized:block/flux_generator_on",
+		"1": "quantized:block/flux_generator_core",
 		"particle": "quantized:block/flux_generator_on"
 	},
 	"elements": [
@@ -157,6 +158,32 @@
 				"west": {"uv": [0, 0, 0, 6], "rotation": 90, "texture": "#missing"},
 				"up": {"uv": [0, 0, 5, 6], "rotation": 180, "texture": "#0"},
 				"down": {"uv": [0, 0, 5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.5, 6.5, 8.5],
+			"to": [9.5, 9.5, 11.5],
+			"rotation": {"angle": 45, "axis": "x", "origin": [7, 10, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"from": [6.5, 5.5, 6.5],
+			"to": [9.5, 8.5, 9.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
 			}
 		}
 	],

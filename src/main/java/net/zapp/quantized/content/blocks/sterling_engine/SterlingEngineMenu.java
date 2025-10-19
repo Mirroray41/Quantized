@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.coal_generator;
+package net.zapp.quantized.content.blocks.sterling_engine;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,31 +8,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorTile;
 import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
-public class CoalGeneratorMenu extends AbstractContainerMenu {
-    private final CoalGeneratorTile blockEntity;
+public class SterlingEngineMenu extends AbstractContainerMenu {
+    private final SterlingEngineTile blockEntity;
     private final Level level;
     private final ContainerData data;
 
-    public CoalGeneratorMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+    public SterlingEngineMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
         this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
-    public CoalGeneratorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.COAL_GENERATOR.get(), pContainerId);
-        this.blockEntity = (CoalGeneratorTile) entity;
+    public SterlingEngineMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+        super(ModMenuTypes.STERLING_ENGINE_MENU.get(), pContainerId);
+        this.blockEntity = (SterlingEngineTile) entity;
         this.level = inv.player.level();
         this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 100, 50){
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 43){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
@@ -51,7 +49,7 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
     }
 
     public boolean isWorking() {
-        return data.get(2) == 1;
+        return data.get(0) > 0;
     }
 
     public int getPowerProduction() {
@@ -70,7 +68,7 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
     public int getScaledFire() {
         int progress = data.get(0);
         int maxProgress = data.get(1);
-        int arrowPixelSize = 24;
+        int arrowPixelSize = 52;
 
         return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress: 0;
     }
@@ -136,7 +134,7 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ModBlocks.COAL_GENERATOR.get());
+                pPlayer, ModBlocks.STERLING_ENGINE.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

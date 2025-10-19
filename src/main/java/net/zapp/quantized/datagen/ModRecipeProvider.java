@@ -196,6 +196,18 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', ModItems.CARBON_SILICON_BATTERY.get())
                 .unlockedBy("has_steel_ingot", has(ModItems.STEEL_NUGGET.get())).save(output);
 
+        shaped(RecipeCategory.MISC, ModBlocks.STERLING_ENGINE.get())
+                .pattern("PGP")
+                .pattern("BWI")
+                .pattern("PLP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('G', ModItems.STEEL_GEAR.get())
+                .define('W', Items.WATER_BUCKET)
+                .define('L', Items.BLAST_FURNACE)
+                .define('I', ModItems.INDUCTOR.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .unlockedBy("has_steel_gear", has(ModItems.STEEL_GEAR)).save(output);
+
         shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_STABILIZER.get())
                 .pattern("PWP")
                 .pattern("TAB")

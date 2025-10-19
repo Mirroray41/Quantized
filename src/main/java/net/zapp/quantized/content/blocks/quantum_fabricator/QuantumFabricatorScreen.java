@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -69,6 +70,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     private int count = 0;
     private Slot queued = null;
+    private ItemStack queuedItem = ItemStack.EMPTY;
 
     // NEW: track which action button is currently shown and keep it in sync each frame
     private boolean showingCancel = false;

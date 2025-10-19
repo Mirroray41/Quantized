@@ -91,11 +91,11 @@ public class TileCapabilities {
                 (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
     }
 
-    protected static void coalGeneratorCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
+    protected static void sterlingEngineCaps(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.STERLING_ENGINE_TILE.get(),
                 (be, side) -> be.getItemHandler());
 
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.FLUX_GENERATOR_TILE.get(),
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.STERLING_ENGINE_TILE.get(),
                 (be, side) -> new EnergyOutputWrapper(be.getEnergyHandler()));
 
     }

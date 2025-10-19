@@ -1,4 +1,4 @@
-package net.zapp.quantized.content.blocks.coal_generator;
+package net.zapp.quantized.content.blocks.sterling_engine;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,11 +28,11 @@ import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CoalGeneratorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
+public class SterlingEngineTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
     private static final int FE_CAPACITY = 100_000;
     private static final int DEFAULT_FE_PRODUCTION = 100;
 
-    private final String ownerName = "CoalGeneratorTile";
+    private final String ownerName = "SterlingEngineTile";
     private EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
     private ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(1) {
         @Override
@@ -73,8 +73,8 @@ public class CoalGeneratorTile extends BlockEntity implements MenuProvider, HasE
     private int maxBurnTime;
     private int feProduction = DEFAULT_FE_PRODUCTION;
 
-    public CoalGeneratorTile(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.COAL_GENERATOR.get(), pos, blockState);
+    public SterlingEngineTile(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.STERLING_ENGINE_TILE.get(), pos, blockState);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -98,9 +98,9 @@ public class CoalGeneratorTile extends BlockEntity implements MenuProvider, HasE
                 setBurnTime(burnTime - 1);
                 energyM.getHandler().receiveEnergy(feProduction, false);
             }
-        } else {
+        } else  {
+            if (burnTime > 0) setBurnTime(burnTime - 1);
             feProduction = 0;
-            setBurnTime(burnTime - 1);
         }
     }
 
@@ -133,8 +133,8 @@ public class CoalGeneratorTile extends BlockEntity implements MenuProvider, HasE
     private void setBurnTime(int burnTime) {
         if (this.burnTime == burnTime) return;
         this.burnTime = burnTime;
-        if (getBlockState().getValue(CoalGenerator.ON) != burnTime > 0) {
-            level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(CoalGenerator.ON, burnTime > 0));
+        if (getBlockState().getValue(SterlingEngine.LIT) != burnTime > 0) {
+            level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(SterlingEngine.LIT, burnTime > 0));
         }
         markDirtyAndUpdate();
     }
@@ -146,7 +146,7 @@ public class CoalGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new CoalGeneratorMenu(id, inv, this, data);
+        return new SterlingEngineMenu(id, inv, this, data);
     }
 
     @Override
