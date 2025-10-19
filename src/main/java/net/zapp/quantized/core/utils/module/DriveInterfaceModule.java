@@ -162,7 +162,18 @@ public class DriveInterfaceModule implements Module {
         return driveItems.contains(item.toString());
     }
 
+    private boolean hasAnyDrives() {
+        for (int i : driveSlots) {
+            ItemStack stack = backingHandler.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() instanceof DriveItem)
+                return true;
+        }
+        return false;
+    }
+
     public boolean canInsertIntoDrives(Item item) {
+        if (!hasAnyDrives()) return false;
         DataFluxPair df = FluxDataFixerUpper.getDataFlux(item);
         if (!DataFluxPair.isValid(df)) return false;
         if (containsItem(item)) return false;
@@ -175,6 +186,8 @@ public class DriveInterfaceModule implements Module {
 
 
     public void insertIntoDrives(Item item) {
+        if (!hasAnyDrives()) return;
+
         DataFluxPair df = FluxDataFixerUpper.getDataFlux(item);
         if (!DataFluxPair.isValid(df)) return;
         if (containsItem(item)) return;

@@ -258,14 +258,12 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
         out.putInt("outputAmount", outputAmount);
-        driveM.recacheDisks();
         super.saveAdditional(out);
     }
 
     @Override
     protected void loadAdditional(ValueInput in) {
         super.loadAdditional(in);
-        driveM.recacheDisks();
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         // modules

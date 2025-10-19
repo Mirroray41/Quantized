@@ -140,8 +140,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             return;
         }
 
-
-
         maxProgress = ProcessingCurves.timeTicks(df.data());
         int toConsume = ProcessingCurves.powerPerTick(df.flux());
 
@@ -149,8 +147,6 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         boolean canOut = driveM.canInsertIntoDrives(in.getItem());
         boolean hasInput = !in.isEmpty();
         boolean working = canPay && canOut && hasInput;
-
-        System.out.println(canPay + ", " + canOut + ", " + hasInput);
 
         setWorking(level, pos, state, working);
         if (!working) {
@@ -215,14 +211,12 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
-        driveM.recacheDisks();
         super.saveAdditional(out);
     }
 
     @Override
     protected void loadAdditional(ValueInput in) {
         super.loadAdditional(in);
-        driveM.recacheDisks();
 
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 

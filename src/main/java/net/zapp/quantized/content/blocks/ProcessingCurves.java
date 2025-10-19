@@ -12,8 +12,8 @@ public class ProcessingCurves {
 
     // Cubic
     private static final float APwr = 0.1f;
-    private static final int BPwr = 10;
-    private static final int CPwr = 15;
+    private static final int BPwr = 7;
+    private static final int CPwr = 10;
     private static final int DPwr = 40;
 
 

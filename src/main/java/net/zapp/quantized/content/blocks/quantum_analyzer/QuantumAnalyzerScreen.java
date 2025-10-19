@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
@@ -100,18 +99,20 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        drawShiftSlotOverlay(guiGraphics, mouseX, mouseY);
+        drawShiftSlotOverlay(guiGraphics);
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void drawShiftSlotOverlay(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void drawShiftSlotOverlay(GuiGraphics guiGraphics) {
         Slot s = hoveredSlot;
         if (s == null || !hasShiftDown()) return;
+        int idx = menu.slots.indexOf(hoveredSlot);
+        if (idx >= 2 + 36) {
+            int x = leftPos + s.x;
+            int y = topPos + s.y;
 
-        int x = leftPos + s.x;
-        int y = topPos + s.y;
-
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DELETE, x, y, 0, 0, 5, 5, 5, 5);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DELETE, x, y, 0, 0, 5, 5, 5, 5);
+        }
     }
 
     @Override
