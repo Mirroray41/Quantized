@@ -2,18 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:steel_block",
-    "C": "quantized:copper_wire",
-    "G": "quantized:steel_gear",
+    "B": "quantized:carbon_silicon_battery",
     "I": "quantized:inductor",
-    "N": "minecraft:netherite_ingot",
     "P": "quantized:steel_plate",
-    "R": "minecraft:redstone"
+    "T": "quantized:flux_tank",
+    "W": "quantized:copper_wire"
   },
   "pattern": [
-    "CRC",
-    "PNP",
-    "IBG"
+    "PIP",
+    "TWB",
+    "PIP"
   ],
   "result": {
     "count": 1,

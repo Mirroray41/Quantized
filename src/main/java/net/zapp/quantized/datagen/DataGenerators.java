@@ -27,16 +27,10 @@ public class DataGenerators {
                 List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
         generator.addProvider(true, new ModRecipeProvider.Runner(packOutput, lookupProvider));
 
-        BlockTagsProvider blockTagsProvider = new ModBlockTagProvider(packOutput, lookupProvider);
-        generator.addProvider(true, blockTagsProvider);
-        generator.addProvider(true, new ModItemTagProvider(packOutput, lookupProvider));
-
-        generator.addProvider(true, new ModDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new ModBlockTagProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, new ModModelProvider(packOutput));
 
-        generator.addProvider(true, new ModDatapackProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
     }
 
     @SubscribeEvent
@@ -49,15 +43,9 @@ public class DataGenerators {
                 List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
         generator.addProvider(true, new ModRecipeProvider.Runner(packOutput, lookupProvider));
 
-        BlockTagsProvider blockTagsProvider = new ModBlockTagProvider(packOutput, lookupProvider);
-        generator.addProvider(true, blockTagsProvider);
-        generator.addProvider(true, new ModItemTagProvider(packOutput, lookupProvider));
-
-        generator.addProvider(true, new ModDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new ModBlockTagProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, new ModModelProvider(packOutput));
 
-        generator.addProvider(true, new ModDatapackProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new ModGlobalLootModifierProvider(packOutput, lookupProvider));
     }
 }

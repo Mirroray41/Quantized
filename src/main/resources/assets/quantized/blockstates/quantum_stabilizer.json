@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "on=false": {
+      "model": "quantized:block/quantum_stabilizer"
+    },
+    "on=true": {
+      "model": "quantized:block/quantum_stabilizer_on"
+    }
+  }
+}

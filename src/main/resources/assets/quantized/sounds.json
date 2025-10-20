@@ -4,7 +4,34 @@
     "sounds": [
       {
         "name": "quantized:quantum_destabilizer_work",
-        "volume": 0.7
+        "volume": 0.4
+      }
+    ]
+  },
+  "quantum_analyzer_work": {
+    "subtitle": "sound.quantized.quantum_analyzer.work",
+    "sounds": [
+      {
+        "name": "quantized:quantum_analyzer_work",
+        "volume": 0.4
+      }
+    ]
+  },
+  "quantum_fabricator_work": {
+    "subtitle": "sound.quantized.quantum_fabricator.work",
+    "sounds": [
+      {
+        "name": "quantized:quantum_fabricator_work",
+        "volume": 0.4
+      }
+    ]
+  },
+  "quantum_stabilizer_work": {
+    "subtitle": "sound.quantized.quantum_stabilizer.work",
+    "sounds": [
+      {
+        "name": "quantized:quantum_stabilizer_work",
+        "volume": 0.4
       }
     ]
   }

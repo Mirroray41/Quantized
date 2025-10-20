@@ -14,7 +14,6 @@ import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.fluxdata.FluxDataJsonLoader;
 import net.zapp.quantized.core.networking.ModMessages;
 import net.zapp.quantized.core.utils.DataFluxPair;
-
 import java.util.List;
 
 import static net.zapp.quantized.core.event.TileCapabilities.*;
@@ -23,11 +22,12 @@ import static net.zapp.quantized.core.event.TileCapabilities.*;
 public class ModEvents {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        machineBlockCaps(event);
         destabilizerCaps(event);
         analyzerCaps(event);
         stabilizerCaps(event);
         fluxGeneratorCaps(event);
+        fabricatorCaps(event);
+        sterlingEngineCaps(event);
     }
 
     @SubscribeEvent

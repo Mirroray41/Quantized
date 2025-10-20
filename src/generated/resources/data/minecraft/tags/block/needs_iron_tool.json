@@ -1,9 +1,10 @@
 {
   "values": [
     "quantized:steel_block",
-    "quantized:machine_block",
     "quantized:quantum_destabilizer",
     "quantized:quantum_analyzer",
-    "quantized:flux_generator"
+    "quantized:quantum_fabricator",
+    "quantized:flux_generator",
+    "quantized:sterling_engine"
   ]
 }

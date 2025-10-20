@@ -9,33 +9,32 @@ import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineMenu;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorMenu;
-import net.zapp.quantized.content.blocks.machine_block.MachineBlockMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorMenu;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerMenu;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, Quantized.MOD_ID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<MachineBlockMenu>> MACHINE_BLOCK_MENU =
-            registerMenuType("machine_block_menu", MachineBlockMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumDestabilizerMenu>> QUANTUM_DESTABILIZER_MENU =
             registerMenuType("quantum_destabilizer_menu", QuantumDestabilizerMenu::new);
-
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumAnalyzerMenu>> QUANTUM_ANALYZER_MENU =
             registerMenuType("quantum_analyzer_menu", QuantumAnalyzerMenu::new);
-
+    public static final DeferredHolder<MenuType<?>, MenuType<QuantumFabricatorMenu>> QUANTUM_FABRICATOR_MENU =
+            registerMenuType("quantum_fabricator_menu", QuantumFabricatorMenu::new);
     public static final DeferredHolder<MenuType<?>, MenuType<QuantumStabilizerMenu>> QUANTUM_STABILIZER_MENU =
             registerMenuType("quantum_stabilizer_menu", QuantumStabilizerMenu::new);
-
-    public static final DeferredHolder<MenuType<?>, MenuType<FluxGeneratorMenu>> FLUX_GENERATOR =
+    public static final DeferredHolder<MenuType<?>, MenuType<FluxGeneratorMenu>> FLUX_GENERATOR_MENU =
             registerMenuType("flux_generator_menu", FluxGeneratorMenu::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<SterlingEngineMenu>> STERLING_ENGINE_MENU =
+            registerMenuType("sterling_engine_menu", SterlingEngineMenu::new);
 
-    private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name,
-                                                                                                              IContainerFactory<T> factory) {
+    private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return MENUS.register(name, () -> IMenuTypeExtension.create(factory));
     }
 

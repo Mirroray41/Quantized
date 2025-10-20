@@ -21,7 +21,7 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     }
 
     public FluxGeneratorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.FLUX_GENERATOR.get(), pContainerId);
+        super(ModMenuTypes.FLUX_GENERATOR_MENU.get(), pContainerId);
         this.blockEntity = (FluxGeneratorTile) entity;
         this.level = inv.player.level();
         this.data = data;
@@ -53,7 +53,7 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     }
 
     public int getFluidCapacity() {
-        return this.data.get(5);
+        return data.get(5);
     }
 
     public FluidStack getFluid() {
@@ -61,8 +61,8 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     }
 
     public int getScaledEnergyBar() {
-        int energyStored = this.data.get(3);
-        int maxEnergy = this.data.get(4);
+        int energyStored = data.get(3);
+        int maxEnergy = data.get(4);
         int arrowPixelSize = 54;
 
         return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
@@ -122,14 +122,14 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
+                addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
 }

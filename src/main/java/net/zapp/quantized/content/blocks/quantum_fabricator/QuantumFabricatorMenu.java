@@ -1,0 +1,297 @@
+package net.zapp.quantized.content.blocks.quantum_fabricator;
+
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
+import net.zapp.quantized.core.init.ModBlocks;
+import net.zapp.quantized.core.init.ModMenuTypes;
+
+public class QuantumFabricatorMenu extends AbstractContainerMenu {
+    public final QuantumFabricatorTile blockEntity;
+    private final Level level;
+    private final ContainerData data;
+
+    public QuantumFabricatorMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(10));
+    }
+
+    public QuantumFabricatorMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+        super(ModMenuTypes.QUANTUM_FABRICATOR_MENU.get(), pContainerId);
+        this.blockEntity = ((QuantumFabricatorTile) entity);
+        this.level = inv.player.level();
+        this.data = data;
+
+        blockEntity.onMenuOpened();
+
+        addPlayerInventory(inv);
+        addPlayerHotbar(inv);
+
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 68){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
+
+        addDiskList();
+
+        addItemList();
+
+        addDataSlots(data);
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (!player.level().isClientSide) {
+            blockEntity.onMenuClosed();
+        }
+    }
+
+    public boolean isCrafting() {
+        return data.get(0) > 0;
+    }
+
+    public int getScaledArrowProgress() {
+        int progress = data.get(0);
+        int maxProgress = data.get(1);
+        int arrowPixelSize = 24;
+
+        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress: 0;
+    }
+
+    public int getScaledEnergyBar() {
+        int energyStored = data.get(3);
+        int maxEnergy = data.get(4);
+        int arrowPixelSize = 54;
+
+        return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
+    }
+
+    public int getProgress() {
+        return data.get(0);
+    }
+
+    public int getMaxProgress() {
+        return data.get(1);
+    }
+
+    public int getProgressPercentage() {
+        return (int) (((float)getProgress() / getMaxProgress()) * 100);
+    }
+
+    public int getEnergyConsumption() {
+        return data.get(2);
+    }
+
+    public int getEnergyStored() {
+        return data.get(3);
+    }
+
+    public int getEnergyCapacity() {
+        return data.get(4);
+    }
+
+    public int getFluidCapacity() {
+        return data.get(5);
+    }
+
+    public FluidStack getFluid() {
+        return blockEntity.getFluidHandler().getFluid();
+    }
+
+    public int getItemCount() {
+        return data.get(6);
+    }
+
+    public void setRowOffset(int rowOffset) {
+        data.set(7, rowOffset);
+    }
+
+    public void modifyAmount(int amount) {
+        data.set(8, amount);
+
+    }
+
+    public int getAmount() {
+        return data.get(8);
+    }
+
+    public void selectItem(int slotId) {
+        if (blockEntity.getDriveInterfaceModule().getFilteredSize() == 0) return;
+        int slot = slotId - 36;
+        if (slot < 7 || slot > 33) return;
+        data.set(9, slot);
+        blockEntity.selectItem(slot);
+    }
+
+
+    public void resetAmount() {
+        data.set(8, 0);
+    }
+
+    public void unselectItem() {
+        data.set(9, -1);
+        blockEntity.selectItem(-1);
+    }
+
+    public Slot getQueuedItemSlot() {
+        ItemStack target = blockEntity.getSelectedItem();
+        if (target == null || target.isEmpty()) return null;
+
+        for (Slot s : this.slots) {
+            int handlerIndex = s.getSlotIndex();
+            if (handlerIndex >= 7 && handlerIndex <= 33) {
+                ItemStack shown = s.getItem();
+                if (!shown.isEmpty() && ItemStack.isSameItemSameComponents(shown, target)) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        try {
+            if (slotId < 7 + 27 + 9) {
+                doClick(slotId, button, clickType, player);
+            } else if (slotId <= 33 + 27 + 9) {
+                if (clickType == ClickType.PICKUP) {
+                    selectItem(slotId);
+                }
+            }
+            broadcastChanges();
+        } catch (Exception exception) {
+            createCrashReport(exception, slotId, button, clickType);
+        }
+    }
+
+
+    private void createCrashReport(Exception exception, int slotId, int button, ClickType clickType) throws ReportedException {
+        CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
+        CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
+        crashreportcategory.setDetail("Menu Type", () -> menuType != null ? BuiltInRegistries.MENU.getKey(menuType).toString() : "<no type>");
+        crashreportcategory.setDetail("Menu Class", () -> getClass().getCanonicalName());
+        crashreportcategory.setDetail("Slot Count", slots.size());
+        crashreportcategory.setDetail("Slot", slotId);
+        crashreportcategory.setDetail("Button", button);
+        crashreportcategory.setDetail("Type", clickType);
+        throw new ReportedException(crashreport);
+    }
+
+    // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
+    // must assign a slot number to each of the slots used by the GUI.
+    // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
+    // Each time we add a Slot to the container, it automatically increases the slotIndex, which means
+    //  0 - 8 = hotbar slots (which will map to the InventoryPlayer slot numbers 0 - 8)
+    //  9 - 35 = player inventory slots (which map to the InventoryPlayer slot numbers 9 - 35)
+    //  36 - 44 = TileInventory slots, which map to our TileEntity slot numbers 0 - 8)
+    private static final int HOTBAR_SLOT_COUNT = 9;
+    private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
+    private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
+    private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
+    private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
+    private static final int VANILLA_FIRST_SLOT_INDEX = 0;
+    private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
+
+    // THIS YOU HAVE TO DEFINE!
+    private static final int TE_INVENTORY_SLOT_COUNT = 7;  // must be the number of slots you have!
+    @Override
+    public ItemStack quickMoveStack(Player playerIn, int pIndex) {
+        Slot sourceSlot = slots.get(pIndex);
+        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
+        ItemStack sourceStack = sourceSlot.getItem();
+        ItemStack copyOfSourceStack = sourceStack.copy();
+
+        // Check if the slot clicked is one of the vanilla container slots
+        if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+            // This is a vanilla container slot so merge the stack into the tile inventory
+            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
+                    + TE_INVENTORY_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;  // EMPTY_ITEM
+            }
+        } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+            // This is a TE slot so merge the stack into the players inventory
+            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else {
+            System.out.println("Invalid slotIndex:" + pIndex);
+            return ItemStack.EMPTY;
+        }
+        // If stack size == 0 (the entire stack was moved) set slot contents to null
+        if (sourceStack.getCount() == 0) {
+            sourceSlot.set(ItemStack.EMPTY);
+        } else {
+            sourceSlot.setChanged();
+        }
+        sourceSlot.onTake(playerIn, sourceStack);
+        return copyOfSourceStack;
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
+                pPlayer, ModBlocks.QUANTUM_FABRICATOR.get());
+    }
+
+    private void addPlayerInventory(Inventory playerInventory) {
+        for (int i = 0; i < 3; ++i) {
+            for (int l = 0; l < 9; ++l) {
+                addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 117 + i * 18));
+            }
+        }
+    }
+
+    private void addPlayerHotbar(Inventory playerInventory) {
+        for (int i = 0; i < 9; ++i) {
+            addSlot(new Slot(playerInventory, i, 8 + i * 18, 175));
+        }
+    }
+
+    private void addDiskList() {
+        for (int i = 0; i < 2; ++i) {
+            for (int l = 0; l < 3; ++l) {
+                addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1 + (i * 3) + l, 8 + (l * 18), 60 + (i * 18)){
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return stack.getItem() instanceof DriveItem;
+                    }
+                });
+            }
+        }
+    }
+
+    private void addItemList() {
+        for (int i = 0; i < 3; ++i) {
+            for (int l = 0; l < 9; ++l) {
+                addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 7 + (i * 9) + l, 1 + (l * 18), -4 + (i * 18)){
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean mayPickup(Player playerIn) {
+                        return false;
+                    }
+                });
+            }
+        }
+    }
+
+}

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_q_bytes": {
+    "has_512_q_bytes": {
       "conditions": {
         "items": [
           {
-            "items": "quantized:q_byte"
+            "items": "quantized:512_q_bytes"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_q_bytes"
+      "has_512_q_bytes"
     ]
   ],
   "rewards": {

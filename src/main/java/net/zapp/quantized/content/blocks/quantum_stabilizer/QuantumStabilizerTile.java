@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -26,6 +25,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModItems;
+import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
@@ -37,6 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
+    // ---- Rendering init ----
+    private static final float ROTATION = 10f;
+
     private static final int BIT_OUT_SLOT = 0;
     private static final int BYTE_OUT_SLOT = 1;
 
@@ -58,10 +61,13 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
     }
 
+    private static final int DEFAULT_POWER_CONSUME = 16;
+    private static final int DEFAULT_FLUX_CONSUME = 16;
+
     private int progress = 0;
     private int maxProgress = 20;
-    private int powerConsumption = 16;
-    private int fluxConsumption = 16;
+    private int powerConsumption = DEFAULT_POWER_CONSUME;
+    private int fluxConsumption = DEFAULT_FLUX_CONSUME;
     private boolean wasWorking = false;
 
     public final ContainerData data = new ContainerData() {
@@ -108,7 +114,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        boolean canPay = energyM.canPay(powerConsumption) && tankM.canPay(fluxConsumption);
+        boolean canPay = energyM.canPay(DEFAULT_POWER_CONSUME) && tankM.canPay(DEFAULT_FLUX_CONSUME);
         boolean canOut = itemM.canOutput(BIT_OUT_SLOT, 1, ModItems.Q_BIT.get())
                 && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get());
         boolean hasInput = tankM.getHandler().getFluidAmount() > fluxConsumption;
@@ -117,15 +123,20 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         setWorking(level, pos, state, working);
         // We don't wanna be mean.
         if (!working) {
+            powerConsumption = 0;
+            fluxConsumption = 0;
             return;
         }
+
+        powerConsumption = DEFAULT_POWER_CONSUME;
+        fluxConsumption = DEFAULT_FLUX_CONSUME;
 
 
         progress++;
         energyM.extractPower(powerConsumption);
         tankM.drainFluid(fluxConsumption);
 
-        level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1f, 1f + (float) progress / maxProgress);
+        level.playSound(null, pos, ModSounds.QUANTUM_STABILIZER_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / maxProgress);
 
         // This machine is not perfect, sometimes you get nothing, other times you get more than you asked for.
         if (progress >= maxProgress) {
@@ -133,16 +144,10 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
             if (RandomUtils.percentChance(75)) {
                 if (RandomUtils.percentChance(5) && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get())) {
                     itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), 1), false);
-                    level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                     return;
                 }
-
                 itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), 1), false);
-                level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 1f, 1f);
-                return;
-
             }
-            level.playSound(null, pos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1f, 1f);
         }
     }
 
@@ -227,6 +232,10 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
+    }
+
+    public float getRotationSpeed() {
+        return ROTATION;
     }
 
 }

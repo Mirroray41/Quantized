@@ -3,42 +3,42 @@ package net.zapp.quantized.content.blocks;
 import net.zapp.quantized.core.utils.DataFluxPair;
 
 public class ProcessingCurves {
-    private static final int T0 = 60;   // base ticks
-    private static final int AT = 2;    // quad weight on data bucket
-    private static final int BT = 3;    // linear weight on data bucket
-    private static final int T_MIN = 10;  // floor so it never goes 0
+    // Cubic
+    private static final float AT = 0.1f;
+    private static final int BT = 2;
+    private static final int CT = 2;
+    private static final int DT = 10;
+    private static final int T_MIN = 60;
 
-    private static final int P0 = 300;  // base power in the high hundreds (late-game feel)
-    private static final int AP = 80;   // quad weight on flux bucket (aggressive early)
-    private static final int BP = 120;  // linear weight on flux bucket
+    // Cubic
+    private static final float APwr = 0.1f;
+    private static final int BPwr = 7;
+    private static final int CPwr = 10;
+    private static final int DPwr = 40;
 
 
-
+    // Scales the "x" term in our quadratic equations, it becomes larger the larger our input integer is.
     private static int bucket(int x) {
         return (x <= 0) ? 0 : 1 + (31 - Integer.numberOfLeadingZeros(x));
     }
 
     public static int timeTicks(int dataValue) {
-        int b = bucket(dataValue);
-        int t = T0 + AT * b * b + BT * b;
+        int x = bucket(dataValue);
+        int t = (int) (AT * Math.pow(x, 3) + BT * Math.pow(x, 2) + CT * x + DT);
         return Math.max(T_MIN, t);
     }
 
     public static int powerPerTick(int fluxValue) {
-        int b = bucket(fluxValue);
-
-        return P0 + AP * b * b + BP * b;
+        int x = bucket(fluxValue);
+        return (int) (APwr * Math.pow(x, 3) + BPwr * Math.pow(x, 2) + CPwr * x + DPwr);
     }
 
+
     public static int timeTicks(DataFluxPair dataFlux) {
-        int b = bucket(dataFlux.data());
-        int t = T0 + AT * b * b + BT * b;
-        return Math.max(T_MIN, t);
+        return timeTicks(dataFlux.data());
     }
 
     public static int powerPerTick(DataFluxPair dataFlux) {
-        int b = bucket(dataFlux.flux());
-
-        return P0 + AP * b * b + BP * b;
+        return powerPerTick(dataFlux.flux());
     }
 }

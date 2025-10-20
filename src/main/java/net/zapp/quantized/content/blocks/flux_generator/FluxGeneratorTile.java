@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -63,9 +62,12 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
         }
     };
 
+    private static final int DEFAULT_FLUX_CONSUMPTION = 32;
+    private static final int DEFAULT_POWER_PRODUCTION = 750;
+
     private boolean isWorking;
-    private int fluxConsumption = 16;
-    private int powerProduction = 200;
+    private int fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
+    private int powerProduction = DEFAULT_POWER_PRODUCTION;
     private boolean wasWorking;
 
 
@@ -80,27 +82,35 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new FluxGeneratorMenu(id, inv, this, this.data);
+        return new FluxGeneratorMenu(id, inv, this, data);
     }
 
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        boolean canPay = tankM.canPay(fluxConsumption);
-        boolean canOutput = energyM.canInsert(powerProduction);
+        energyM.pushEnergy(level, pos);
+
+        boolean canPay = tankM.canPay(DEFAULT_FLUX_CONSUMPTION);
+        boolean canOutput = energyM.canInsert(DEFAULT_POWER_PRODUCTION);
         boolean canWork = canPay && canOutput;
 
         setWorking(level, pos, state, canWork);
 
         if (!canWork) {
+            fluxConsumption = 0;
+            powerProduction = 0;
             return;
         }
+        powerProduction = DEFAULT_POWER_PRODUCTION;
+        fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
 
         energyM.getHandler().receiveEnergy(powerProduction, false);
         tankM.drainFluid(fluxConsumption);
         // level.playSound(null, pos, PRODUCTION_SOUND, SoundSource.BLOCKS, 1f, 1f);
     }
+
+
 
     private void setWorking(Level level, BlockPos pos, BlockState state, boolean working) {
         if (wasWorking != working) {
