@@ -119,26 +119,77 @@ public class FluxDataConfig {
 
     private static void addPredefinedItems(BiConsumer<String, DataFluxPair> itemDef) {
         itemDef.accept("minecraft:netherite_upgrade_smithing_template", new DataFluxPair(160, 57345));
-        itemDef.accept("minecraft:basalt", new DataFluxPair(4, 1));
-        itemDef.accept("minecraft:blackstone", new DataFluxPair(4, 1));
+        itemDef.accept("minecraft:basalt", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:blackstone", new DataFluxPair(1, 1));
         itemDef.accept("minecraft:bamboo", new DataFluxPair(1, 2));
         itemDef.accept("minecraft:clay_ball", new DataFluxPair(4, 16));
         itemDef.accept("minecraft:prismarine_shard", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:melon_slice", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:apple", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:chorus_fruit", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:enchanted_golden_apple", new DataFluxPair(18, 73732));
+        itemDef.accept("minecraft:gilded_blackstone", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:exposed_copper", new DataFluxPair(4, 1152));
+        itemDef.accept("minecraft:weathered_copper", new DataFluxPair(4, 1152));
+        itemDef.accept("minecraft:oxidized_copper", new DataFluxPair(4, 1152));
+        itemDef.accept("minecraft:honeycomb", new DataFluxPair(2, 16));
+        itemDef.accept("minecraft:ice", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:snow_block", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:pointed_dripstone", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:budding_amethyst", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:small_amethyst_bud", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:medium_amethyst_bud", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:large_amethyst_bud", new DataFluxPair(3, 12));
+        itemDef.accept("minecraft:amethyst_cluster", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:mangrove_roots", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:brown_mushroom_block", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:red_mushroom_block", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:kelp", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:sponge", new DataFluxPair(4, 8));
+        itemDef.accept("minecraft:wet_sponge", new DataFluxPair(4, 8));
+        itemDef.accept("minecraft:slime_ball", new DataFluxPair(4, 8));
+        itemDef.accept("minecraft:honey_block", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:soul_sand", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:soul_soil", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:cobweb", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:blaze_rod", new DataFluxPair(8, 64));
+        itemDef.accept("minecraft:flint", new DataFluxPair(1, 3));
+        itemDef.accept("minecraft:ghast_tear", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:obsidian", new DataFluxPair(4, 64));
+        itemDef.accept("minecraft:nether_star", new DataFluxPair(64, 65536));
+        itemDef.accept("minecraft:glow_ink_sack", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:ink_sack", new DataFluxPair(2, 8));
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {
         tagDef.accept("#minecraft:logs", new DataFluxPair(4, 16));
         tagDef.accept("#minecraft:dirt", new DataFluxPair(1, 1));
+        tagDef.accept("#minecraft:wool", new DataFluxPair(2, 8));
+        tagDef.accept("#minecraft:terracotta", new DataFluxPair(2, 8));
+        tagDef.accept("#minecraft:leaves", new DataFluxPair(1, 1));
+        tagDef.accept("#minecraft:coral_blocks", new DataFluxPair(1, 1));
+        tagDef.accept("#minecraft:corals", new DataFluxPair(1, 1));
         tagDef.accept("#c:sands", new DataFluxPair(1, 1));
+        tagDef.accept("#c:end_stones", new DataFluxPair(2, 2));
+        tagDef.accept("#c:dyes", new DataFluxPair(2, 4));
+        tagDef.accept("#c:mushrooms", new DataFluxPair(2, 8));
+        tagDef.accept("#c:flowers", new DataFluxPair(2, 4));
+
+        tagDef.accept("#c:strings", new DataFluxPair(1, 2));
+        tagDef.accept("#c:gravels", new DataFluxPair(1, 1));
 
         tagDef.accept("#c:ores/copper", new DataFluxPair(4, 32));
         tagDef.accept("#c:ores/iron", new DataFluxPair(8, 256));
         tagDef.accept("#c:ores/gold", new DataFluxPair(16, 1024));
+        tagDef.accept("#c:ores/coal", new DataFluxPair(4, 128));
+        tagDef.accept("#c:ores/quartz", new DataFluxPair(4, 64));
         tagDef.accept("#c:ores/diamond", new DataFluxPair(32, 8192));
+        tagDef.accept("#c:ores/emerald", new DataFluxPair(32, 8192));
         tagDef.accept("#c:ores/netherite_scrap", new DataFluxPair(64, 16384));
         tagDef.accept("#c:ores/redstone", new DataFluxPair(4, 320));
 
         tagDef.accept("#c:dusts/redstone", new DataFluxPair(4, 64));
+        tagDef.accept("#c:dusts/glowstone", new DataFluxPair(4, 32));
 
 
         tagDef.accept("#c:ingots/copper", new DataFluxPair(4, 128));
@@ -150,6 +201,7 @@ public class FluxDataConfig {
 
         tagDef.accept("#c:gems/diamond", new DataFluxPair(32, 8192));
         tagDef.accept("#c:gems/prismarine", new DataFluxPair(4, 32));
+        tagDef.accept("#c:gems/amethyst", new DataFluxPair(4, 32));
 
         tagDef.accept("#c:stones", new DataFluxPair(1, 1));
         tagDef.accept("#c:cobblestones", new DataFluxPair(1, 1));
@@ -162,6 +214,17 @@ public class FluxDataConfig {
         tagDef.accept("#c:buckets/entity_water", new DataFluxPair(16, 1536));
 
         tagDef.accept("#c:clumps/resin", new DataFluxPair(1, 4));
+
+        tagDef.accept("#c:crops/wheat", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/beetroot", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/cactus", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/carrot", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/cocoa_bean", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/nether_wart", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/pumpkin", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/potato", new DataFluxPair(1, 4));
+        tagDef.accept("#c:crops/sugar_cane", new DataFluxPair(1, 4));
+
     }
 
     private static DataFluxPair asNumberPair(Object val) {

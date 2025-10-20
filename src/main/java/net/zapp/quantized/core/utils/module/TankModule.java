@@ -49,6 +49,6 @@ public class TankModule implements Module {
     }
 
     public void drainFluid(int toDrain) {
-        this.tank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+        tank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
     }
 }

@@ -1,31 +1,23 @@
 package net.zapp.quantized.content.blocks.flux_generator;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.zapp.quantized.core.init.ModBlockEntities;
-import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.TankModule;
@@ -71,7 +63,7 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
     };
 
     private static final int DEFAULT_FLUX_CONSUMPTION = 32;
-    private static final int DEFAULT_POWER_PRODUCTION = 500;
+    private static final int DEFAULT_POWER_PRODUCTION = 750;
 
     private boolean isWorking;
     private int fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
