@@ -41,6 +41,7 @@ import java.util.Optional;
 
 public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRecipe> {
     public static final ResourceLocation UID = Quantized.id("qbit_crafting");
+    public static final ResourceLocation RECIPE_TEXTURE = Quantized.id("textures/gui/quantum_stabilizer/stabilization_recipe.png");
     public static final IRecipeType<JeiStabilizationRecipe> TYPE = IRecipeType.create(UID, JeiStabilizationRecipe.class);
 
     // simple bar dimensions for FE draw
@@ -54,7 +55,7 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
     private final IIngredientTypeWithSubtypes<Fluid, FluidStack> fluidType;
 
     public StabilizationCategory(IGuiHelper guiHelper, IPlatformFluidHelper<FluidStack> platformFluidHelper) {
-        this.background = guiHelper.createBlankDrawable(150, 60);
+        this.background = guiHelper.createBlankDrawable(156, 54);
         ItemStack machineStack = new ItemStack(ModBlocks.QUANTUM_STABILIZER.asItem());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, machineStack);
 
@@ -79,25 +80,25 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
 
     @Override
     public int getWidth() {
-        return 176;
+        return 156;
     }
 
     @Override
     public int getHeight() {
-        return 72;
+        return 54;
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, JeiStabilizationRecipe recipe, IFocusGroup focuses) {
         if (recipe.output().getItem() == ModItems.Q_BIT.get()) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 71, 34)
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 18)
                     .add(recipe.output())
                     .addRichTooltipCallback((view, tooltip) -> {
                         tooltip.add(Component.literal(recipe.chancePercent() + "% ").withStyle(ChatFormatting.GOLD)
                                 .append(Component.literal("Chance").withStyle(ChatFormatting.GRAY)));
                     });
         } else {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 89, 34)
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 79, 18)
                     .add(recipe.output())
                     .addRichTooltipCallback((view, tooltip) -> {
                         tooltip.add(Component.literal(recipe.chancePercent() + "% ").withStyle(ChatFormatting.GOLD)
@@ -111,7 +112,7 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
     public void draw(JeiStabilizationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font font = Minecraft.getInstance().font;
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, QuantumStabilizerScreen.GUI_TEXTURE, 0, 0, 0, 0, getWidth(), getHeight(), 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RECIPE_TEXTURE, 0, 0, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
 
         renderEnergyBar(guiGraphics, 0, -54, recipe.energyCostFE());
         renderFluidTank(guiGraphics, 0, 0, recipe.flux());
@@ -119,7 +120,7 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
         renderTooltip(guiGraphics, (int) mouseX, (int) mouseY, recipe.energyCostFE(), recipe.flux());
 
         // Chance text under output
-        guiGraphics.drawString(font, Component.literal(recipe.chancePercent() + "%"), 80, 55, Color.BLUE.getRGB(), false);
+        guiGraphics.drawCenteredString(font, Component.literal(recipe.chancePercent() + "%"), 78, 38, Color.MAGENTA.getRGB());
     }
 
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, int fluxAmount, FluidStack fluid) {
@@ -141,12 +142,12 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
     }
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y, int feCost) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, QuantumStabilizerScreen.ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54, 0, 54, 12, 54, 12, 54);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, QuantumStabilizerScreen.ENERGY_BAR_TEXTURE,x, y + 54, 0, 54, 12, 54, 12, 54);
     }
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y, FluidStack stack) {
-        renderFluidMeterContent(guiGraphics, stack, stack.getAmount(), x + 155, y + 17, 10, 52);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, QuantumStabilizerScreen.FLUID_BAR_OVERLAY_TEXTURE, x + 154, y + 16, 0, 0, 12, 54, 12, 54);
+        renderFluidMeterContent(guiGraphics, stack, stack.getAmount(), x + 145, y + 1, 10, 52);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, QuantumStabilizerScreen.FLUID_BAR_OVERLAY_TEXTURE, x + 144, y, 0, 0, 12, 54, 12, 54);
     }
 
     protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y, int w, int h) {
