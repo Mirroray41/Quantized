@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
     // ---- Rendering init ----
-    private static final float ROTATION = 5f;
+    private static final float ROTATION = 10f;
 
     // ---- Slots ----
     private static final int INPUT_SLOT = 0;

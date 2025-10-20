@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
     // ---- Rendering init ----
-    private static final float ROTATION = 5f;
+    private static final float ROTATION = 10f;
 
     private static final int BIT_OUT_SLOT = 0;
     private static final int BYTE_OUT_SLOT = 1;

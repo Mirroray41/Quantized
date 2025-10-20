@@ -61,9 +61,7 @@ public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumSta
     private float getRotation(QuantumStabilizerTile blockEntity) {
         float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
 
-        //System.out.println((float) blockEntity.data.get(0) / blockEntity.data.get(1));
-
-        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1))) * deltaTime);
+        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
 
         if(rotation >= 360) {
             rotation = rotation - 360;

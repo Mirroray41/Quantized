@@ -41,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasDriveInterfaceModule {
-    private static final float ROTATION = 5f;
+    private static final float ROTATION = 10f;
 
     private static final int INPUT_SLOT = 0;
     private static final int DISK_SLOT = 1;

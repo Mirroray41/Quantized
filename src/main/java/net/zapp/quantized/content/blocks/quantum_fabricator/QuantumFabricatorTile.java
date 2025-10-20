@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasDriveInterfaceModule {
     // ---- Rendering init ----
-    private static final float ROTATION = 5f;
+    private static final float ROTATION = 10f;
 
     // ---- Slots ----
     private static final int OUTPUT_SLOT = 0;

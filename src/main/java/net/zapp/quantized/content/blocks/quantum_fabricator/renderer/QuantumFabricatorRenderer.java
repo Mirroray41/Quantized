@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
-import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorTile;
 
 public class QuantumFabricatorRenderer implements BlockEntityRenderer<QuantumFabricatorTile> {
@@ -56,9 +55,7 @@ public class QuantumFabricatorRenderer implements BlockEntityRenderer<QuantumFab
     private float getRotation(QuantumFabricatorTile blockEntity) {
         float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
 
-        //System.out.println((float) blockEntity.data.get(0) / blockEntity.data.get(1));
-
-        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1))) * deltaTime);
+        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
 
         if(rotation >= 360) {
             rotation = rotation - 360;
