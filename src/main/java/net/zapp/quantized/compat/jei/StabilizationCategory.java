@@ -1,5 +1,6 @@
 package net.zapp.quantized.compat.jei;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -53,6 +54,10 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
     private final IDrawable icon;
     private final Component title;
     private final IIngredientTypeWithSubtypes<Fluid, FluidStack> fluidType;
+
+    private int x;
+    private int y;
+
 
     public StabilizationCategory(IGuiHelper guiHelper, IPlatformFluidHelper<FluidStack> platformFluidHelper) {
         this.background = guiHelper.createBlankDrawable(156, 54);
@@ -112,6 +117,9 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
     public void draw(JeiStabilizationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font font = Minecraft.getInstance().font;
 
+        x = ( Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 ) - ( getWidth() / 2 );
+        y = (int) (( Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 ) + ( getHeight() / 2 ) - ( Minecraft.getInstance().getWindow().getGuiScaledHeight() * 0.4) + 27);
+
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RECIPE_TEXTURE, 0, 0, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
 
         renderEnergyBar(guiGraphics, 0, -54, recipe.energyCostFE());
@@ -125,15 +133,15 @@ public class StabilizationCategory implements IRecipeCategory<JeiStabilizationRe
 
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, int fluxAmount, FluidStack fluid) {
         Font font = Minecraft.getInstance().font;
-        if (isHovering(10, 16, 12, 54, mouseX, mouseY)) {
+        if (isHovering(0, 0, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(Component.translatable("jei.tooltip.quantized.battery.energy_cost", fluxAmount));
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX + 125, mouseY + 125);
-        } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), x + mouseX, y + mouseY);
+        } else if (isHovering(144, 0, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(fluid.getHoverName());
             components.add(Component.translatable("jei.tooltip.quantized.tank.fluid_cost", fluid.getAmount()));
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX + 125, mouseY + 125);
+            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), x + mouseX, y + mouseY);
         }
     }
 

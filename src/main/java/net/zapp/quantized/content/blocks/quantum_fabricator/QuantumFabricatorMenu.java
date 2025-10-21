@@ -151,13 +151,10 @@ public class QuantumFabricatorMenu extends AbstractContainerMenu {
         ItemStack target = blockEntity.getSelectedItem();
         if (target == null || target.isEmpty()) return null;
 
-        for (Slot s : this.slots) {
-            int handlerIndex = s.getSlotIndex();
-            if (handlerIndex >= 7 && handlerIndex <= 33) {
-                ItemStack shown = s.getItem();
-                if (!shown.isEmpty() && ItemStack.isSameItemSameComponents(shown, target)) {
-                    return s;
-                }
+        for (int i = 0 ; i < 27 ; i++) {
+            ItemStack shown = getSlot(i + 36 + 7).getItem();
+            if (!shown.isEmpty() && ItemStack.isSameItemSameComponents(shown, target)) {
+                return getSlot(i + 36 + 7);
             }
         }
         return null;

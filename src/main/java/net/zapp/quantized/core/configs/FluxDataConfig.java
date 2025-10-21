@@ -159,6 +159,9 @@ public class FluxDataConfig {
         itemDef.accept("minecraft:nether_star", new DataFluxPair(64, 65536));
         itemDef.accept("minecraft:glow_ink_sack", new DataFluxPair(2, 8));
         itemDef.accept("minecraft:ink_sack", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:ender_pearl", new DataFluxPair(16, 2048));
+
+
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {

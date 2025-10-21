@@ -68,7 +68,6 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.QUANTUM_STABILIZER);
                         output.accept(ModBlocks.QUANTUM_ANALYZER);
                         output.accept(ModBlocks.QUANTUM_FABRICATOR);
-                        output.accept(ModBlocks.STERLING_ENGINE);
                     }).build());
 
 
