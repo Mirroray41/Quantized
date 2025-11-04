@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "5": "quantized:512_q_bytes",
-    "B": "quantized:carbon_silicon_battery",
-    "P": "quantized:steel_plate",
-    "W": "quantized:copper_wire"
+    "5": {
+      "item": "quantized:512_q_bytes"
+    },
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "W": {
+      "item": "quantized:copper_wire"
+    }
   },
   "pattern": [
     "PWP",

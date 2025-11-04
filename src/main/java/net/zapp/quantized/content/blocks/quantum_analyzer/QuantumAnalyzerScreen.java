@@ -3,12 +3,11 @@ package net.zapp.quantized.content.blocks.quantum_analyzer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
@@ -60,8 +59,8 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             scrollStep = (float) scrollHeight / (rows - 3);
         }
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SCROLL_TEXTURE, x + 154, y + 31 + Math.round(scrollAmount), 0, 0, 12, 15, 12, 15);
+        guiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(SCROLL_TEXTURE, x + 154, y + 31 + Math.round(scrollAmount), 0, 0, 12, 15, 12, 15);
 
 
         renderProgressArrow(guiGraphics, x, y);
@@ -70,12 +69,12 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PROGRESS_TEXTURE,x + 31, y + 73, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
+            guiGraphics.blit(PROGRESS_TEXTURE,x + 31, y + 73, 0, 0, menu.getScaledArrowProgress(), 4, 24, 4);
         }
     }
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 23 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
+        guiGraphics.blit(ENERGY_BAR_TEXTURE,x + 10, y + 23 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
 
@@ -111,7 +110,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             int x = leftPos + s.x;
             int y = topPos + s.y;
 
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, DELETE, x, y, 0, 0, 5, 5, 5, 5);
+            guiGraphics.blit(DELETE, x, y, 0, 0, 5, 5, 5, 5);
         }
     }
 
@@ -130,12 +129,12 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
             components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(31, 67, 24, 3, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(1);
             components.add(Component.translatable("tooltip.quantized.progress.progress_ticks", menu.getProgress(), menu.getMaxProgress(), menu.getProgressPercentage()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -207,8 +206,8 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
             lastSent = "";
         }
 
-        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), ""));
-        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
+        PacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), ""));
+        PacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), 0));
 
         super.onClose();
     }
@@ -216,14 +215,14 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private void onSearchChanged(String text) {
         if (Objects.equals(text, lastSent)) return;
         lastSent = text;
-        ClientPacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), text));
+        PacketDistributor.sendToServer(new MenuFilterC2S(menu.blockEntity.getBlockPos(), text));
         rowOffest = 0;
         scrollAmount = 0;
         syncScrollOffset();
     }
 
     private void syncScrollOffset() {
-        ClientPacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), rowOffest));
+        PacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), rowOffest));
         menu.setRowOffset(rowOffest);
     }
 

@@ -2,12 +2,24 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:carbon_silicon_battery",
-    "G": "quantized:steel_gear",
-    "I": "quantized:inductor",
-    "L": "minecraft:blast_furnace",
-    "P": "quantized:steel_plate",
-    "W": "minecraft:water_bucket"
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "G": {
+      "item": "quantized:steel_gear"
+    },
+    "I": {
+      "item": "quantized:inductor"
+    },
+    "L": {
+      "item": "minecraft:blast_furnace"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    }
   },
   "pattern": [
     "PGP",

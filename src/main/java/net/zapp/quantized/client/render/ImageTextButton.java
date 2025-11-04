@@ -1,9 +1,9 @@
 package net.zapp.quantized.client.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,9 +34,9 @@ public class ImageTextButton extends Button {
     @Override
     protected void renderWidget(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
         if (!pressed) {
-            gfx.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
+            gfx.blit(TEXTURE, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
         } else {
-            gfx.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_PRESSED, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
+            gfx.blit(TEXTURE_PRESSED, getX(), getY(), 0, 0, TEX_W, TEX_H, TEX_W, TEX_H);    // full texture size
             pressed = false;
         }
 
@@ -46,10 +46,12 @@ public class ImageTextButton extends Button {
         var tc = getMessage().getStyle().getColor();
         if (tc != null) color = 0xFF000000 | tc.getValue();
 
-        gfx.pose().pushMatrix();
-        gfx.pose().translate(0, 0);
+        gfx.pose().pushPose();
+        gfx.pose().translate(0, 0, 0);
         gfx.drawCenteredString(font, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, color);
-        gfx.pose().popMatrix();
+        gfx.pose().popPose();
+
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
     }
 
     @Override

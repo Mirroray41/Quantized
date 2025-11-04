@@ -17,8 +17,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.utils.module.EnergyModule;
@@ -37,7 +35,7 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
     private ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(1) {
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (stack.getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0)
+            if (stack.getBurnTime(null) > 0) // Pass null for RecipeType in 1.21.1
                 return super.insertItem(slot, stack, simulate);
             return stack;
         }
@@ -89,7 +87,7 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
                 feProduction = 0;
                 ItemStack fuel = itemM.getHandler().getStackInSlot(0);
                 if (fuel.isEmpty()) return;
-                setBurnTime(fuel.getBurnTime(RecipeType.SMELTING, level.fuelValues()));
+                setBurnTime(fuel.getBurnTime(RecipeType.SMELTING));
                 maxBurnTime = burnTime;
                 if (burnTime <= 0) return;
                 itemM.getHandler().extractItem(0, 1, false);
@@ -106,28 +104,28 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
 
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+    protected void saveAdditional(CompoundTag output, HolderLookup.Provider registries) {
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        energyM.save(output, regs);
-        itemM.save(output, regs);
+        energyM.save(output, registries);
+        itemM.save(output, registries);
 
         output.putInt("burnTime", burnTime);
         output.putInt("maxBurnTime", maxBurnTime);
 
-        super.saveAdditional(output);
+        super.saveAdditional(output, registries);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+    protected void loadAdditional(CompoundTag input, HolderLookup.Provider registries) {
+        super.loadAdditional(input, registries);
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        energyM.load(input, regs);
-        itemM.load(input, regs);
+        energyM.load(input, registries);
+        itemM.load(input, registries);
 
-        burnTime = input.getIntOr("burnTime", 0);
-        maxBurnTime = input.getIntOr("maxBurnTime", 1);
+        burnTime = input.getInt("burnTime");
+        maxBurnTime = input.getInt("maxBurnTime");
     }
 
     private void setBurnTime(int burnTime) {

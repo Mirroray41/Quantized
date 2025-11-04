@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": "minecraft:end_crystal",
-    "I": "quantized:inductor",
-    "N": "quantized:steel_nugget",
-    "P": "quantized:steel_plate",
-    "R": "minecraft:redstone_block"
+    "C": {
+      "item": "minecraft:end_crystal"
+    },
+    "I": {
+      "item": "quantized:inductor"
+    },
+    "N": {
+      "item": "quantized:steel_nugget"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    }
   },
   "pattern": [
     "PPN",

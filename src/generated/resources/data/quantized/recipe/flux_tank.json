@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": "quantized:steel_nugget",
-    "P": "quantized:steel_plate",
-    "T": "minecraft:tinted_glass"
+    "N": {
+      "item": "quantized:steel_nugget"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "T": {
+      "item": "minecraft:tinted_glass"
+    }
   },
   "pattern": [
     "PNP",

@@ -28,7 +28,7 @@ public class QuantumAnalyzerRenderer implements BlockEntityRenderer<QuantumAnaly
 
     @Override
     public void render(QuantumAnalyzerTile pBlockEntity, float pPartialTick, PoseStack pPoseStack,
-                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay, Vec3 vec3) {
+                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = pBlockEntity.getItemHandler().getStackInSlot(0);
@@ -53,7 +53,7 @@ public class QuantumAnalyzerRenderer implements BlockEntityRenderer<QuantumAnaly
     }
 
     private float getRotation(QuantumAnalyzerTile blockEntity) {
-        float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
+        float deltaTime = Minecraft.getInstance().getFrameTimeNs();
 
         rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
 

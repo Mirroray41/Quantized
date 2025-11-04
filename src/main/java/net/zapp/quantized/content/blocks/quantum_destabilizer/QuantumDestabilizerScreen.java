@@ -1,22 +1,23 @@
 package net.zapp.quantized.content.blocks.quantum_destabilizer;
 
-import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
-import net.zapp.quantized.client.render.FluidTankRenderState;
 import org.joml.Matrix3x2f;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         renderProgressArrow(guiGraphics, x, y);
         renderEnergyBar(guiGraphics, x, y);
@@ -46,17 +47,17 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SPIRAL_TEXTURE,x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
+            guiGraphics.blit(SPIRAL_TEXTURE,x + 88 - menu.getScaledArrowProgress(), y + 42 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), 22 - menu.getScaledArrowProgress(), menu.getScaledArrowProgress() * 2, menu.getScaledArrowProgress() * 2, 44, 44);
         }
     }
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
+        guiGraphics.blit(ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
     private void renderFluidTank(GuiGraphics guiGraphics, int x, int y) {
         renderFluidMeterContent(guiGraphics, menu.getFluid(), menu.getFluidCapacity(), x + 155, y + 17, 10, 52);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FLUID_BAR_OVERLAY_TEXTURE, x + 154, y + 16, 0, 0, 12, 54, 12, 54);
+        guiGraphics.blit(FLUID_BAR_OVERLAY_TEXTURE, x + 154, y + 16, 0, 0, 12, 54, 12, 54);
     }
 
     @Override
@@ -87,30 +88,47 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
 
     protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
                                            int w, int h) {
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(x, y);
+        RenderSystem.enableBlend();
+        guiGraphics.pose().pushPose();
+
+        guiGraphics.pose().translate(x, y, 0);
+
         renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
-        guiGraphics.pose().popMatrix();
+
+        guiGraphics.pose().popPose();
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+        RenderSystem.disableBlend();
     }
 
     private void renderFluidStack(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int w, int h) {
-        if (fluidStack.isEmpty())
+        if(fluidStack.isEmpty())
             return;
 
         Fluid fluid = fluidStack.getFluid();
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid);
         ResourceLocation stillFluidImageId = fluidTypeExtensions.getStillTexture(fluidStack);
-        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).
+        if(stillFluidImageId == null)
+            stillFluidImageId = ResourceLocation.withDefaultNamespace("air");
+        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).
                 apply(stillFluidImageId);
 
         int fluidColorTint = fluidTypeExtensions.getTintColor(fluidStack);
 
-        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity) ?
-                0 : (h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0) ? 0 :
+        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity)?
+                0:(h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0)?0:
                 (Math.min(fluidStack.getAmount(), tankCapacity - 1) * h / tankCapacity + 1)));
 
-        for (int yOffset = h; yOffset > fluidMeterPos; yOffset -= 16) {
-            for (int xOffset = 0; xOffset < w; xOffset += 16) {
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor((fluidColorTint >> 16 & 0xFF) / 255.f,
+                (fluidColorTint >> 8 & 0xFF) / 255.f, (fluidColorTint & 0xFF) / 255.f,
+                (fluidColorTint >> 24 & 0xFF) / 255.f);
+
+        Matrix4f mat = guiGraphics.pose().last().pose();
+
+        for(int yOffset = h;yOffset > fluidMeterPos;yOffset -= 16) {
+            for(int xOffset = 0;xOffset < w;xOffset += 16) {
                 int width = Math.min(w - xOffset, 16);
                 int height = Math.min(yOffset - fluidMeterPos, 16);
 
@@ -121,14 +139,13 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
                 u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
                 v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
 
-                GpuTextureView gpuTextureView = minecraft.getTextureManager().getTexture(stillFluidSprite.atlasLocation()).getTextureView();
-                guiGraphics.guiRenderState.submitGuiElement(new FluidTankRenderState(
-                        RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(gpuTextureView),
-                        new Matrix3x2f(guiGraphics.pose()),
-                        xOffset, yOffset, width, height,
-                        u0, u1, v0, v1, fluidColorTint,
-                        guiGraphics.scissorStack.peek()
-                ));
+                Tesselator tesselator = Tesselator.getInstance();
+                BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferBuilder.addVertex(mat, xOffset, yOffset, 0).setUv(u0, v1);
+                bufferBuilder.addVertex(mat, xOffset + width, yOffset, 0).setUv(u1, v1);
+                bufferBuilder.addVertex(mat, xOffset + width, yOffset - height, 0).setUv(u1, v0);
+                bufferBuilder.addVertex(mat, xOffset, yOffset - height, 0).setUv(u0, v0);
+                BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
             }
         }
     }
@@ -142,13 +159,13 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
             components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
             components.add(Component.translatable("tooltip.quantized.battery.energy_usage", menu.getEnergyConsumption()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         } else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(menu.getFluid().getHoverName());
             components.add(Component.translatable("tooltip.quantized.tank.fluid_stored", menu.getFluid().getAmount(), menu.getFluidCapacity()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 }

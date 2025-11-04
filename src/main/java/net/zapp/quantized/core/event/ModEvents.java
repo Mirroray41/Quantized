@@ -6,8 +6,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
@@ -36,8 +37,8 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onAddReload(AddServerReloadListenersEvent event) {
-        event.addListener(Quantized.id("data_flux_json_loader"), new FluxDataJsonLoader());
+    public static void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new FluxDataJsonLoader());
     }
 
     @SubscribeEvent

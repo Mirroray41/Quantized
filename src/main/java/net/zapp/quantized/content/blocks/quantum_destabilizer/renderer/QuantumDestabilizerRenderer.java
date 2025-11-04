@@ -28,7 +28,7 @@ public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumD
 
     @Override
     public void render(QuantumDestabilizerTile pBlockEntity, float pPartialTick, PoseStack pPoseStack,
-                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay, Vec3 vec3) {
+                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = pBlockEntity.getItemHandler().getStackInSlot(0);
@@ -57,7 +57,7 @@ public class QuantumDestabilizerRenderer implements BlockEntityRenderer<QuantumD
     }
 
     private float getRotation(QuantumDestabilizerTile blockEntity) {
-        float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
+        float deltaTime = Minecraft.getInstance().getFrameTimeNs();
 
         rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
 

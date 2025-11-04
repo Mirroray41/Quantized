@@ -2,7 +2,6 @@ package net.zapp.quantized.content.blocks.sterling_engine;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +28,7 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         renderEnergyBar(guiGraphics, x, y);
         renderFire(guiGraphics, x, y);
@@ -37,14 +36,14 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
 
     private void renderFire(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isWorking()) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FIRE_TEXTURE, x + 80, y + 26, 0, 0, 14, 14, 14, 14);
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEMPERATURE_GAGE,x + 155, y + 17 + 52 - menu.getScaledFire(), 0, 52 - menu.getScaledFire(), 10, menu.getScaledFire(), 10, 52);
+            guiGraphics.blit(FIRE_TEXTURE, x + 80, y + 26, 0, 0, 14, 14, 14, 14);
+            guiGraphics.blit(TEMPERATURE_GAGE,x + 155, y + 17 + 52 - menu.getScaledFire(), 0, 52 - menu.getScaledFire(), 10, menu.getScaledFire(), 10, 52);
         }
     }
 
 
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
+        guiGraphics.blit(ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
 
     @Override
@@ -82,14 +81,14 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
             components.add(Component.translatable("tooltip.quantized.battery.energy_stored", menu.getEnergyStored(), menu.getEnergyCapacity()));
             components.add(Component.translatable("tooltip.quantized.battery.energy_production", menu.getPowerProduction()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         }
         // TODO: CHANGE THIS TO LOCATION OF FIRE SPRITE
         else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(Component.translatable("tooltip.quantized.burning.info", menu.getBurnTime(), menu.getMaxBurnTime()));
 
-            guiGraphics.setTooltipForNextFrame(font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         }
     }
 }

@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:carbon_silicon_battery",
-    "P": "quantized:steel_plate",
-    "R": "quantized:repulsion_core",
-    "T": "quantized:flux_tank",
-    "W": "quantized:copper_wire"
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "R": {
+      "item": "quantized:repulsion_core"
+    },
+    "T": {
+      "item": "quantized:flux_tank"
+    },
+    "W": {
+      "item": "quantized:copper_wire"
+    }
   },
   "pattern": [
     "PWP",

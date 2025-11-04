@@ -19,8 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
@@ -170,37 +168,30 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     }
 
     @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        drops();
-        super.preRemoveSideEffects(pos, state);
-    }
+    protected void saveAdditional(CompoundTag out, HolderLookup.Provider registries) {
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-
-    @Override
-    protected void saveAdditional(ValueOutput out) {
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
-
-        itemM.save(out, regs);
-        energyM.save(out, regs);
-        tankM.save(out, regs);
+        itemM.save(out, registries);
+        energyM.save(out, registries);
+        tankM.save(out, registries);
 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
-        super.saveAdditional(out);
+        super.saveAdditional(out, registries);
     }
 
     @Override
-    protected void loadAdditional(ValueInput in) {
-        super.loadAdditional(in);
+    protected void loadAdditional(CompoundTag in, HolderLookup.Provider registries) {
+        super.loadAdditional(in, registries);
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         itemM.load(in, regs);
         energyM.load(in, regs);
         tankM.load(in, regs);
 
-        progress = in.getIntOr("progress", 0);
-        maxProgress = in.getIntOr("maxProgress", 20);
+        progress = in.getInt("progress");
+        maxProgress = in.getInt("maxProgress");
     }
 
     @Override

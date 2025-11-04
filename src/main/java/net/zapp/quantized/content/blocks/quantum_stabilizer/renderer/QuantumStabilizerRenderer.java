@@ -30,7 +30,7 @@ public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumSta
 
     @Override
     public void render(QuantumStabilizerTile pBlockEntity, float pPartialTick, PoseStack pPoseStack,
-                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay, Vec3 vec3) {
+                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = ModItems.Q_BIT.toStack();
@@ -59,7 +59,7 @@ public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumSta
     }
 
     private float getRotation(QuantumStabilizerTile blockEntity) {
-        float deltaTime = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
+        float deltaTime = Minecraft.getInstance().getFrameTimeNs();
 
         rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
 

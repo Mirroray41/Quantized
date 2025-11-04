@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:carbon_silicon_battery",
-    "I": "quantized:inductor",
-    "P": "quantized:steel_plate",
-    "T": "quantized:flux_tank",
-    "W": "quantized:copper_wire"
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "I": {
+      "item": "quantized:inductor"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "T": {
+      "item": "quantized:flux_tank"
+    },
+    "W": {
+      "item": "quantized:copper_wire"
+    }
   },
   "pattern": [
     "PIP",

@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "quantized:steel_block"
+    {
+      "item": "quantized:steel_block"
+    }
   ],
   "result": {
     "count": 9,

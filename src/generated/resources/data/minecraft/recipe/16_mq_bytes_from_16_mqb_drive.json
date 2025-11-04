@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "quantized:16_mqb_drive"
+    {
+      "item": "quantized:16_mqb_drive"
+    }
   ],
   "result": {
     "count": 1,

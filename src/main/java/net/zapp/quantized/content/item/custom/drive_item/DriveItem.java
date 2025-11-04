@@ -7,17 +7,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DriveItem extends Item {
@@ -53,18 +49,19 @@ public class DriveItem extends Item {
         for (String s : items) {
             ResourceLocation id = ResourceLocation.tryParse(s);
             if (id == null) continue;
-            BuiltInRegistries.ITEM.get(id).ifPresent(holder -> storedItems.add(holder.value()));
+            Optional<Item> itemOpt = BuiltInRegistries.ITEM.getOptional(id);
+            itemOpt.ifPresent(storedItems::add);
         }
         return storedItems;
     }
-    
+
     public static void addItem(ItemStack drive, ItemStack toAdd, DataFluxPair df) {
         DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
         if (diskData == null) return;
         List<Item> items = new ArrayList<>(getStoredItems(drive));
         items.add(toAdd.getItem());
         List<String> itemStrs = items.stream().map(Item::toString).toList();
-        
+
         DriveRecord newData = new DriveRecord(diskData.capacity(), diskData.maxSizePerItem(), diskData.dataUsed() + df.data(), itemStrs.toArray(new String[diskData.count() + 1]), diskData.count() + 1);
         drive.set(ModDataComponents.DRIVE_DATA, newData);
     }
@@ -89,7 +86,7 @@ public class DriveItem extends Item {
     }
 
     @Override
-    public @NotNull ItemStack getCraftingRemainder(ItemStack itemStack) {
+    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         return new ItemStack(ModItems.DRIVE_CASING.get());
     }
 
@@ -101,32 +98,33 @@ public class DriveItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
 
         initializeDriveData(stack);
         DriveRecord data = stack.get(ModDataComponents.DRIVE_DATA);
-        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.data", data.dataUsed(), data.capacity()));
-        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.max_size",data.maxSizePerItem()));
-        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.count",data.count()));
+        tooltip.add(Component.translatable("tooltip.quantized.disk.data", data.dataUsed(), data.capacity()));
+        tooltip.add(Component.translatable("tooltip.quantized.disk.max_size", data.maxSizePerItem()));
+        tooltip.add(Component.translatable("tooltip.quantized.disk.count", data.count()));
+
         if (data.count() > 0) {
             if (!Screen.hasShiftDown()) {
-                tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.items"));
+                tooltip.add(Component.translatable("tooltip.quantized.disk.items"));
             } else {
-                tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.items_shift"));
-                if (data.count() < 8) {
-                    for (int i = 0; i < data.count(); i++) {
-                        ResourceLocation location = ResourceLocation.parse(data.items()[i]);
-                        Item item = BuiltInRegistries.ITEM.get(location).get().value();
-                        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.item",item.getName().getString()));
+                tooltip.add(Component.translatable("tooltip.quantized.disk.items_shift"));
+                int itemsToShow = Math.min(data.count(), 8);
+
+                for (int i = 0; i < itemsToShow; i++) {
+                    ResourceLocation location = ResourceLocation.parse(data.items()[i]);
+                    Optional<Item> itemOpt = BuiltInRegistries.ITEM.getOptional(location);
+                    if (itemOpt.isPresent()) {
+                        Item item = itemOpt.get();
+                        tooltip.add(Component.translatable("tooltip.quantized.disk.item", item.getName(ItemStack.EMPTY).getString()));
                     }
-                } else {
-                    for (int i = 0; i < 8; i++) {
-                        ResourceLocation location = ResourceLocation.parse(data.items()[i]);
-                        Item item = BuiltInRegistries.ITEM.get(location).get().value();
-                        tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.item",item.getName().getString()));
-                    }
-                    tooltipAdder.accept(Component.translatable("tooltip.quantized.disk.item_more", data.count() - 8));
+                }
+
+                if (data.count() > 8) {
+                    tooltip.add(Component.translatable("tooltip.quantized.disk.item_more", data.count() - 8));
                 }
             }
         }

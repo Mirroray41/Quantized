@@ -19,16 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
-import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
-import net.zapp.quantized.core.init.ModDataComponents;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.DriveInterfaceModule;
@@ -196,35 +192,29 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     }
 
     @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        drops();
-        super.preRemoveSideEffects(pos, state);
-    }
+    protected void saveAdditional(CompoundTag out, HolderLookup.Provider registries) {
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-    @Override
-    protected void saveAdditional(ValueOutput out) {
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
-
-        itemM.save(out, regs);
-        energyM.save(out, regs);
+        itemM.save(out, registries);
+        energyM.save(out, registries);
 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
 
-        super.saveAdditional(out);
+        super.saveAdditional(out, registries);
     }
 
     @Override
-    protected void loadAdditional(ValueInput in) {
-        super.loadAdditional(in);
+    protected void loadAdditional(CompoundTag in, HolderLookup.Provider registries) {
+        super.loadAdditional(in, registries);
 
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        itemM.load(in, regs);
-        energyM.load(in, regs);
+        itemM.load(in, registries);
+        energyM.load(in, registries);
 
-        progress = in.getIntOr("progress", 0);
-        maxProgress = in.getIntOr("maxProgress", 72);
+        progress = in.getInt("progress");
+        maxProgress = in.getInt("maxProgress");
     }
 
     @Override

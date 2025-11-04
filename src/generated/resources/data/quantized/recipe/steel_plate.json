@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "quantized:steel_ingot",
-    "quantized:mallet"
+    {
+      "item": "quantized:steel_ingot"
+    },
+    {
+      "item": "quantized:mallet"
+    }
   ],
   "result": {
     "count": 2,

@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "R": "quantized:steel_rod",
-    "W": "quantized:copper_wire"
+    "R": {
+      "item": "quantized:steel_rod"
+    },
+    "W": {
+      "item": "quantized:copper_wire"
+    }
   },
   "pattern": [
     "WRW",

@@ -2,13 +2,12 @@ package net.zapp.quantized.core.utils.module;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.function.IntConsumer;
@@ -46,13 +45,13 @@ public class ItemModule implements Module {
     }
 
     @Override
-    public void save(ValueOutput out, HolderLookup.Provider registries) {
-        items.serialize(out);
+    public void save(CompoundTag out, HolderLookup.Provider registries) {
+        items.serializeNBT(registries);
     }
 
     @Override
-    public void load(ValueInput in, HolderLookup.Provider registries) {
-        items.deserialize(in);
+    public void load(CompoundTag in, HolderLookup.Provider registries) {
+        items.deserializeNBT(registries, in);
     }
 
     public boolean canOutput(int outputSlot, int outputAmount, Item outputItem) {

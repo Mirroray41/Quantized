@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,8 +76,8 @@ public class QuantumFabricator extends BaseEntityBlock {
 
 
     @Override
-    protected InteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos,
-                                          Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos,
+                                              Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             if(entity instanceof QuantumFabricatorTile quantumFabricatorTile) {
@@ -87,7 +87,7 @@ public class QuantumFabricator extends BaseEntityBlock {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -99,5 +99,16 @@ public class QuantumFabricator extends BaseEntityBlock {
 
         return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(),
                 (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof QuantumFabricatorTile tile) {
+                tile.drops();
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 }

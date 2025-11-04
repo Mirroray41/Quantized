@@ -3,11 +3,10 @@ package net.zapp.quantized.core.utils.module;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.zapp.quantized.core.utils.energy.CustomEnergyStorage;
@@ -28,7 +27,7 @@ public class EnergyModule implements Module {
     public CustomEnergyStorage getHandler() { return energy; }
 
     @Override
-    public void save(ValueOutput out, HolderLookup.Provider registries) {
+    public void save(CompoundTag out, HolderLookup.Provider registries) {
         out.putInt(moduleOwner + ".energy", energy.getEnergyStored());
         out.putInt(moduleOwner + ".max_energy", energy.getMaxEnergyStored());
         out.putBoolean(moduleOwner + ".energy_can_receive", energy.canReceive());
@@ -36,9 +35,9 @@ public class EnergyModule implements Module {
     }
 
     @Override
-    public void load(ValueInput in, HolderLookup.Provider registries) {
-        energy.setCapacity(in.getIntOr(moduleOwner + ".max_energy", energy.getMaxEnergyStored()));
-        energy.setEnergy(in.getIntOr(moduleOwner + ".energy", 0));
+    public void load(CompoundTag in, HolderLookup.Provider registries) {
+        energy.setCapacity(in.getInt(moduleOwner + ".max_energy"));
+        energy.setEnergy(in.getInt(moduleOwner + ".energy"));
     }
 
     public boolean canPay(int powerConsumption) {

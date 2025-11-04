@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:256_kq_bytes"
+    "B": {
+      "item": "quantized:256_kq_bytes"
+    }
   },
   "pattern": [
     "BBB",

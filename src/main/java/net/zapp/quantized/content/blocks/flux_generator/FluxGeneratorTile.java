@@ -15,8 +15,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.utils.module.EnergyModule;
@@ -124,18 +122,18 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
 
     @Override
-    protected void saveAdditional(ValueOutput out) {
+    protected void saveAdditional(CompoundTag out, HolderLookup.Provider registries) {
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         energyM.save(out, regs);
         tankM.save(out, regs);
 
-        super.saveAdditional(out);
+        super.saveAdditional(out, registries);
     }
 
     @Override
-    protected void loadAdditional(ValueInput in) {
-        super.loadAdditional(in);
+    protected void loadAdditional(CompoundTag in, HolderLookup.Provider registries) {
+        super.loadAdditional(in, registries);
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         energyM.load(in, regs);

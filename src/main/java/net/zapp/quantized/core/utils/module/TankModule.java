@@ -1,8 +1,7 @@
 package net.zapp.quantized.core.utils.module;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -32,16 +31,16 @@ public class TankModule implements Module {
      }
 
     @Override
-    public void save(ValueOutput out, HolderLookup.Provider registries) {
+    public void save(CompoundTag out, HolderLookup.Provider registries) {
         if (tank.getFluid().isEmpty()) return; // Avoid serializing nothing.
-        out.store(moduleOwner + ".fluid", FluidStack.CODEC, tank.getFluid());
+        tank.getFluid().save(registries);
         out.putInt(moduleOwner + ".fluid_capacity", tank.getCapacity());
     }
 
     @Override
-    public void load(ValueInput in, HolderLookup.Provider registries) {
-        tank.setFluid(in.read(moduleOwner + ".fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY));
-        tank.setCapacity(in.getIntOr(moduleOwner + ".fluid_capacity", tank.getCapacity()));
+    public void load(CompoundTag in, HolderLookup.Provider registries) {
+        tank.setFluid(FluidStack.parseOptional(registries, in.getCompound("Fluid")));
+        tank.setCapacity(in.getInt(moduleOwner + ".fluid_capacity"));
     }
 
     public boolean canPay(int amount) {

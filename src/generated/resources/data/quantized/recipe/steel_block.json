@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "quantized:steel_ingot"
+    "B": {
+      "item": "quantized:steel_ingot"
+    }
   },
   "pattern": [
     "BBB",

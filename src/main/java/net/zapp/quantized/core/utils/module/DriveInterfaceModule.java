@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.DriveRecord;
@@ -77,9 +78,9 @@ public class DriveInterfaceModule implements Module {
             int idx = i + (rowOffset * ghostCols);
             if (idx < filteredItems.size()) {
                 ResourceLocation rl = ResourceLocation.parse(filteredItems.get(idx));
-                Optional<Holder.Reference<Item>> opt = BuiltInRegistries.ITEM.get(rl);
-                if (opt.isPresent()) {
-                    backingHandler.setStackInSlot(i + driveGhostSlots[0], new ItemStack(opt.get().value()));
+                Item opt = BuiltInRegistries.ITEM.get(rl);
+                if (opt != Items.AIR) {
+                    backingHandler.setStackInSlot(i + driveGhostSlots[0], new ItemStack(opt));
                 } else {
                     backingHandler.setStackInSlot(i + driveGhostSlots[0], ItemStack.EMPTY);
                 }
@@ -111,9 +112,9 @@ public class DriveInterfaceModule implements Module {
                 else {
                     try {
                         ResourceLocation rl = ResourceLocation.parse(s);
-                        Optional<Holder.Reference<Item>> opt = BuiltInRegistries.ITEM.get(rl);
-                        if (opt.isPresent()) {
-                            Item it = opt.get().value();
+                        Item opt = BuiltInRegistries.ITEM.get(rl);
+                        if (opt != Items.AIR) {
+                            Item it = opt;
                             String name = it.getDescriptionId().toLowerCase(Locale.ROOT);
                             if (name.contains(filter)) filteredItems.add(s);
                         }

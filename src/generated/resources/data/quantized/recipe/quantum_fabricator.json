@@ -2,12 +2,24 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "5": "quantized:512_q_bytes",
-    "A": "quantized:attraction_core",
-    "B": "quantized:carbon_silicon_battery",
-    "P": "quantized:steel_plate",
-    "R": "quantized:repulsion_core",
-    "T": "quantized:flux_tank"
+    "5": {
+      "item": "quantized:512_q_bytes"
+    },
+    "A": {
+      "item": "quantized:attraction_core"
+    },
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "R": {
+      "item": "quantized:repulsion_core"
+    },
+    "T": {
+      "item": "quantized:flux_tank"
+    }
   },
   "pattern": [
     "PRP",

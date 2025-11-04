@@ -1,9 +1,5 @@
 package net.zapp.quantized.client.event;
 
-import net.minecraft.client.Camera;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.fog.FogData;
-import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,7 +12,6 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineScreen;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
@@ -31,9 +26,6 @@ import net.zapp.quantized.content.blocks.quantum_stabilizer.renderer.QuantumStab
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluidTypes;
 import net.zapp.quantized.core.init.ModMenuTypes;
-import net.zapp.quantized.core.networking.ModClientMessages;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import javax.annotation.Nullable;
 
@@ -71,11 +63,6 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void registerClientPayloadHandlersEvent(RegisterClientPayloadHandlersEvent event) {
-        ModClientMessages.register(event);
-    }
-
-    @SubscribeEvent
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
@@ -96,22 +83,6 @@ public class ClientModEvents {
             @Override
             public @Nullable ResourceLocation getOverlayTexture() {
                 return ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getOverlayTexture();
-            }
-
-            @Override
-            public Vector4f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor) {
-                Vector3f fogColor = ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get().getFogColor();
-                return new Vector4f(
-                        fogColor.x,
-                        fogColor.y,
-                        fogColor.z,
-                        fluidFogColor.w
-                );
-            }
-
-            @Override
-            public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData) {
-                //TODO FIX
             }
         }, ModFluidTypes.QUANTUM_FLUX_FLUID_TYPE.get());
     }

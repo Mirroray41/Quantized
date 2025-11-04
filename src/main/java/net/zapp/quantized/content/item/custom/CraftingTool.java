@@ -10,7 +10,7 @@ public class CraftingTool extends Item {
     }
 
     @Override
-    public @NotNull ItemStack getCraftingRemainder(ItemStack itemStack) {
+    public @NotNull ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         ItemStack stack = itemStack.copy();
         if (stack.getDamageValue() + 1 >= stack.getMaxDamage()) {
             return ItemStack.EMPTY;

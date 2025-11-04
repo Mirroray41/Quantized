@@ -33,7 +33,7 @@ public class SterlingEngineMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 43){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
+                return stack.getBurnTime(RecipeType.SMELTING) > 0;
             }
         });
 

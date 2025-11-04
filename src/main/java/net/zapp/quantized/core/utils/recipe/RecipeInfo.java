@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +29,10 @@ public class RecipeInfo {
         this.recipeType = recipeType;
     }
 
-    public static RecipeInfo tryGetFromRecipe(Recipe<?> r, HolderLookup.Provider regs) {
-        List<ItemStack> inputItems = RecipeUtils.getRecipeInputs(r, regs);
+    public static RecipeInfo tryGetFromRecipe(Recipe<?> r, Level level) {
+        List<ItemStack> inputItems = RecipeUtils.getRecipeInputs(r, level);
         if (inputItems.isEmpty()) return null;
-        Optional<ItemStack> output = RecipeUtils.tryGetRecipeOutput(r, regs);
+        Optional<ItemStack> output = RecipeUtils.tryGetRecipeOutput(r, level);
         return output.map(item -> new RecipeInfo(inputItems, item, r.getType())).orElse(null);
     }
 
@@ -50,9 +51,9 @@ public class RecipeInfo {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("RecipeInfo for output: ").append(outputItem.getItemName().getString()).append('\n');
+        sb.append("RecipeInfo for output: ").append(outputItem.getHoverName().getString()).append('\n');
         for (int i = 0; i < inputItems.size(); i++) {
-            sb.append("Slot: ").append(i).append(" : ").append(inputItems.get(i).getItemName().getString()).append('\n');
+            sb.append("Slot: ").append(i).append(" : ").append(inputItems.get(i).getHoverName().getString()).append('\n');
         }
         return sb.toString();
     }

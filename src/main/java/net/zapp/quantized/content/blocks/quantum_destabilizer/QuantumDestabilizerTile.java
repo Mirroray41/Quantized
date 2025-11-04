@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.NbtContents;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -19,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -196,42 +195,36 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         Containers.dropContents(level, worldPosition, inv);
     }
 
-    @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        drops();
-        super.preRemoveSideEffects(pos, state);
-    }
-
     // ---- Save / Load ----
     @Override
-    protected void saveAdditional(ValueOutput out) {
+    protected void saveAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider registries) {
         HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         // modules
-        itemM.save(out, regs);
-        energyM.save(out, regs);
-        tankM.save(out, regs);
+        itemM.save(nbt, regs);
+        energyM.save(nbt, regs);
+        tankM.save(nbt, regs);
 
         // local fields
-        out.putInt("progress", progress);
-        out.putInt("maxProgress", maxProgress);
+        nbt.putInt("progress", progress);
+        nbt.putInt("maxProgress", maxProgress);
 
-        super.saveAdditional(out);
+        super.saveAdditional(nbt, registries);
     }
 
     @Override
-    protected void loadAdditional(ValueInput in) {
-        super.loadAdditional(in);
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+    protected void loadAdditional(CompoundTag in, HolderLookup.Provider registries) {
+        super.loadAdditional(in, registries);
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
         // modules
-        itemM.load(in, regs);
-        energyM.load(in, regs);
-        tankM.load(in, regs);
+        itemM.load(in, registries);
+        energyM.load(in, registries);
+        tankM.load(in, registries);
 
         // local fields
-        progress = in.getIntOr("progress", 0);
-        maxProgress = in.getIntOr("maxProgress", 72);
+        progress = in.getInt("progress");
+        maxProgress = in.getInt("maxProgress");
     }
 
     // ---- Network sync ----

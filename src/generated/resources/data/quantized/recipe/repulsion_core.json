@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": "minecraft:end_crystal",
-    "G": "minecraft:glowstone",
-    "I": "quantized:inductor",
-    "N": "quantized:steel_nugget",
-    "P": "quantized:steel_plate"
+    "C": {
+      "item": "minecraft:end_crystal"
+    },
+    "G": {
+      "item": "minecraft:glowstone"
+    },
+    "I": {
+      "item": "quantized:inductor"
+    },
+    "N": {
+      "item": "quantized:steel_nugget"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    }
   },
   "pattern": [
     "NPP",

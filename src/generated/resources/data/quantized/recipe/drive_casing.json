@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "minecraft:glass",
-    "N": "minecraft:gold_nugget",
-    "S": "quantized:steel_plate"
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "N": {
+      "item": "minecraft:gold_nugget"
+    },
+    "S": {
+      "item": "quantized:steel_plate"
+    }
   },
   "pattern": [
     "SNS",

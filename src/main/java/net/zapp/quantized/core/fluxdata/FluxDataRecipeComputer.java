@@ -8,8 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.zapp.quantized.Quantized;
@@ -30,7 +32,7 @@ public final class FluxDataRecipeComputer {
         MinecraftServer server = e.getServer();
         RecipeManager recipeManager = server.getRecipeManager();
         RegistryAccess.Frozen regs = server.registryAccess();
-        computeAndCacheRecursive(recipeManager, regs);
+        computeAndCacheRecursive(recipeManager, e.getServer().overworld());
     }
 
     private static int tierOf(RecipeInfo ri) {
@@ -54,11 +56,11 @@ public final class FluxDataRecipeComputer {
         return false;
     }
 
-    public static void computeAndCacheRecursive(RecipeManager recipeManager, HolderLookup.Provider regs) {
+    public static void computeAndCacheRecursive(RecipeManager recipeManager, Level level) {
         // 1) Build RecipeInfo once, index by output item id
         Map<ResourceLocation, List<RecipeInfo>> byOutput = new HashMap<>();
         for (var holder : recipeManager.getRecipes()) {
-            var info = RecipeInfo.tryGetFromRecipe(holder.value(), regs);
+            var info = RecipeInfo.tryGetFromRecipe(holder.value(), level);
             if (info == null) continue;
             byOutput.computeIfAbsent(outputItemId(info), k -> new ArrayList<>()).add(info);
         }
@@ -175,9 +177,11 @@ public final class FluxDataRecipeComputer {
 
 
     private static boolean isOutputCached(ResourceLocation rl) {
-        Optional<Holder.Reference<Item>> item  = BuiltInRegistries.ITEM.get(rl);
-        return item.filter(itemReference -> DataFluxPair.isValid(FluxDataFixerUpper.getDataFlux(itemReference.value()))).isPresent();
+        Item item = BuiltInRegistries.ITEM.get(rl);
+        if (item == Items.AIR) return false; // Registry returns AIR if not found
+        return DataFluxPair.isValid(FluxDataFixerUpper.getDataFlux(item));
     }
+
 
     private static boolean isOutputCached(RecipeInfo recipeInfo) {
         return DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(recipeInfo.output()));
@@ -213,6 +217,6 @@ public final class FluxDataRecipeComputer {
 
     private static void cacheRecipe(RecipeInfo recipeInfo) {
         FluxDataFixerUpper.cacheNewValue(recipeInfo.output().getItem(), costForRecipe(recipeInfo));
-        Quantized.LOGGER.info("Successfully cached derived recipe for: {}, {}", recipeInfo.output().getItemName().getString(), FluxDataFixerUpper.getDataFluxFromStack(recipeInfo.output()));
+        Quantized.LOGGER.info("Successfully cached derived recipe for: {}, {}", recipeInfo.output().getDisplayName().getString(), FluxDataFixerUpper.getDataFluxFromStack(recipeInfo.output()));
     }
 }

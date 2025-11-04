@@ -1,11 +1,13 @@
 package net.zapp.quantized.core.fluxdata;
 
 import com.google.gson.*;
+import com.llamalad7.mixinextras.lib.gson.Strictness;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.fml.loading.FMLPaths;
 import net.zapp.quantized.Quantized;
 import net.zapp.quantized.core.configs.FluxDataConfig;
@@ -23,16 +25,15 @@ import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 public final class FluxDataJsonLoader implements PreparableReloadListener {
-    private static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
+    private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final String JSON_DIR = "flux_data_overrides";
     private static final String ITEMS_KEY = "items";
     private static final String TAGS_KEY  = "tags";
     private static final String PRIORITY  = "priority";
 
     private static final int DEFAULT_CONFIG_FILE_PRIORITY = 10_000;
-
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, Executor bg, Executor game) {
+    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager rm, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller1, Executor bg, Executor game) {
         CompletableFuture<List<Pack>> prepared = CompletableFuture.supplyAsync(() -> {
             List<Pack> packs = new ArrayList<>();
             loadExternalConfigJson(packs);

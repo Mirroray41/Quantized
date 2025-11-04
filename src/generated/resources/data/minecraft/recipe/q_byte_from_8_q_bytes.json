@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "quantized:8_q_bytes"
+    {
+      "item": "quantized:8_q_bytes"
+    }
   ],
   "result": {
     "count": 8,

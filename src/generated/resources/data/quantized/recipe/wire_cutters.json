@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": "quantized:steel_nugget",
-    "S": "quantized:steel_plate",
-    "T": "minecraft:blue_terracotta"
+    "N": {
+      "item": "quantized:steel_nugget"
+    },
+    "S": {
+      "item": "quantized:steel_plate"
+    },
+    "T": {
+      "item": "minecraft:blue_terracotta"
+    }
   },
   "pattern": [
     " S ",
