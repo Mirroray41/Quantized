@@ -60,5 +60,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.DRIVE_1G.get());
 
         basicItem(ModItems.DRIVE_CASING.get());
+        // SINGULARITY_DRIVE model is hand-authored (placeholder texture not yet present, which
+        // basicItem's ExistingFileHelper would reject).
     }
 }

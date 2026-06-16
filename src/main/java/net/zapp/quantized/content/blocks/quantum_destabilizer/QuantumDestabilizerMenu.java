@@ -31,6 +31,7 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 80, 34));
+
         addDataSlots(data);
     }
 
@@ -111,7 +112,6 @@ public class QuantumDestabilizerMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else {
-            System.out.println("Invalid slotIndex:" + pIndex);
             return ItemStack.EMPTY;
         }
         // If stack size == 0 (the entire stack was moved) set slot contents to null

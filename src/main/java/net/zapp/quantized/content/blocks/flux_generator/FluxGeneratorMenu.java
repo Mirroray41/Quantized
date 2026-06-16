@@ -32,6 +32,10 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
+    public net.minecraft.core.BlockPos getMachinePos() {
+        return blockEntity.getBlockPos();
+    }
+
     public int getFluxConsumption() {
         return data.get(0);
     }
@@ -87,30 +91,8 @@ public class FluxGeneratorMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_SLOT_COUNT = 0;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
-        Slot sourceSlot = slots.get(pIndex);
-        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
-        ItemStack sourceStack = sourceSlot.getItem();
-        ItemStack copyOfSourceStack = sourceStack.copy();
-
-        // Check if the slot clicked is one of the vanilla container slots
-        if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + TE_INVENTORY_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;  // EMPTY_ITEM
-            }
-        } else {
-            System.out.println("Invalid slotIndex:" + pIndex);
-            return ItemStack.EMPTY;
-        }
-        // If stack size == 0 (the entire stack was moved) set slot contents to null
-        if (sourceStack.getCount() == 0) {
-            sourceSlot.set(ItemStack.EMPTY);
-        } else {
-            sourceSlot.setChanged();
-        }
-        sourceSlot.onTake(playerIn, sourceStack);
-        return copyOfSourceStack;
+        // The flux generator has no item slots of its own, so there is nothing to shift-click into.
+        return ItemStack.EMPTY;
     }
 
     @Override

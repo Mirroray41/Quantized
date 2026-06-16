@@ -28,17 +28,22 @@ import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule {
+import java.util.List;
+
+public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule, HasUpgradeModule {
     // ---- Rendering init ----
     private static final float ROTATION = 10f;
 
@@ -68,6 +73,8 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), s -> markDirtyAndUpdate());
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.SPEED, UpgradeType.EFFICIENCY), this::markDirtyAndUpdate);
 
     // ---- Menu sync data ----
     private int progress = 0;
@@ -133,10 +140,11 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             return;
         }
 
-        maxProgress = ProcessingCurves.timeTicks(df.data());
-        powerConsumption = ProcessingCurves.powerPerTick(df.flux());
-        if (cachedOut.isEmpty() || cachedOut.getAmount() != df.flux()) {
-            cachedOut = new FluidStack(ModFluids.QUANTUM_FLUX.get(), df.flux());
+        maxProgress = upgradeM.speedTicks(ProcessingCurves.timeTicks(df.data()));
+        powerConsumption = upgradeM.efficiencyCost(ProcessingCurves.powerPerTick(df.flux()));
+        int fluxOut = df.flux();
+        if (cachedOut.isEmpty() || cachedOut.getAmount() != fluxOut) {
+            cachedOut = new FluidStack(ModFluids.QUANTUM_FLUX.get(), fluxOut);
         }
 
         boolean canPay = energyM.canPay(powerConsumption);
@@ -193,6 +201,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
             inv.setItem(i, itemM.getHandler().getStackInSlot(i));
         }
         Containers.dropContents(level, worldPosition, inv);
+        upgradeM.dropAll(level, worldPosition);
     }
 
     // ---- Save / Load ----
@@ -204,6 +213,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         itemM.save(nbt, regs);
         energyM.save(nbt, regs);
         tankM.save(nbt, regs);
+        upgradeM.save(nbt, regs);
 
         // local fields
         nbt.putInt("progress", progress);
@@ -221,6 +231,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         itemM.load(in, registries);
         energyM.load(in, registries);
         tankM.load(in, registries);
+        upgradeM.load(in, registries);
 
         // local fields
         progress = in.getInt("progress");
@@ -258,6 +269,11 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 
     // ---- Rendering ----

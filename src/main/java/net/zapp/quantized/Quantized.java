@@ -14,7 +14,7 @@ import net.zapp.quantized.core.configs.Config;
 import net.zapp.quantized.core.configs.FluxDataConfig;
 import net.zapp.quantized.core.init.*;
 import org.slf4j.Logger;
-
+//claude --resume ad212fa8-ab21-41b8-8d55-5840f9e24eb7
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Quantized.MOD_ID)
 public class Quantized {

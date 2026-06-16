@@ -26,17 +26,22 @@ import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModSounds;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.DriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasDriveInterfaceModule {
+import java.util.List;
+
+public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasDriveInterfaceModule, HasUpgradeModule {
     private static final float ROTATION = 10f;
 
     private static final int INPUT_SLOT = 0;
@@ -72,6 +77,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     });
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
     private final DriveInterfaceModule driveM = new DriveInterfaceModule(itemM.getHandler(), new int[]{DISK_SLOT}, DriveInterfaceModule.createSlotRange(2, 15), 3, 5, this::markDirtyAndUpdate);
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.SPEED, UpgradeType.EFFICIENCY), this::markDirtyAndUpdate);
     private int progress = 0;
     private int maxProgress = 72;
     public int powerConsumption = 16;
@@ -136,8 +143,8 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             return;
         }
 
-        maxProgress = ProcessingCurves.timeTicks(df.data());
-        int toConsume = ProcessingCurves.powerPerTick(df.flux());
+        maxProgress = upgradeM.speedTicks(ProcessingCurves.timeTicks(df.data()));
+        int toConsume = upgradeM.efficiencyCost(ProcessingCurves.powerPerTick(df.flux()));
 
         boolean canPay = energyM.canPay(toConsume);
         boolean canOut = driveM.canInsertIntoDrives(in.getItem());
@@ -189,6 +196,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
             inv.setItem(i, itemM.getHandler().getStackInSlot(i));
         }
         Containers.dropContents(level, worldPosition, inv);
+        upgradeM.dropAll(level, worldPosition);
     }
 
     @Override
@@ -197,6 +205,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
         itemM.save(out, registries);
         energyM.save(out, registries);
+        upgradeM.save(out, registries);
 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
@@ -212,6 +221,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
         itemM.load(in, registries);
         energyM.load(in, registries);
+        upgradeM.load(in, registries);
 
         progress = in.getInt("progress");
         maxProgress = in.getInt("maxProgress");
@@ -262,5 +272,10 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     @Override
     public @NotNull DriveInterfaceModule getDriveInterfaceModule() {
         return driveM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 }

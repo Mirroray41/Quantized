@@ -55,7 +55,7 @@ public class DriveInterfaceModule implements Module {
                 continue;
             }
             if (!stack.has(ModDataComponents.DRIVE_DATA)) {
-                stack.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+                stack.set(ModDataComponents.DRIVE_DATA, DriveItem.defaultRecordFor(stack));
             }
             driveData[i - driveSlots[0]] = stack.get(ModDataComponents.DRIVE_DATA);
         }

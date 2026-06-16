@@ -7,6 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -29,6 +30,7 @@ public class ModEvents {
         fluxGeneratorCaps(event);
         fabricatorCaps(event);
         sterlingEngineCaps(event);
+        replicatorCaps(event);
     }
 
     @SubscribeEvent
@@ -39,6 +41,11 @@ public class ModEvents {
     @SubscribeEvent
     public static void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new FluxDataJsonLoader());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event) {
+        net.zapp.quantized.core.command.QuantizedCommand.register(event.getDispatcher(), event.getBuildContext());
     }
 
     @SubscribeEvent

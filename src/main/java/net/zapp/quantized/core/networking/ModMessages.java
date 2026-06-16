@@ -23,6 +23,8 @@ public final class ModMessages {
         registrar.playToServer(MenuScrollC2S.TYPE, MenuScrollC2S.STREAM_CODEC, MenuScrollC2S::handle);
         registrar.playToServer(MenuFilterC2S.TYPE, MenuFilterC2S.STREAM_CODEC, MenuFilterC2S::handle);
         registrar.playToServer(ModifyAmountButtonC2S.TYPE, ModifyAmountButtonC2S.STREAM_CODEC, ModifyAmountButtonC2S::handle);
+        registrar.playToServer(OpenUpgradesC2S.TYPE, OpenUpgradesC2S.STREAM_CODEC, OpenUpgradesC2S::handle);
+        registrar.playToServer(OpenMachineMenuC2S.TYPE, OpenMachineMenuC2S.STREAM_CODEC, OpenMachineMenuC2S::handle);
     }
 
     public static void sendToServer(CustomPacketPayload message) {

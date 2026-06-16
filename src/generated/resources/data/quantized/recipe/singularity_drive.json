@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "1": {
+      "item": "quantized:2_mq_bytes"
+    },
+    "D": {
+      "item": "quantized:drive_casing"
+    },
+    "S": {
+      "item": "quantized:steel_plate"
+    }
+  },
+  "pattern": [
+    "S1S",
+    "1D1",
+    "S1S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:singularity_drive"
+  }
+}

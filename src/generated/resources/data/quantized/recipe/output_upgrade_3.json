@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "minecraft:quartz"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "Q": {
+      "item": "quantized:512_q_bytes"
+    }
+  },
+  "pattern": [
+    "PMP",
+    "MQM",
+    "PMP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:output_upgrade_3"
+  }
+}

@@ -46,12 +46,14 @@ public class ItemModule implements Module {
 
     @Override
     public void save(CompoundTag out, HolderLookup.Provider registries) {
-        items.serializeNBT(registries);
+        out.put(moduleOwner + ".items", items.serializeNBT(registries));
     }
 
     @Override
     public void load(CompoundTag in, HolderLookup.Provider registries) {
-        items.deserializeNBT(registries, in);
+        if (in.contains(moduleOwner + ".items")) {
+            items.deserializeNBT(registries, in.getCompound(moduleOwner + ".items"));
+        }
     }
 
     public boolean canOutput(int outputSlot, int outputAmount, Item outputItem) {

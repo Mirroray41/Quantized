@@ -91,6 +91,18 @@ public class TileCapabilities {
                 (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
     }
 
+    protected static void replicatorCaps(RegisterCapabilitiesEvent event) {
+        // Expose only the output slot (index 2) for automation extraction.
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(),
+                (be, side) -> new RangedWrapper(be.getItemHandler(), 2, 3));
+
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(),
+                (be, side) -> new EnergyInputWrapper(be.getEnergyHandler()));
+
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(),
+                (be, side) -> new FluidInputWrapper(be.getFluidHandler()));
+    }
+
     protected static void sterlingEngineCaps(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.STERLING_ENGINE_TILE.get(),
                 (be, side) -> be.getItemHandler());

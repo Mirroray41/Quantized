@@ -27,18 +27,23 @@ import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.utils.module.DriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasDriveInterfaceModule {
+import java.util.List;
+
+public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasDriveInterfaceModule, HasUpgradeModule {
     // ---- Rendering init ----
     private static final float ROTATION = 10f;
 
@@ -85,6 +90,8 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), s -> markDirtyAndUpdate());
     private final DriveInterfaceModule driveM = new DriveInterfaceModule(getItemHandler(), DRIVE_SLOTS, DRIVE_GHOST_SLOTS, 3, 9, this::markDirtyAndUpdate);
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.SPEED, UpgradeType.EFFICIENCY), this::markDirtyAndUpdate);
 
     // ---- Menu sync data ----
     private int progress = 0;
@@ -159,6 +166,14 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
             resetCraft();
             return;
         }
+        // Stop fabricating if the drive that supplied the selected item was removed/changed so it is
+        // no longer present in any inserted drive. Without this the tile keeps running on the stale
+        // cached selectedItem reference even after every drive is pulled out.
+        if (!driveM.containsItem(selectedItem.getItem())) {
+            selectItem(-1);
+            setWorking(level, pos, state, false);
+            return;
+        }
         if (cachedOut.isEmpty()) {
             resetCraft();
             cachedOut = selectedItem;
@@ -175,10 +190,11 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
             return;
         }
 
-        maxProgress = ProcessingCurves.timeTicks(df.data());
-        int toConsume = ProcessingCurves.powerPerTick(df.flux());
+        maxProgress = upgradeM.speedTicks(ProcessingCurves.timeTicks(df.data()));
+        int toConsume = upgradeM.efficiencyCost(ProcessingCurves.powerPerTick(df.flux()));
+        int fluxCost = upgradeM.efficiencyCost(df.flux());
 
-        boolean canPay = energyM.canPay(toConsume) && tankM.canPay(df.flux());
+        boolean canPay = energyM.canPay(toConsume) && tankM.canPay(fluxCost);
         boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, selectedItem.getItem());
         boolean working = canPay && canOut;
         setWorking(level, pos, state, working);
@@ -194,7 +210,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         level.playSound(null, pos, ModSounds.QUANTUM_FABRICATOR_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
         if (progress >= maxProgress) {
-            tankM.drainFluid(df.flux());
+            tankM.drainFluid(fluxCost);
             itemM.getHandler().insertItem(OUTPUT_SLOT, selectedItem.copy(), false);
             outputAmount--;
             if (outputAmount == 0) {
@@ -232,6 +248,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
             inv.setItem(i, itemM.getHandler().getStackInSlot(i));
         }
         Containers.dropContents(level, worldPosition, inv);
+        upgradeM.dropAll(level, worldPosition);
     }
 
     // ---- Save / Load ----
@@ -243,6 +260,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         itemM.save(out, registries);
         energyM.save(out, registries);
         tankM.save(out, registries);
+        upgradeM.save(out, registries);
 
         // local fields
         out.putInt("progress", progress);
@@ -260,6 +278,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         itemM.load(in, registries);
         energyM.load(in, registries);
         tankM.load(in, registries);
+        upgradeM.load(in, registries);
 
         // local fields
         progress = in.getInt("progress");
@@ -296,7 +315,9 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
             return;
         }
         selectedSlot = slot;
-        selectedItem = itemM.getHandler().getStackInSlot(slot);
+        // Copy so the selection is a stable snapshot, not a live reference to the ghost slot stack
+        // (which gets overwritten/cleared whenever the drive list is recomputed).
+        selectedItem = itemM.getHandler().getStackInSlot(slot).copy();
         markDirtyAndUpdate();
     }
 
@@ -322,6 +343,11 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     @Override
     public @NotNull DriveInterfaceModule getDriveInterfaceModule() {
         return driveM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 
     // ---- Rendering ----

@@ -10,6 +10,7 @@ import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineTile;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorTile;
+import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorTile;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerTile;
 
 import java.util.function.Supplier;
@@ -47,6 +48,11 @@ public class ModBlockEntities {
             BLOCK_ENTITY_TYPES.register("flux_generator_tile",
                     () -> BlockEntityType.Builder
                             .of(FluxGeneratorTile::new, ModBlocks.FLUX_GENERATOR.get())
+                            .build(null));
+    public static final Supplier<BlockEntityType<QuantumReplicatorTile>> QUANTUM_REPLICATOR_TILE =
+            BLOCK_ENTITY_TYPES.register("quantum_replicator_tile",
+                    () -> BlockEntityType.Builder
+                            .of(QuantumReplicatorTile::new, ModBlocks.QUANTUM_REPLICATOR.get())
                             .build(null));
 
     public static void register(IEventBus eventBus) {

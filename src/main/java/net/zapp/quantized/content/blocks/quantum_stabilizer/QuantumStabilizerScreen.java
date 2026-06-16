@@ -34,6 +34,18 @@ public class QuantumStabilizerScreen extends AbstractContainerScreen<QuantumStab
     }
 
     @Override
+    protected void init() {
+        super.init();
+        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(
+                        Component.translatable("gui.quantized.upgrades.open"),
+                        b -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.getMachinePos())))
+                .bounds(leftPos + imageWidth + 4, topPos + 4, 18, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
+                .build());
+    }
+
+    @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;

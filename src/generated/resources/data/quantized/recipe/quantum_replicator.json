@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "1": {
+      "item": "quantized:1_gq_bytes"
+    },
+    "B": {
+      "item": "quantized:carbon_silicon_battery"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "R": {
+      "item": "quantized:repulsion_core"
+    },
+    "T": {
+      "item": "quantized:flux_tank"
+    },
+    "W": {
+      "item": "quantized:copper_wire"
+    }
+  },
+  "pattern": [
+    "PTP",
+    "R1B",
+    "PWP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:quantum_replicator"
+  }
+}

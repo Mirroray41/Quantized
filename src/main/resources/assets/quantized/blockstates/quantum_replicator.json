@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "on=false": {
+      "model": "quantized:block/quantum_replicator"
+    },
+    "on=true": {
+      "model": "quantized:block/quantum_replicator_on"
+    }
+  }
+}

@@ -18,15 +18,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SterlingEngineTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule {
+import java.util.List;
+
+public class SterlingEngineTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasUpgradeModule {
     private static final int FE_CAPACITY = 100_000;
     private static final int DEFAULT_FE_PRODUCTION = 100;
 
@@ -40,6 +45,8 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
             return stack;
         }
     });
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.EFFICIENCY, UpgradeType.OUTPUT), this::markDirtyAndUpdate);
 
 
     private final ContainerData data = new ContainerData() {
@@ -82,17 +89,19 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
     }
 
     private void generateEnergy(Level level) {
-        if (energyM.canInsert(DEFAULT_FE_PRODUCTION)) {
+        int production = upgradeM.outputMultiplied(DEFAULT_FE_PRODUCTION);
+        if (energyM.canInsert(production)) {
             if (burnTime <= 0) {
                 feProduction = 0;
                 ItemStack fuel = itemM.getHandler().getStackInSlot(0);
                 if (fuel.isEmpty()) return;
-                setBurnTime(fuel.getBurnTime(RecipeType.SMELTING));
+                // Efficiency card makes each fuel item burn for longer.
+                setBurnTime(upgradeM.efficiencyScaled(fuel.getBurnTime(RecipeType.SMELTING)));
                 maxBurnTime = burnTime;
                 if (burnTime <= 0) return;
                 itemM.getHandler().extractItem(0, 1, false);
             } else {
-                feProduction = DEFAULT_FE_PRODUCTION;
+                feProduction = production;
                 setBurnTime(burnTime - 1);
                 energyM.getHandler().receiveEnergy(feProduction, false);
             }
@@ -109,6 +118,7 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
 
         energyM.save(output, registries);
         itemM.save(output, registries);
+        upgradeM.save(output, registries);
 
         output.putInt("burnTime", burnTime);
         output.putInt("maxBurnTime", maxBurnTime);
@@ -123,9 +133,16 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
 
         energyM.load(input, registries);
         itemM.load(input, registries);
+        upgradeM.load(input, registries);
 
         burnTime = input.getInt("burnTime");
         maxBurnTime = input.getInt("maxBurnTime");
+    }
+
+    public void drops() {
+        if (level == null) return;
+        itemM.dropAll(level, worldPosition);
+        upgradeM.dropAll(level, worldPosition);
     }
 
     private void setBurnTime(int burnTime) {
@@ -172,5 +189,10 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
     @Override
     public @NotNull ItemModule getItemModule() {
         return itemM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 }

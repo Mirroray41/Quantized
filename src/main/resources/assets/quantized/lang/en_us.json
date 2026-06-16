@@ -29,6 +29,33 @@
   "item.quantized.128_mqb_drive": "128 MQB Drive",
   "item.quantized.1_gqb_drive": "1 GQB Drive",
 
+  "item.quantized.singularity_drive": "Singularity Drive",
+
+  "item.quantized.speed_upgrade_1": "Speed Upgrade I",
+  "item.quantized.speed_upgrade_2": "Speed Upgrade II",
+  "item.quantized.speed_upgrade_3": "Speed Upgrade III",
+  "item.quantized.speed_upgrade_4": "Speed Upgrade IV",
+  "item.quantized.speed_upgrade_5": "Speed Upgrade V",
+  "item.quantized.efficiency_upgrade_1": "Efficiency Upgrade I",
+  "item.quantized.efficiency_upgrade_2": "Efficiency Upgrade II",
+  "item.quantized.efficiency_upgrade_3": "Efficiency Upgrade III",
+  "item.quantized.efficiency_upgrade_4": "Efficiency Upgrade IV",
+  "item.quantized.efficiency_upgrade_5": "Efficiency Upgrade V",
+  "item.quantized.output_upgrade_1": "Output Upgrade I",
+  "item.quantized.output_upgrade_2": "Output Upgrade II",
+  "item.quantized.output_upgrade_3": "Output Upgrade III",
+  "item.quantized.output_upgrade_4": "Output Upgrade IV",
+  "item.quantized.output_upgrade_5": "Output Upgrade V",
+
+  "tooltip.quantized.upgrade.speed": "§eProcessing Speed ×%1$s",
+  "tooltip.quantized.upgrade.efficiency": "§bResource Efficiency ×%1$s",
+  "tooltip.quantized.upgrade.output": "§aOutput ×%1$s",
+  "tooltip.quantized.upgrade.tier": "§7Tier %1$s",
+
+  "gui.quantized.upgrades": "Upgrades",
+  "gui.quantized.upgrades.open": "⚙",
+  "gui.quantized.upgrades.back": "Back",
+
   "block.quantized.steel_block": "Steel Block",
   "item.quantized.steel_ingot": "Steel Ingot",
   "item.quantized.steel_nugget": "Steel Nugget",
@@ -70,6 +97,10 @@
   "tooltip.quantized.disk.item": "    %1$s",
   "tooltip.quantized.disk.item_more": "    §7And %1$s §7more...",
 
+  "tooltip.quantized.disk.singular": "§dStores a single item of any size",
+  "tooltip.quantized.disk.singular_empty": "§7Empty — imprint it in a Quantum Item Generator",
+  "tooltip.quantized.disk.singular_stored": "§aImprinted: §f%1$s",
+
 
   "tooltip.quantized.battery.energy_stored": "Battery: %1$s/%2$s FE",
   "tooltip.quantized.battery.energy_usage": "Using: %1$s FE/t",
@@ -109,6 +140,9 @@
 
   "block.quantized.tile.sterling_engine": "Sterling Engine",
   "block.quantized.sterling_engine": "Sterling Engine",
+
+  "block.quantized.quantum_replicator": "Quantum Replicator",
+  "block.quantized.tile.quantum_replicator": "Quantum Replicator",
 
   "block.quantized.tile.machine_block": "Machine Block",
   "jei.quantized.qbit_crafting.title": "Quantum Stabilization"

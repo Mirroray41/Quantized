@@ -1,11 +1,14 @@
 package net.zapp.quantized.content.blocks.sterling_engine;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.core.networking.ModMessages;
+import net.zapp.quantized.core.networking.messages.OpenUpgradesC2S;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,17 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
 
     public SterlingEngineScreen(SterlingEngineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        addRenderableWidget(Button.builder(
+                        Component.translatable("gui.quantized.upgrades.open"),
+                        b -> ModMessages.sendToServer(new OpenUpgradesC2S(menu.getMachinePos())))
+                .bounds(leftPos + imageWidth + 4, topPos + 4, 18, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
+                .build());
     }
 
     @Override

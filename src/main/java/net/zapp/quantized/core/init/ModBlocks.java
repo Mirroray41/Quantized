@@ -19,6 +19,7 @@ import net.zapp.quantized.content.blocks.flux_generator.FluxGenerator;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzer;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizer;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricator;
+import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicator;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizer;
 
 import java.util.function.Function;
@@ -54,6 +55,10 @@ public class ModBlocks {
             () -> new SterlingEngine(BlockBehaviour.Properties.of()
                     .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> state.getValue(SterlingEngine.LIT) ? 15 : 0)));
+    public static final DeferredBlock<Block> QUANTUM_REPLICATOR = registerBlock("quantum_replicator",
+            () -> new QuantumReplicator(BlockBehaviour.Properties.of()
+                    .strength(3f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(QuantumReplicator.ON) ? 15 : 0)));
 
     public static final DeferredBlock<LiquidBlock> QUANTUM_FLUX_BLOCK = registerBlock("quantum_flux",
             () -> new LiquidBlock(ModFluids.FLOWING_QUANTUM_FLUX.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));

@@ -26,10 +26,20 @@ public class DriveItem extends Item {
         this.maxPatternSize = maxPatternSize;
     }
 
+    /** The DRIVE_DATA a freshly-made disk of this item tier should start with. */
+    public DriveRecord makeDefaultRecord() {
+        return new DriveRecord(capacity, maxPatternSize, 0, new String[0], 0);
+    }
+
+    /** Tier-aware default record for whatever drive a stack is; blank for non-drives. */
+    public static DriveRecord defaultRecordFor(ItemStack stack) {
+        return stack.getItem() instanceof DriveItem d ? d.makeDefaultRecord() : DriveRecord.blank();
+    }
+
     public static List<String> getStoredItemNames(ItemStack drive) {
         if (!(drive.getItem() instanceof DriveItem)) return List.of();
         if (!drive.has(ModDataComponents.DRIVE_DATA)) {
-            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            drive.set(ModDataComponents.DRIVE_DATA, defaultRecordFor(drive));
             return List.of();
         }
         DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
@@ -39,7 +49,7 @@ public class DriveItem extends Item {
     public static List<Item> getStoredItems(ItemStack drive) {
         if (!(drive.getItem() instanceof DriveItem)) return List.of();
         if (!drive.has(ModDataComponents.DRIVE_DATA)) {
-            drive.set(ModDataComponents.DRIVE_DATA, DriveRecord.blank());
+            drive.set(ModDataComponents.DRIVE_DATA, defaultRecordFor(drive));
             return List.of();
         }
         DriveRecord diskData = drive.get(ModDataComponents.DRIVE_DATA);
@@ -70,7 +80,7 @@ public class DriveItem extends Item {
         if (drive == null || drive.isEmpty() || !(drive.getItem() instanceof DriveItem)) return false;
 
         DriveRecord rec = drive.get(ModDataComponents.DRIVE_DATA);
-        if (rec == null) rec = DriveRecord.blank();
+        if (rec == null) rec = defaultRecordFor(drive);
 
         String key = DriveRecord.keyOf(toRemove);
         if (!rec.containsItemString(key)) return false;
@@ -92,8 +102,7 @@ public class DriveItem extends Item {
 
     private void initializeDriveData(ItemStack stack) {
         if (!stack.has(ModDataComponents.DRIVE_DATA.get())) {
-            stack.set(ModDataComponents.DRIVE_DATA.get(),
-                    new DriveRecord(capacity, maxPatternSize, 0, new String[0], 0));
+            stack.set(ModDataComponents.DRIVE_DATA.get(), makeDefaultRecord());
         }
     }
 

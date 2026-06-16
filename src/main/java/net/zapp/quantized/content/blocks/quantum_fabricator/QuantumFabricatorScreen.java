@@ -143,7 +143,13 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             showingCancel = false;
         }
 
-
+        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(
+                        Component.translatable("gui.quantized.upgrades.open"),
+                        p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos())))
+                .bounds(x + imageWidth + 4, y + 4, 18, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
+                .build());
     }
 
     private void drawQueuedOverlay(GuiGraphics g) {

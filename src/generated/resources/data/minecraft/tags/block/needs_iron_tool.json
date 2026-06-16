@@ -5,6 +5,7 @@
     "quantized:quantum_analyzer",
     "quantized:quantum_fabricator",
     "quantized:flux_generator",
-    "quantized:sterling_engine"
+    "quantized:sterling_engine",
+    "quantized:quantum_replicator"
   ]
 }

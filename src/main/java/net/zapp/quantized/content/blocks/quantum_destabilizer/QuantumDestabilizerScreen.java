@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -31,6 +32,18 @@ public class QuantumDestabilizerScreen extends AbstractContainerScreen<QuantumDe
 
     public QuantumDestabilizerScreen(QuantumDestabilizerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        addRenderableWidget(Button.builder(
+                        Component.translatable("gui.quantized.upgrades.open"),
+                        b -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos())))
+                .bounds(leftPos + imageWidth + 4, topPos + 4, 18, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
+                .build());
     }
 
     @Override

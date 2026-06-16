@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "P": {
+      "item": "quantized:steel_plate"
+    },
+    "Q": {
+      "item": "quantized:8_q_bytes"
+    }
+  },
+  "pattern": [
+    "PMP",
+    "MQM",
+    "PMP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "quantized:efficiency_upgrade_2"
+  }
+}

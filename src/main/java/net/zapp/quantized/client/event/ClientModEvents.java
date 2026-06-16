@@ -21,8 +21,10 @@ import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilize
 import net.zapp.quantized.content.blocks.quantum_destabilizer.renderer.QuantumDestabilizerRenderer;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorScreen;
 import net.zapp.quantized.content.blocks.quantum_fabricator.renderer.QuantumFabricatorRenderer;
+import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorScreen;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerScreen;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.renderer.QuantumStabilizerRenderer;
+import net.zapp.quantized.content.blocks.upgrade.UpgradeScreen;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluidTypes;
 import net.zapp.quantized.core.init.ModMenuTypes;
@@ -60,6 +62,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.QUANTUM_STABILIZER_MENU.get(), QuantumStabilizerScreen::new);
         event.register(ModMenuTypes.FLUX_GENERATOR_MENU.get(), FluxGeneratorScreen::new);
         event.register(ModMenuTypes.STERLING_ENGINE_MENU.get(), SterlingEngineScreen::new);
+        event.register(ModMenuTypes.QUANTUM_REPLICATOR_MENU.get(), QuantumReplicatorScreen::new);
+        event.register(ModMenuTypes.UPGRADE_MENU.get(), UpgradeScreen::new);
     }
 
     @SubscribeEvent

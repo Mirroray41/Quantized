@@ -14,7 +14,9 @@ import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorMenu;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerMenu;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerMenu;
 import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorMenu;
+import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorMenu;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerMenu;
+import net.zapp.quantized.content.blocks.upgrade.UpgradeMenu;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
@@ -33,6 +35,10 @@ public class ModMenuTypes {
             registerMenuType("flux_generator_menu", FluxGeneratorMenu::new);
     public static final DeferredHolder<MenuType<?>, MenuType<SterlingEngineMenu>> STERLING_ENGINE_MENU =
             registerMenuType("sterling_engine_menu", SterlingEngineMenu::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<QuantumReplicatorMenu>> QUANTUM_REPLICATOR_MENU =
+            registerMenuType("quantum_replicator_menu", QuantumReplicatorMenu::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<UpgradeMenu>> UPGRADE_MENU =
+            registerMenuType("upgrade_menu", UpgradeMenu::new);
 
     private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return MENUS.register(name, () -> IMenuTypeExtension.create(factory));

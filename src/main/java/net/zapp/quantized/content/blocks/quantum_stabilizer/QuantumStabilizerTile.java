@@ -24,17 +24,22 @@ import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.init.ModSounds;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import net.zapp.quantized.core.utils.random.RandomUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule {
+import java.util.List;
+
+public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasUpgradeModule {
     // ---- Rendering init ----
     private static final float ROTATION = 10f;
 
@@ -54,6 +59,8 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
 
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), i -> markDirtyAndUpdate());
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.SPEED, UpgradeType.EFFICIENCY, UpgradeType.OUTPUT), this::markDirtyAndUpdate);
 
     public QuantumStabilizerTile(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), pos, blockState);
@@ -61,9 +68,10 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
 
     private static final int DEFAULT_POWER_CONSUME = 16;
     private static final int DEFAULT_FLUX_CONSUME = 16;
+    private static final int DEFAULT_MAX_PROGRESS = 20;
 
     private int progress = 0;
-    private int maxProgress = 20;
+    private int maxProgress = DEFAULT_MAX_PROGRESS;
     private int powerConsumption = DEFAULT_POWER_CONSUME;
     private int fluxConsumption = DEFAULT_FLUX_CONSUME;
     private boolean wasWorking = false;
@@ -112,10 +120,13 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        boolean canPay = energyM.canPay(DEFAULT_POWER_CONSUME) && tankM.canPay(DEFAULT_FLUX_CONSUME);
+        int powerCost = upgradeM.efficiencyCost(DEFAULT_POWER_CONSUME);
+        int fluxCost = upgradeM.efficiencyCost(DEFAULT_FLUX_CONSUME);
+
+        boolean canPay = energyM.canPay(powerCost) && tankM.canPay(fluxCost);
         boolean canOut = itemM.canOutput(BIT_OUT_SLOT, 1, ModItems.Q_BIT.get())
                 && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get());
-        boolean hasInput = tankM.getHandler().getFluidAmount() > fluxConsumption;
+        boolean hasInput = tankM.getHandler().getFluidAmount() > fluxCost;
         boolean working = canPay && canOut && hasInput;
 
         setWorking(level, pos, state, working);
@@ -126,8 +137,9 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
             return;
         }
 
-        powerConsumption = DEFAULT_POWER_CONSUME;
-        fluxConsumption = DEFAULT_FLUX_CONSUME;
+        powerConsumption = powerCost;
+        fluxConsumption = fluxCost;
+        maxProgress = upgradeM.speedTicks(DEFAULT_MAX_PROGRESS);
 
 
         progress++;
@@ -144,7 +156,8 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
                     itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), 1), false);
                     return;
                 }
-                itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), 1), false);
+                int bits = upgradeM.outputMultiplied(1);
+                itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), bits), false);
             }
         }
     }
@@ -158,13 +171,14 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         }
     }
 
-    private void drops() {
+    public void drops() {
         if (level == null) return;
         SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
         for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
             inv.setItem(i, itemM.getHandler().getStackInSlot(i));
         }
         Containers.dropContents(level, worldPosition, inv);
+        upgradeM.dropAll(level, worldPosition);
     }
 
     @Override
@@ -174,6 +188,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         itemM.save(out, registries);
         energyM.save(out, registries);
         tankM.save(out, registries);
+        upgradeM.save(out, registries);
 
         out.putInt("progress", progress);
         out.putInt("maxProgress", maxProgress);
@@ -189,6 +204,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         itemM.load(in, regs);
         energyM.load(in, regs);
         tankM.load(in, regs);
+        upgradeM.load(in, regs);
 
         progress = in.getInt("progress");
         maxProgress = in.getInt("maxProgress");
@@ -223,6 +239,11 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 
     public float getRotationSpeed() {

@@ -39,6 +39,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DRIVE_128M);
                         output.accept(ModItems.Q_BYTES_1G);
                         output.accept(ModItems.DRIVE_1G);
+                        output.accept(ModItems.SINGULARITY_DRIVE);
                     }).build());
 
 
@@ -68,6 +69,10 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.QUANTUM_STABILIZER);
                         output.accept(ModBlocks.QUANTUM_ANALYZER);
                         output.accept(ModBlocks.QUANTUM_FABRICATOR);
+                        output.accept(ModBlocks.QUANTUM_REPLICATOR);
+                        ModItems.SPEED_UPGRADES.forEach(output::accept);
+                        ModItems.EFFICIENCY_UPGRADES.forEach(output::accept);
+                        ModItems.OUTPUT_UPGRADES.forEach(output::accept);
                     }).build());
 
 

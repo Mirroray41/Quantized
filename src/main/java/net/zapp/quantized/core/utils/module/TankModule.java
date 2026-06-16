@@ -32,15 +32,16 @@ public class TankModule implements Module {
 
     @Override
     public void save(CompoundTag out, HolderLookup.Provider registries) {
-        if (tank.getFluid().isEmpty()) return; // Avoid serializing nothing.
-        tank.getFluid().save(registries);
+        // writeToNBT only writes the "Fluid" sub-tag when the tank is non-empty.
+        tank.writeToNBT(registries, out);
         out.putInt(moduleOwner + ".fluid_capacity", tank.getCapacity());
     }
 
     @Override
     public void load(CompoundTag in, HolderLookup.Provider registries) {
-        tank.setFluid(FluidStack.parseOptional(registries, in.getCompound("Fluid")));
-        tank.setCapacity(in.getInt(moduleOwner + ".fluid_capacity"));
+        tank.readFromNBT(registries, in);
+        int capacity = in.getInt(moduleOwner + ".fluid_capacity");
+        if (capacity > 0) tank.setCapacity(capacity);
     }
 
     public boolean canPay(int amount) {

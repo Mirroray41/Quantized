@@ -224,6 +224,30 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('B', ModItems.CARBON_SILICON_BATTERY.get())
                 .unlockedBy("has_battery", has(ModItems.CARBON_SILICON_BATTERY)).save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_REPLICATOR.get())
+                .pattern("PTP")
+                .pattern("R1B")
+                .pattern("PWP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('T', ModItems.FLUX_TANK.get())
+                .define('R', ModItems.REPULSION_CORE.get())
+                .define('1', ModItems.Q_BYTES_1G.get())
+                .define('B', ModItems.CARBON_SILICON_BATTERY.get())
+                .define('W', ModItems.COPPER_WIRE.get())
+                .unlockedBy("has_1g_q_bytes", has(ModItems.Q_BYTES_1G)).save(recipeOutput);
+
+        // Special single-item disk: crafted around compacted q-bits (2M Q-Bytes).
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SINGULARITY_DRIVE.get())
+                .pattern("S1S")
+                .pattern("1D1")
+                .pattern("S1S")
+                .define('S', ModItems.STEEL_PLATE.get())
+                .define('1', ModItems.Q_BYTES_2M.get())
+                .define('D', ModItems.DRIVE_CASING.get())
+                .unlockedBy("has_2m_q_bytes", has(ModItems.Q_BYTES_2M)).save(recipeOutput);
+
+        upgradeCardRecipes(recipeOutput);
+
         driveUnpackRecipe(recipeOutput, ModItems.DRIVE_8.get(), ModItems.Q_BYTES_8.get());
         driveUnpackRecipe(recipeOutput, ModItems.DRIVE_64.get(), ModItems.Q_BYTES_64.get());
         driveUnpackRecipe(recipeOutput, ModItems.DRIVE_512.get(), ModItems.Q_BYTES_512.get());
@@ -283,6 +307,27 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item1, 8)
                 .requires(item2)
                 .unlockedBy(unlock, has(item1)).save(recipeOutput, getItemName(item1) + "_from_" + getItemName(item2));
+    }
+
+    /** One crafting recipe per upgrade card: a steel/marker frame around the tier's q-bit. */
+    protected void upgradeCardRecipes(RecipeOutput recipeOutput) {
+        for (int t = 0; t < ModItems.UPGRADE_TIER_QBIT.size(); t++) {
+            ItemLike qbit = ModItems.UPGRADE_TIER_QBIT.get(t).get();
+            upgradeCard(recipeOutput, ModItems.SPEED_UPGRADES.get(t).get(), qbit, Items.REDSTONE);
+            upgradeCard(recipeOutput, ModItems.EFFICIENCY_UPGRADES.get(t).get(), qbit, Items.GLOWSTONE_DUST);
+            upgradeCard(recipeOutput, ModItems.OUTPUT_UPGRADES.get(t).get(), qbit, Items.QUARTZ);
+        }
+    }
+
+    protected void upgradeCard(RecipeOutput recipeOutput, ItemLike card, ItemLike qbit, ItemLike marker) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, card)
+                .pattern("PMP")
+                .pattern("MQM")
+                .pattern("PMP")
+                .define('P', ModItems.STEEL_PLATE.get())
+                .define('M', marker)
+                .define('Q', qbit)
+                .unlockedBy("has_" + getItemName(qbit), has(qbit)).save(recipeOutput);
     }
 
     protected void driveUnpackRecipe(RecipeOutput recipeOutput, ItemLike drive, ItemLike data) {

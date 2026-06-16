@@ -161,7 +161,57 @@ public class FluxDataConfig {
         itemDef.accept("minecraft:ink_sack", new DataFluxPair(2, 8));
         itemDef.accept("minecraft:ender_pearl", new DataFluxPair(16, 2048));
 
+        // --- Primitive drops with no recipe (must be anchored or derivation dead-ends on them) ---
+        // Mob / combat drops
+        itemDef.accept("minecraft:leather", new DataFluxPair(4, 64));
+        itemDef.accept("minecraft:rabbit_hide", new DataFluxPair(1, 16));
+        itemDef.accept("minecraft:feather", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:bone", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:string", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:gunpowder", new DataFluxPair(4, 32));
+        itemDef.accept("minecraft:spider_eye", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:rotten_flesh", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:phantom_membrane", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:rabbit_foot", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:nautilus_shell", new DataFluxPair(8, 256));
+        itemDef.accept("minecraft:shulker_shell", new DataFluxPair(16, 2048));
+        itemDef.accept("minecraft:dragon_breath", new DataFluxPair(16, 2048));
+        itemDef.accept("minecraft:echo_shard", new DataFluxPair(16, 2048));
+        itemDef.accept("minecraft:heart_of_the_sea", new DataFluxPair(32, 8192));
+        itemDef.accept("minecraft:totem_of_undying", new DataFluxPair(64, 32768));
+        itemDef.accept("minecraft:experience_bottle", new DataFluxPair(8, 256));
 
+        // Mined / world items with no smelting or crafting source
+        itemDef.accept("minecraft:coal", new DataFluxPair(4, 128));
+        itemDef.accept("minecraft:lapis_lazuli", new DataFluxPair(4, 64));
+        itemDef.accept("minecraft:prismarine_crystals", new DataFluxPair(4, 16));
+        itemDef.accept("minecraft:amethyst_shard", new DataFluxPair(4, 32));
+        itemDef.accept("minecraft:glowstone_dust", new DataFluxPair(4, 32));
+
+        // Primitive foods / farmables not covered by a crop tag
+        itemDef.accept("minecraft:egg", new DataFluxPair(2, 8));
+        itemDef.accept("minecraft:wheat_seeds", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:beetroot_seeds", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:melon_seeds", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:pumpkin_seeds", new DataFluxPair(1, 1));
+        itemDef.accept("minecraft:torchflower_seeds", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:pitcher_pod", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:sweet_berries", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:glow_berries", new DataFluxPair(1, 2));
+        itemDef.accept("minecraft:cocoa_beans", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:nether_wart", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:sugar_cane", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:carrot", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:potato", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:wheat", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:beetroot", new DataFluxPair(1, 4));
+        itemDef.accept("minecraft:cactus", new DataFluxPair(1, 4));
+
+        // Fishing
+        itemDef.accept("minecraft:cod", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:salmon", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:tropical_fish", new DataFluxPair(2, 4));
+        itemDef.accept("minecraft:pufferfish", new DataFluxPair(2, 8));
     }
 
     private static void addPredefinedTags(BiConsumer<String, DataFluxPair> tagDef) {
@@ -247,15 +297,11 @@ public class FluxDataConfig {
     }
 
     public static String normalizeTagKey(String key) {
+        // Only normalise the leading '#'. Underscores are legitimate characters in tag paths
+        // (e.g. c:end_stones, minecraft:coral_blocks, c:raw_materials/copper) and must NOT be
+        // rewritten to '/', or the resulting TagKey matches no real item tag.
         String s = key.trim();
         if (!s.startsWith("#")) s = "#" + s;
-        int colon = s.indexOf(':');
-        if (colon > 0 && colon + 1 < s.length()) {
-            String ns = s.substring(1, colon);
-            String path = s.substring(colon + 1);
-            if (path.contains("_") && !path.contains("/")) path = path.replace('_', '/');
-            s = "#" + ns + ":" + path;
-        }
         return s;
     }
 

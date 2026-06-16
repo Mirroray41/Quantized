@@ -15,22 +15,29 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.TankModule;
+import net.zapp.quantized.core.utils.module.UpgradeModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
 import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule {
+import java.util.List;
+
+public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasUpgradeModule {
     private static final int FE_CAPACITY = 1_000_000;
     private static final int TANK_CAPACITY = 16_000;
 
     private final String ownerName = "FluxGeneratorTile";
     private final EnergyModule energyM = new EnergyModule(ownerName, FE_CAPACITY, Integer.MAX_VALUE, true, true);
     private final TankModule tankM = new TankModule(ownerName, TANK_CAPACITY, fs -> fs.getFluidType() == ModFluids.QUANTUM_FLUX.get().getFluidType(), i -> markDirtyAndUpdate());
+    private final UpgradeModule upgradeM = new UpgradeModule(ownerName,
+            List.of(UpgradeType.EFFICIENCY, UpgradeType.OUTPUT), this::markDirtyAndUpdate);
 
     private final ContainerData data = new ContainerData() {
         @Override
@@ -89,8 +96,11 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
         energyM.pushEnergy(level, pos);
 
-        boolean canPay = tankM.canPay(DEFAULT_FLUX_CONSUMPTION);
-        boolean canOutput = energyM.canInsert(DEFAULT_POWER_PRODUCTION);
+        int flux = upgradeM.efficiencyCost(DEFAULT_FLUX_CONSUMPTION);
+        int power = upgradeM.outputMultiplied(DEFAULT_POWER_PRODUCTION);
+
+        boolean canPay = tankM.canPay(flux);
+        boolean canOutput = energyM.canInsert(power);
         boolean canWork = canPay && canOutput;
 
         setWorking(level, pos, state, canWork);
@@ -100,8 +110,8 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
             powerProduction = 0;
             return;
         }
-        powerProduction = DEFAULT_POWER_PRODUCTION;
-        fluxConsumption = DEFAULT_FLUX_CONSUMPTION;
+        powerProduction = power;
+        fluxConsumption = flux;
 
         energyM.getHandler().receiveEnergy(powerProduction, false);
         tankM.drainFluid(fluxConsumption);
@@ -127,6 +137,7 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
         energyM.save(out, regs);
         tankM.save(out, regs);
+        upgradeM.save(out, regs);
 
         super.saveAdditional(out, registries);
     }
@@ -138,6 +149,11 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
 
         energyM.load(in, regs);
         tankM.load(in, regs);
+        upgradeM.load(in, regs);
+    }
+
+    public void drops() {
+        if (level != null) upgradeM.dropAll(level, worldPosition);
     }
 
     @Override
@@ -165,5 +181,10 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
     @Override
     public @NotNull TankModule getTankModule() {
         return tankM;
+    }
+
+    @Override
+    public @NotNull UpgradeModule getUpgradeModule() {
+        return upgradeM;
     }
 }

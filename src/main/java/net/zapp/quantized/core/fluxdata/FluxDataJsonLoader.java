@@ -100,6 +100,9 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
             }
         Quantized.LOGGER.info("[Quantized:JsonDataFluxer] Applied {} pack(s).", packs.size());
         FluxDataFixerUpper.cacheAllItems();
+        // Recompute recipe-derived values against the refreshed anchors. No-op during the initial
+        // datapack load (no server yet); ServerStartedEvent handles that first pass.
+        FluxDataRecipeComputer.recomputeDerived();
     }
 
     private void applyOnePack(Pack p) {
@@ -168,13 +171,8 @@ public final class FluxDataJsonLoader implements PreparableReloadListener {
     }
 
     private static String normalizeTagKey(String key) {
-        String k = key.startsWith("#") ? key.substring(1) : key;
-        int colon = k.indexOf(':');
-        if (colon > 0) {
-            String ns = k.substring(0, colon);
-            String path = k.substring(colon + 1).replace('_', '/');
-            return ns + ":" + path;
-        }
-        return k;
+        // Strip the leading '#' only. Underscores are valid in tag paths and must be preserved
+        // (rewriting them to '/' produced tags like c:raw/materials/copper that match nothing).
+        return key.startsWith("#") ? key.substring(1) : key;
     }
 }
