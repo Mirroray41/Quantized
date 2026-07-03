@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorTile;
@@ -30,7 +31,10 @@ public class QuantumReplicatorRenderer implements BlockEntityRenderer<QuantumRep
                        MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        ItemStack stack = pBlockEntity.getItemHandler().getStackInSlot(1);
+        ItemStack stack = new ItemStack(Items.AIR);
+        if (pBlockEntity.getImprintedItem() != null) {
+            stack = pBlockEntity.getImprintedItem().getDefaultInstance();
+        }
 
         float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
 

@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -168,6 +169,8 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
         progress++;
         energyM.extractPower(powerConsumption);
 
+        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+
         level.playSound(null, pos, ModSounds.QUANTUM_REPLICATOR_WORK.value(),
                 SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
@@ -179,7 +182,7 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
     }
 
     /** The single item imprinted on the inserted singularity drive, or {@code null}. */
-    private @Nullable Item getImprintedItem() {
+    public @Nullable Item getImprintedItem() {
         ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
         if (!(disk.getItem() instanceof SingularityDriveItem)) return null;
         List<Item> stored = DriveItem.getStoredItems(disk);

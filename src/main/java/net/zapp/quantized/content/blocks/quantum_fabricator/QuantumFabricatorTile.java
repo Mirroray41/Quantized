@@ -17,11 +17,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
 import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorTile;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
@@ -50,6 +52,9 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
 
     public float prevRotation;
     public float rotation;
+
+    public float prevScale;
+    public float scale;
 
     // ---- Slots ----
     private static final int OUTPUT_SLOT = 0;
@@ -210,6 +215,8 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
         powerConsumption = toConsume;
         progress++;
         energyM.extractPower(powerConsumption);
+
+        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
 
         level.playSound(null, pos, ModSounds.QUANTUM_FABRICATOR_WORK.value(), SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
@@ -372,11 +379,14 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, QuantumFabricatorTile blockEntity) {
         blockEntity.prevRotation = blockEntity.rotation;
+        blockEntity.prevScale = blockEntity.scale;
 
         float speed = (float) (ROTATION +
                 (ROTATION * ((float) blockEntity.data.get(0) / blockEntity.data.get(1))));
 
         blockEntity.rotation += speed;
+
+        blockEntity.scale = (float) (0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1)));
 
         if (blockEntity.rotation >= 360) {
             blockEntity.rotation -= 360;
