@@ -13,7 +13,7 @@ import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
 public class QuantumStabilizerMenu extends AbstractContainerMenu {
-    private final QuantumStabilizerTile blockEntity;
+    public final QuantumStabilizerTile blockEntity;
     private final Level level;
     private final ContainerData data;
 

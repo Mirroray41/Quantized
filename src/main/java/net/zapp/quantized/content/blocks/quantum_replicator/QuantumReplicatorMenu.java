@@ -34,21 +34,15 @@ public class QuantumReplicatorMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         // Disk slot — only the singularity drive.
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), QuantumReplicatorTile.DISK_SLOT, 44, 35) {
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), QuantumReplicatorTile.DISK_SLOT, 44, 34) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof SingularityDriveItem;
             }
         });
-        // Sample slot — any item with a flux value; used to imprint the disk.
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), QuantumReplicatorTile.SAMPLE_SLOT, 80, 35) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack));
-            }
-        });
+
         // Output slot — replicated items, extract only.
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), QuantumReplicatorTile.OUTPUT_SLOT, 116, 35) {
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), QuantumReplicatorTile.OUTPUT_SLOT, 116, 34) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -58,19 +52,27 @@ public class QuantumReplicatorMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public int getProgress() {
-        return data.get(0);
-    }
-
-    public int getMaxProgress() {
-        return data.get(1);
-    }
-
-    public boolean isWorking() {
+    public boolean isCrafting() {
         return data.get(0) > 0;
     }
 
-    public int getPowerConsumption() {
+    public int getScaledArrowProgress() {
+        int progress = data.get(0);
+        int maxProgress = data.get(1);
+        int arrowPixelSize = 77;
+
+        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress: 0;
+    }
+
+    public int getScaledEnergyBar() {
+        int energyStored = data.get(3);
+        int maxEnergy = data.get(4);
+        int arrowPixelSize = 54;
+
+        return maxEnergy != 0 && energyStored != 0 ? energyStored * arrowPixelSize / maxEnergy : 0;
+    }
+
+    public int getEnergyConsumption() {
         return data.get(2);
     }
 
@@ -87,14 +89,7 @@ public class QuantumReplicatorMenu extends AbstractContainerMenu {
     }
 
     public FluidStack getFluid() {
-        return blockEntity.getFluid();
-    }
-
-    public int getScaledEnergyBar() {
-        int energyStored = data.get(3);
-        int maxEnergy = data.get(4);
-        int barPixelSize = 54;
-        return maxEnergy != 0 && energyStored != 0 ? energyStored * barPixelSize / maxEnergy : 0;
+        return blockEntity.getFluidHandler().getFluid();
     }
 
     private static final int HOTBAR_SLOT_COUNT = 9;
@@ -104,7 +99,7 @@ public class QuantumReplicatorMenu extends AbstractContainerMenu {
     private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;
+    private static final int TE_INVENTORY_SLOT_COUNT = 2;
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {

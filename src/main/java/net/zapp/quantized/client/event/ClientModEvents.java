@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.content.blocks.quantum_replicator.renderer.QuantumReplicatorRenderer;
 import net.zapp.quantized.content.blocks.sterling_engine.SterlingEngineScreen;
 import net.zapp.quantized.content.blocks.flux_generator.FluxGeneratorScreen;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerScreen;
@@ -51,7 +52,7 @@ public class ClientModEvents {
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_ANALYZER_TILE.get(), QuantumAnalyzerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_FABRICATOR_TILE.get(), QuantumFabricatorRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_STABILIZER_TILE.get(), QuantumStabilizerRenderer::new);
-
+        event.registerBlockEntityRenderer(ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(), QuantumReplicatorRenderer::new);
     }
 
     @SubscribeEvent

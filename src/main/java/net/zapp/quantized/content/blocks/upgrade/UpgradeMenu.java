@@ -23,6 +23,7 @@ public class UpgradeMenu extends AbstractContainerMenu {
     private final Level level;
     private final BlockPos pos;
     private final ItemStackHandler upgrades;
+    public HasUpgradeModule entity = null;
 
     public UpgradeMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()));
@@ -36,14 +37,18 @@ public class UpgradeMenu extends AbstractContainerMenu {
                 ? hum.getUpgradeHandler()
                 : new ItemStackHandler(0);
 
+        if (entity instanceof HasUpgradeModule) {
+            this.entity = (HasUpgradeModule) entity;
+        }
+
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
         // Upgrade slots, centred as a horizontal row.
         int count = upgrades.getSlots();
-        int startX = 88 - count * 9;
+        int startX = 89 - count * 9;
         for (int i = 0; i < count; i++) {
-            addSlot(new SlotItemHandler(upgrades, i, startX + i * 18, 35));
+            addSlot(new SlotItemHandler(upgrades, i, startX + i * 18, 34));
         }
     }
 

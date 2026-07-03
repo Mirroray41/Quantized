@@ -69,11 +69,18 @@ public class QuantumReplicator extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        if (level.isClientSide()) {
-            return null;
+        if(level.isClientSide()) {
+            return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(), (level1, blockPos, blockState, blockEntity) -> blockEntity.clientTick(level1, blockPos, blockState, blockEntity));
         }
+
         return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_REPLICATOR_TILE.get(),
                 (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
+    }
+
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> actualType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == actualType ? (BlockEntityTicker<A>) ticker : null;
     }
 
     @Override

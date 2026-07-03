@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -22,12 +23,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.SingularityDriveItem;
 import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
+import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
@@ -45,17 +48,22 @@ import java.util.List;
 public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasUpgradeModule {
     private static final float ROTATION = 10f;
 
+    public float prevRotation;
+    public float rotation;
+
+    public float prevScale;
+    public float scale;
+
     // ---- Slots ----
     public static final int DISK_SLOT = 0;
-    public static final int SAMPLE_SLOT = 1;
-    public static final int OUTPUT_SLOT = 2;
+    public static final int OUTPUT_SLOT = 1;
 
     // ---- Energy/Fluids constants ----
     public static final int FE_CAPACITY = 1_000_000;
     public static final int TANK_CAPACITY = 8_000_000;
 
     private final String ownerName = "QuantumReplicatorTile";
-    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(3) {
+    private final ItemModule itemM = new ItemModule(ownerName, new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
             markDirtyAndUpdate();
@@ -65,7 +73,6 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
         @NotNull
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (slot == DISK_SLOT && !(stack.getItem() instanceof SingularityDriveItem)) return stack;
-            if (slot == SAMPLE_SLOT && !DataFluxPair.isValid(FluxDataFixerUpper.getDataFluxFromStack(stack))) return stack;
             return super.insertItem(slot, stack, simulate);
         }
     });
@@ -128,7 +135,6 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
-        tryImprintDisk();
 
         Item target = getImprintedItem();
         if (target == null) {
@@ -162,6 +168,9 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
         progress++;
         energyM.extractPower(powerConsumption);
 
+        level.playSound(null, pos, ModSounds.QUANTUM_REPLICATOR_WORK.value(),
+                SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
+
         if (progress >= maxProgress) {
             tankM.drainFluid(fluxCost);
             itemM.getHandler().insertItem(OUTPUT_SLOT, new ItemStack(target, 1), false);
@@ -175,21 +184,6 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
         if (!(disk.getItem() instanceof SingularityDriveItem)) return null;
         List<Item> stored = DriveItem.getStoredItems(disk);
         return stored.isEmpty() ? null : stored.get(0);
-    }
-
-    /** Imprint the inserted (blank) singularity drive with whatever valued item is in the sample slot. */
-    private void tryImprintDisk() {
-        ItemStack disk = itemM.getHandler().getStackInSlot(DISK_SLOT);
-        if (!(disk.getItem() instanceof SingularityDriveItem)) return;
-        if (!DriveItem.getStoredItems(disk).isEmpty()) return; // already imprinted
-
-        ItemStack sample = itemM.getHandler().getStackInSlot(SAMPLE_SLOT);
-        if (sample.isEmpty()) return;
-        DataFluxPair df = FluxDataFixerUpper.getDataFlux(sample.getItem());
-        if (!DataFluxPair.isValid(df)) return;
-
-        DriveItem.addItem(disk, new ItemStack(sample.getItem(), 1), df);
-        itemM.getHandler().setStackInSlot(DISK_SLOT, disk); // persist component change + sync
     }
 
     // ---- helpers ----
@@ -288,7 +282,20 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
         return tankM.getHandler().getFluid();
     }
 
-    public float getRotationSpeed() {
-        return ROTATION;
+    public static void clientTick(Level level, BlockPos pos, BlockState state, QuantumReplicatorTile blockEntity) {
+        blockEntity.prevRotation = blockEntity.rotation;
+        blockEntity.prevScale = blockEntity.scale;
+
+        float speed = (float) (ROTATION +
+                (ROTATION * ((float) blockEntity.data.get(0) / blockEntity.data.get(1))));
+
+        blockEntity.rotation += speed;
+
+        blockEntity.scale = (float) (0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1)));
+
+        if (blockEntity.rotation >= 360) {
+            blockEntity.rotation -= 360;
+            blockEntity.prevRotation -= 360;
+        }
     }
 }

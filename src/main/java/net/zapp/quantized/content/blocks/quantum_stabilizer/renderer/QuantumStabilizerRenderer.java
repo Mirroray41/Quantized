@@ -11,19 +11,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.phys.Vec3;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.blocks.quantum_fabricator.QuantumFabricatorTile;
 import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerTile;
 import net.zapp.quantized.core.init.ModItems;
 
 public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumStabilizerTile> {
-    private float rotation;
-
-
     public QuantumStabilizerRenderer(BlockEntityRendererProvider.Context context) {
 
     }
@@ -35,10 +32,13 @@ public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumSta
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = ModItems.Q_BIT.toStack();
 
+        float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+
+
         pPoseStack.pushPose();
         pPoseStack.translate(0.5f, 0.75f, 0.5f);
-        pPoseStack.scale(getScale(pBlockEntity), getScale(pBlockEntity), getScale(pBlockEntity));
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(getRotation(pBlockEntity)));
+        pPoseStack.scale(getScale(pBlockEntity, partialTick), getScale(pBlockEntity, partialTick), getScale(pBlockEntity, partialTick));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(getRotation(pBlockEntity, partialTick)));
 
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, getLightLevel(pBlockEntity.getLevel(),
                 pBlockEntity.getBlockPos()), OverlayTexture.NO_OVERLAY, pPoseStack, pBufferSource, pBlockEntity.getLevel(), 1);
@@ -54,19 +54,11 @@ public class QuantumStabilizerRenderer implements BlockEntityRenderer<QuantumSta
         return LightTexture.pack(bLight, sLight);
     }
 
-    private float getScale(QuantumStabilizerTile blockEntity) {
-        return (float)(0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1)));
+    private float getScale(QuantumStabilizerTile blockEntity, float partialTick) {
+        return Mth.lerp(partialTick, blockEntity.prevScale, blockEntity.scale);
     }
 
-    private float getRotation(QuantumStabilizerTile blockEntity) {
-        float deltaTime = Minecraft.getInstance().getFrameTimeNs();
-
-        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
-
-        if(rotation >= 360) {
-            rotation = rotation - 360;
-        }
-
-        return rotation;
+    private float getRotation(QuantumStabilizerTile blockEntity, float partialTick) {
+        return Mth.lerp(partialTick, blockEntity.prevRotation, blockEntity.rotation);
     }
 }

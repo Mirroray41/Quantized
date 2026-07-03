@@ -13,7 +13,7 @@ import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
 public class SterlingEngineMenu extends AbstractContainerMenu {
-    private final SterlingEngineTile blockEntity;
+    public final SterlingEngineTile blockEntity;
     private final Level level;
     private final ContainerData data;
 

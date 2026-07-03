@@ -34,5 +34,14 @@
         "volume": 0.4
       }
     ]
+  },
+  "quantum_replicator_work": {
+    "subtitle": "sound.quantized.quantum_replicator.work",
+    "sounds": [
+      {
+        "name": "quantized:quantum_replicator_work",
+        "volume": 0.4
+      }
+    ]
   }
 }

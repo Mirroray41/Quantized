@@ -35,6 +35,12 @@ public class ModSounds {
             SoundEvent::createVariableRangeEvent
     );
 
+    public static final Holder<SoundEvent> QUANTUM_REPLICATOR_WORK = SOUND_EVENTS.register(
+            "quantum_replicator_work",
+            // Takes in the registry name
+            SoundEvent::createVariableRangeEvent
+    );
+
 
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);

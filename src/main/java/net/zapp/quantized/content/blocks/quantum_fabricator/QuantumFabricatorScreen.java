@@ -24,8 +24,10 @@ import net.zapp.quantized.client.render.ImageTextButton;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
 import net.zapp.quantized.core.networking.messages.ModifyAmountButtonC2S;
+import net.zapp.quantized.core.utils.screen.ScreenUtils;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.gui.Font;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,25 +36,23 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabricatorMenu> {
-    private static final ResourceLocation GUI_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/quantum_fabricator_screen.png");
-    private static final ResourceLocation PROGRESS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/progress.png");
-    private static final ResourceLocation ENERGY_BAR_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/energy_bar.png");
-    private static final ResourceLocation SCROLL_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/scroll.png");
-    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/fluid_bar_overlay.png");
-    private static final ResourceLocation BUTTON_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/button.png");
-    private static final ResourceLocation BUTTON_PRESSED_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/button_pressed.png");
-    private static final ResourceLocation SELECTED_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Quantized.MOD_ID,"textures/gui/quantum_fabricator/selected.png");
+    private static final ResourceLocation GUI_TEXTURE =Quantized.id("textures/gui/quantum_fabricator/quantum_fabricator_screen.png");
+    private static final ResourceLocation PROGRESS_TEXTURE = Quantized.id("textures/gui/progress.png");
+    private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
+    private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
+    private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
+    private static final ResourceLocation BUTTON_TEXTURE = Quantized.id("textures/gui/button.png");
+    private static final ResourceLocation BUTTON_PRESSED_TEXTURE = Quantized.id("textures/gui/button_pressed.png");
+    private static final ResourceLocation SELECTED_TEXTURE = Quantized.id("textures/gui/quantum_fabricator/selected.png");
 
-    protected int imageHeight = 233;
-    protected int imageWidth = 196;
+    private static final ResourceLocation UPGRADE_BUTTON = Quantized.id("textures/gui/upgrade_button.png");
+    private static final ResourceLocation UPGRADE_BUTTON_PRESSED = Quantized.id("textures/gui/upgrade_button_pressed.png");
+
+
+    protected int imageHeight;
+    protected int imageWidth;
+
+    private int standardImageWidth = 176;
 
     private final int scrollHeight = 37;
 
@@ -76,6 +76,8 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     public QuantumFabricatorScreen(QuantumFabricatorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+        this.imageWidth = 196;
+        this.imageHeight = 233;
     }
 
     @Override
@@ -106,7 +108,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
     }
 
     private void renderFluidTank(GuiGraphics g, int x, int y) {
-        renderFluidMeterContent(g, menu.getFluid(), menu.getFluidCapacity(), x + 181, y + 151, 10, 52);
+        ScreenUtils.renderFluidMeterContent(g, menu.getFluid(), menu.getFluidCapacity(), x + 181, y + 151, 10, 52);
         g.blit(FLUID_BAR_OVERLAY_TEXTURE, x + 180, y + 150, 0, 0, 12, 54, 12, 54);
     }
 
@@ -123,16 +125,16 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         searchBox.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBox);
 
-        sendButton   = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(false), Component.literal("✔").withColor(Color.GREEN.getRGB()));
-        cancelButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(true ), Component.literal("✘").withColor(Color.RED.getRGB()));
+        sendButton   = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(false), Component.literal("✔").withColor(Color.GREEN.getRGB()), false);
+        cancelButton = new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 117, y + 106, 16, 12, p -> syncAmountSelector(true ), Component.literal("✘").withColor(Color.RED.getRGB()), false);
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> modifyCount(1),   Component.literal("+I").withColor(Color.GREEN.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> modifyCount(10),  Component.literal("+X").withColor(Color.GREEN.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 97, 16, 12, p -> modifyCount(100), Component.literal("+C").withColor(Color.GREEN.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 97, 16, 12, p -> modifyCount(1),   Component.literal("+I").withColor(Color.GREEN.getRGB()), false));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 97, 16, 12, p -> modifyCount(10),  Component.literal("+X").withColor(Color.GREEN.getRGB()), false));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 97, 16, 12, p -> modifyCount(100), Component.literal("+C").withColor(Color.GREEN.getRGB()), false));
 
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> modifyCount(-1),   Component.literal("-I").withColor(Color.RED.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> modifyCount(-10),  Component.literal("-X").withColor(Color.RED.getRGB())));
-        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 115, 16, 12, p -> modifyCount(-100), Component.literal("-C").withColor(Color.RED.getRGB())));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 135, y + 115, 16, 12, p -> modifyCount(-1),   Component.literal("-I").withColor(Color.RED.getRGB()), false));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 153, y + 115, 16, 12, p -> modifyCount(-10),  Component.literal("-X").withColor(Color.RED.getRGB()), false));
+        addRenderableWidget(new ImageTextButton(BUTTON_TEXTURE, BUTTON_PRESSED_TEXTURE, x + 171, y + 115, 16, 12, p -> modifyCount(-100), Component.literal("-C").withColor(Color.RED.getRGB()), false));
 
         boolean hasWork = (menu.getAmount() > 0) || menu.isCrafting();
         if (hasWork) {
@@ -143,13 +145,11 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
             showingCancel = false;
         }
 
-        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(
-                        Component.translatable("gui.quantized.upgrades.open"),
-                        p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
-                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos())))
-                .bounds(x + imageWidth + 4, y + 4, 18, 18)
-                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
-                .build());
+        addRenderableWidget(new ImageTextButton(UPGRADE_BUTTON, UPGRADE_BUTTON_PRESSED, x + imageWidth + 4, y + 4, 18, 18,
+                p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                        new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos()))
+                )
+        );
     }
 
     private void drawQueuedOverlay(GuiGraphics g) {
@@ -182,7 +182,7 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         int y = (height - imageHeight) / 2;
 
         int amnt = menu.getAmount() > 0 ? menu.getAmount() : count;
-        g.drawCenteredString(font, Component.literal("" + amnt), x + 98, y + 86, 0xFFeaf2f8);
+        ScreenUtils.drawCenteredString(g, font, Component.literal("" + amnt), 0xFF5e6469, x + 98, y + 86, false);
 
         this.queued = computeQueuedSlot();
         drawQueuedOverlay(g);
@@ -195,72 +195,9 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
 
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
-        g.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2) - 6, titleLabelY - 35, 0xFF5e6469, false);
         g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 33, 0xFF5e6469, false);
-    }
-
-    protected void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
-                                           int w, int h) {
-        RenderSystem.enableBlend();
-        guiGraphics.pose().pushPose();
-
-        guiGraphics.pose().translate(x, y, 0);
-
-        renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
-
-        guiGraphics.pose().popPose();
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-        RenderSystem.disableBlend();
-    }
-
-    private void renderFluidStack(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int w, int h) {
-        if(fluidStack.isEmpty())
-            return;
-
-        Fluid fluid = fluidStack.getFluid();
-        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid);
-        ResourceLocation stillFluidImageId = fluidTypeExtensions.getStillTexture(fluidStack);
-        if(stillFluidImageId == null)
-            stillFluidImageId = ResourceLocation.withDefaultNamespace("air");
-        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).
-                apply(stillFluidImageId);
-
-        int fluidColorTint = fluidTypeExtensions.getTintColor(fluidStack);
-
-        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity)?
-                0:(h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0)?0:
-                (Math.min(fluidStack.getAmount(), tankCapacity - 1) * h / tankCapacity + 1)));
-
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor((fluidColorTint >> 16 & 0xFF) / 255.f,
-                (fluidColorTint >> 8 & 0xFF) / 255.f, (fluidColorTint & 0xFF) / 255.f,
-                (fluidColorTint >> 24 & 0xFF) / 255.f);
-
-        Matrix4f mat = guiGraphics.pose().last().pose();
-
-        for(int yOffset = h;yOffset > fluidMeterPos;yOffset -= 16) {
-            for(int xOffset = 0;xOffset < w;xOffset += 16) {
-                int width = Math.min(w - xOffset, 16);
-                int height = Math.min(yOffset - fluidMeterPos, 16);
-
-                float u0 = stillFluidSprite.getU0();
-                float u1 = stillFluidSprite.getU1();
-                float v0 = stillFluidSprite.getV0();
-                float v1 = stillFluidSprite.getV1();
-                u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
-                v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
-
-                Tesselator tesselator = Tesselator.getInstance();
-                BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferBuilder.addVertex(mat, xOffset, yOffset, 0).setUv(u0, v1);
-                bufferBuilder.addVertex(mat, xOffset + width, yOffset, 0).setUv(u1, v1);
-                bufferBuilder.addVertex(mat, xOffset + width, yOffset - height, 0).setUv(u1, v0);
-                bufferBuilder.addVertex(mat, xOffset, yOffset - height, 0).setUv(u0, v0);
-                BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
-            }
-        }
+        // using standard gui size because renderLabels ignores custom imageWidth for some reason
+        ScreenUtils.drawCenteredString(g, font, title, 0xFF5e6469, standardImageWidth / 2 , titleLabelY - 35, false);
     }
 
     @Override
@@ -379,21 +316,6 @@ public class QuantumFabricatorScreen extends AbstractContainerScreen<QuantumFabr
         }
 
         count = 0;
-    }
-
-
-    protected int getTextLen(String text) {
-        int out = 0;
-        for (int i = 0 ; i < text.length() ; i++) {
-            switch (text.charAt(i)) {
-                case 'I', 'k', ' ', 'f': out+=5; break;
-                case 't': out+=4; break;
-                case 'l': out+=3; break;
-                case 'i': out+=2; break;
-                default: out+=6; break;
-            }
-        }
-        return out;
     }
 
     private Slot computeQueuedSlot() {

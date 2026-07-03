@@ -7,8 +7,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.client.render.ImageTextButton;
 import net.zapp.quantized.core.networking.ModMessages;
 import net.zapp.quantized.core.networking.messages.OpenUpgradesC2S;
+import net.zapp.quantized.core.utils.screen.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,10 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
     private static final ResourceLocation TEMPERATURE_GAGE = Quantized.id("textures/gui/sterling_engine/temp_progress.png");
 
 
+    private static final ResourceLocation UPGRADE_BUTTON = Quantized.id("textures/gui/upgrade_button.png");
+    private static final ResourceLocation UPGRADE_BUTTON_PRESSED = Quantized.id("textures/gui/upgrade_button_pressed.png");
+
+
     public SterlingEngineScreen(SterlingEngineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
@@ -29,12 +35,14 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(Button.builder(
-                        Component.translatable("gui.quantized.upgrades.open"),
-                        b -> ModMessages.sendToServer(new OpenUpgradesC2S(menu.getMachinePos())))
-                .bounds(leftPos + imageWidth + 4, topPos + 4, 18, 18)
-                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
-                .build());
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+
+        addRenderableWidget(new ImageTextButton(UPGRADE_BUTTON, UPGRADE_BUTTON_PRESSED, x + imageWidth + 4, y + 4, 18, 18,
+                        p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos()))
+                )
+        );
     }
 
     @Override
@@ -55,7 +63,6 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
         }
     }
 
-
     private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.blit(ENERGY_BAR_TEXTURE,x + 10, y + 16 + 54 - menu.getScaledEnergyBar(), 0, 54 - menu.getScaledEnergyBar(), 12, menu.getScaledEnergyBar(), 12, 54);
     }
@@ -68,22 +75,8 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY, 0xFF5e6469, false);
+        ScreenUtils.drawCenteredString(guiGraphics, font, title, 0xFF5e6469, imageWidth / 2, titleLabelY, false);
         guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
-    }
-
-    protected int getTextLen(String text) {
-        int out = 0;
-        for (int i = 0 ; i < text.length() ; i++) {
-            switch (text.charAt(i)) {
-                case 'I', 'k', ' ', 'f': out+=5; break;
-                case 't': out+=4; break;
-                case 'l': out+=3; break;
-                case 'i': out+=2; break;
-                default: out+=6; break;
-            }
-        }
-        return out;
     }
 
     @Override
@@ -97,7 +90,6 @@ public class SterlingEngineScreen extends AbstractContainerScreen<SterlingEngine
 
             guiGraphics.renderTooltip(font, components, Optional.empty(), mouseX, mouseY);
         }
-        // TODO: CHANGE THIS TO LOCATION OF FIRE SPRITE
         else if (isHovering(154, 16, 12, 54, mouseX, mouseY)) {
             List<Component> components = new ArrayList<>(2);
             components.add(Component.translatable("tooltip.quantized.burning.info", menu.getBurnTime(), menu.getMaxBurnTime()));

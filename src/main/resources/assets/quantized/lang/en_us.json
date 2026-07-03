@@ -143,6 +143,7 @@
 
   "block.quantized.quantum_replicator": "Quantum Replicator",
   "block.quantized.tile.quantum_replicator": "Quantum Replicator",
+  "sound.quantized.quantum_replicator.work": "Quantum Replicator Working",
 
   "block.quantized.tile.machine_block": "Machine Block",
   "jei.quantized.qbit_crafting.title": "Quantum Stabilization"

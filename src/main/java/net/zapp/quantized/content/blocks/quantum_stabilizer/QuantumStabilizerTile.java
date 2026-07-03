@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModItems;
@@ -42,6 +43,12 @@ import java.util.List;
 public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasTankModule, HasUpgradeModule {
     // ---- Rendering init ----
     private static final float ROTATION = 10f;
+
+    public float prevRotation;
+    public float rotation;
+
+    public float prevScale;
+    public float scale;
 
     private static final int BIT_OUT_SLOT = 0;
     private static final int BYTE_OUT_SLOT = 1;
@@ -246,8 +253,21 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         return upgradeM;
     }
 
-    public float getRotationSpeed() {
-        return ROTATION;
+    public static void clientTick(Level level, BlockPos pos, BlockState state, QuantumStabilizerTile blockEntity) {
+        blockEntity.prevRotation = blockEntity.rotation;
+        blockEntity.prevScale = blockEntity.scale;
+
+        float speed = (float) (ROTATION +
+                (ROTATION * ((float) blockEntity.data.get(0) / blockEntity.data.get(1))));
+
+        blockEntity.rotation += speed;
+
+        blockEntity.scale = (float) (0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1)));
+
+        if (blockEntity.rotation >= 360) {
+            blockEntity.rotation -= 360;
+            blockEntity.prevRotation -= 360;
+        }
     }
 
 }

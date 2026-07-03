@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
@@ -43,6 +44,9 @@ import java.util.List;
 
 public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasItemModule, HasDriveInterfaceModule, HasUpgradeModule {
     private static final float ROTATION = 10f;
+
+    public float prevRotation;
+    public float rotation;
 
     private static final int INPUT_SLOT = 0;
     private static final int DISK_SLOT = 1;
@@ -277,5 +281,19 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
     @Override
     public @NotNull UpgradeModule getUpgradeModule() {
         return upgradeM;
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, QuantumAnalyzerTile blockEntity) {
+        blockEntity.prevRotation = blockEntity.rotation;
+
+        float speed = (float) (ROTATION +
+                (ROTATION * ((float) blockEntity.data.get(0) / blockEntity.data.get(1))));
+
+        blockEntity.rotation += speed;
+
+        if (blockEntity.rotation >= 360) {
+            blockEntity.rotation -= 360;
+            blockEntity.prevRotation -= 360;
+        }
     }
 }

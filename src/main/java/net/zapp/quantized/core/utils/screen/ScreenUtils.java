@@ -1,0 +1,88 @@
+package net.zapp.quantized.core.utils.screen;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import org.joml.Matrix4f;
+
+public class ScreenUtils {
+    public static void drawCenteredString(GuiGraphics gfx, Font font, Component text , int color, int x, int y, boolean dropShadow) {
+        int textWidth = font.width(text);
+        int centeredX = x - (textWidth / 2);
+        gfx.drawString(font, text, centeredX, y, color, dropShadow);
+    }
+
+    public static void renderFluidMeterContent(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int x, int y,
+                                               int w, int h) {
+        RenderSystem.enableBlend();
+        guiGraphics.pose().pushPose();
+
+        guiGraphics.pose().translate(x, y, 0);
+
+        renderFluidStack(guiGraphics, fluidStack, tankCapacity, w, h);
+
+        guiGraphics.pose().popPose();
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+        RenderSystem.disableBlend();
+    }
+
+    private static void renderFluidStack(GuiGraphics guiGraphics, FluidStack fluidStack, int tankCapacity, int w, int h) {
+        if(fluidStack.isEmpty())
+            return;
+
+        Fluid fluid = fluidStack.getFluid();
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid);
+        ResourceLocation stillFluidImageId = fluidTypeExtensions.getStillTexture(fluidStack);
+        if(stillFluidImageId == null)
+            stillFluidImageId = ResourceLocation.withDefaultNamespace("air");
+        TextureAtlasSprite stillFluidSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).
+                apply(stillFluidImageId);
+
+        int fluidColorTint = fluidTypeExtensions.getTintColor(fluidStack);
+
+        int fluidMeterPos = tankCapacity == -1 || (fluidStack.getAmount() > 0 && fluidStack.getAmount() == tankCapacity)?
+                0:(h - ((fluidStack.getAmount() <= 0 || tankCapacity == 0)?0:
+                        (Math.min(fluidStack.getAmount(), tankCapacity - 1) * h / tankCapacity + 1)));
+
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor((fluidColorTint >> 16 & 0xFF) / 255.f,
+                (fluidColorTint >> 8 & 0xFF) / 255.f, (fluidColorTint & 0xFF) / 255.f,
+                (fluidColorTint >> 24 & 0xFF) / 255.f);
+
+        Matrix4f mat = guiGraphics.pose().last().pose();
+
+        for(int yOffset = h;yOffset > fluidMeterPos;yOffset -= 16) {
+            for(int xOffset = 0;xOffset < w;xOffset += 16) {
+                int width = Math.min(w - xOffset, 16);
+                int height = Math.min(yOffset - fluidMeterPos, 16);
+
+                float u0 = stillFluidSprite.getU0();
+                float u1 = stillFluidSprite.getU1();
+                float v0 = stillFluidSprite.getV0();
+                float v1 = stillFluidSprite.getV1();
+                u1 = u1 - ((16 - width) / 16.f * (u1 - u0));
+                v0 = v0 - ((16 - height) / 16.f * (v0 - v1));
+
+                Tesselator tesselator = Tesselator.getInstance();
+                BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferBuilder.addVertex(mat, xOffset, yOffset, 0).setUv(u0, v1);
+                bufferBuilder.addVertex(mat, xOffset + width, yOffset, 0).setUv(u1, v1);
+                bufferBuilder.addVertex(mat, xOffset + width, yOffset - height, 0).setUv(u1, v0);
+                bufferBuilder.addVertex(mat, xOffset, yOffset - height, 0).setUv(u0, v0);
+                BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+            }
+        }
+    }
+}

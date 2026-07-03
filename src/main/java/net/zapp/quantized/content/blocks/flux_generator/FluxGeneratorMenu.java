@@ -12,7 +12,7 @@ import net.zapp.quantized.core.init.ModBlocks;
 import net.zapp.quantized.core.init.ModMenuTypes;
 
 public class FluxGeneratorMenu extends AbstractContainerMenu {
-    private final FluxGeneratorTile blockEntity;
+    public final FluxGeneratorTile blockEntity;
     private final Level level;
     private final ContainerData data;
 

@@ -15,7 +15,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.client.render.ImageTextButton;
 import net.zapp.quantized.core.init.ModFluids;
+import net.zapp.quantized.core.utils.screen.ScreenUtils;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMenu> {
-    // TODO: UNCOMMENT WHEN TEXTURES ARE MADE.
     private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/flux_generator/flux_generator_screen.png");
     private static final ResourceLocation REACTOR_OVERLAY = Quantized.id("textures/gui/flux_generator/flux_reactor_overlay.png");
     private static final ResourceLocation REACTOR_OVERLAY_STABLE = Quantized.id("textures/gui/flux_generator/flux_reactor_overlay_stable.png");
@@ -35,6 +36,9 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation FLUID_BAR_OVERLAY_TEXTURE = Quantized.id("textures/gui/fluid_bar_overlay.png");
 
+    private static final ResourceLocation UPGRADE_BUTTON = Quantized.id("textures/gui/upgrade_button.png");
+    private static final ResourceLocation UPGRADE_BUTTON_PRESSED = Quantized.id("textures/gui/upgrade_button_pressed.png");
+
     public FluxGeneratorScreen(FluxGeneratorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
@@ -42,13 +46,14 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(
-                        Component.translatable("gui.quantized.upgrades.open"),
-                        b -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
-                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.getMachinePos())))
-                .bounds(leftPos + imageWidth + 4, topPos + 4, 18, 18)
-                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
-                .build());
+
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        addRenderableWidget(new ImageTextButton(UPGRADE_BUTTON, UPGRADE_BUTTON_PRESSED, x + imageWidth + 4, y + 4, 18, 18,
+                        p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos()))
+                )
+        );
     }
 
     @Override
@@ -102,8 +107,8 @@ public class FluxGeneratorScreen extends AbstractContainerScreen<FluxGeneratorMe
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY, 0xFF5e6469, false);
         guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
+        ScreenUtils.drawCenteredString(guiGraphics, font, title, 0xFF5e6469, imageWidth / 2, titleLabelY, false);
     }
 
     protected int getTextLen(String text) {

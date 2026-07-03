@@ -6,18 +6,28 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.client.render.ImageTextButton;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.networking.ModMessages;
 import net.zapp.quantized.core.networking.messages.OpenMachineMenuC2S;
+import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
+import net.zapp.quantized.core.utils.screen.ScreenUtils;
 
-/**
- * Standalone screen for a machine's upgrade slots. Uses a placeholder background reused from the
- * sterling engine GUI until dedicated textures exist; a back button returns to the machine's menu.
- */
+import java.util.List;
+
 public class UpgradeScreen extends AbstractContainerScreen<UpgradeMenu> {
-    // Placeholder background - reuse an existing 176x166 machine GUI until a dedicated texture is made.
-    private static final ResourceLocation GUI_TEXTURE =
-            Quantized.id("textures/gui/sterling_engine/sterling_engine_screen.png");
+    private static final ResourceLocation GUI_TEXTURE = Quantized.id("textures/gui/upgrade_menu/upgrade_menu_screen.png");
+    private static final ResourceLocation BACK_BUTTON = Quantized.id("textures/gui/upgrade_menu/back_button.png");
+    private static final ResourceLocation BACK_BUTTON_PRESSED = Quantized.id("textures/gui/upgrade_menu/back_button_pressed.png");
+
+    private static final ResourceLocation UPGRADE_SLOT = Quantized.id("textures/gui/upgrade_menu/upgrade_slot.png");
+
+    private static final ResourceLocation SPEED_UPGRADE_IDENTIFIER = Quantized.id("textures/gui/upgrade_menu/speed_upgrade_identifier.png");
+    private static final ResourceLocation EFFICIENCY_UPGRADE_IDENTIFIER = Quantized.id("textures/gui/upgrade_menu/efficiency_upgrade_identifier.png");
+    private static final ResourceLocation OUTPUT_UPGRADE_IDENTIFIER = Quantized.id("textures/gui/upgrade_menu/output_upgrade_identifier.png");
 
     public UpgradeScreen(UpgradeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -28,11 +38,10 @@ public class UpgradeScreen extends AbstractContainerScreen<UpgradeMenu> {
         super.init();
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        addRenderableWidget(Button.builder(
-                        Component.translatable("gui.quantized.upgrades.back"),
-                        b -> ModMessages.sendToServer(new OpenMachineMenuC2S(menu.getMachinePos())))
-                .bounds(x + imageWidth - 54, y + 4, 50, 16)
-                .build());
+
+        addRenderableWidget(new ImageTextButton(BACK_BUTTON, BACK_BUTTON_PRESSED, x + imageWidth + 4, y + 4, 18, 18,
+                b -> ModMessages.sendToServer(new OpenMachineMenuC2S(menu.getMachinePos())))
+        );
     }
 
     @Override
@@ -40,6 +49,23 @@ public class UpgradeScreen extends AbstractContainerScreen<UpgradeMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         guiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+
+        ItemStackHandler upgrades = menu.entity instanceof HasUpgradeModule hum
+                ? hum.getUpgradeHandler()
+                : new ItemStackHandler(0);
+
+        List<UpgradeType> types = menu.entity.getUpgradeModule().types();
+
+        int count = upgrades.getSlots();
+        int startX = 88 - count * 9;
+        for (int i = 0; i < count; i++) {
+            guiGraphics.blit(UPGRADE_SLOT, x + startX + i * 18, y + 33, 0, 0, 18, 18, 18, 18);
+            switch (types.get(i)) {
+                case EFFICIENCY -> guiGraphics.blit(EFFICIENCY_UPGRADE_IDENTIFIER, x + startX + 2 + i * 18, y + 52, 0, 0, 14, 2, 14, 2);
+                case SPEED -> guiGraphics.blit(SPEED_UPGRADE_IDENTIFIER, x + startX + 2 + i * 18, y + 52, 0, 0, 14, 2, 14, 2);
+                case OUTPUT -> guiGraphics.blit(OUTPUT_UPGRADE_IDENTIFIER, x + startX + 2 + i * 18, y + 52, 0, 0, 14, 2, 14, 2);
+            }
+        }
     }
 
     @Override
@@ -50,7 +76,7 @@ public class UpgradeScreen extends AbstractContainerScreen<UpgradeMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, titleLabelX, titleLabelY, 0xFF5e6469, false);
+        ScreenUtils.drawCenteredString(guiGraphics, font, title, 0xFF5e6469, imageWidth / 2, titleLabelY, false);
         guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF5e6469, false);
     }
 }

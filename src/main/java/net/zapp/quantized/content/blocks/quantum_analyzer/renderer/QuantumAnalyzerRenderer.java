@@ -11,12 +11,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.zapp.quantized.content.blocks.quantum_analyzer.QuantumAnalyzerTile;
+import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 
 public class QuantumAnalyzerRenderer implements BlockEntityRenderer<QuantumAnalyzerTile> {
     private float rotation;
@@ -36,7 +38,7 @@ public class QuantumAnalyzerRenderer implements BlockEntityRenderer<QuantumAnaly
         pPoseStack.pushPose();
         pPoseStack.translate(0.5f, 0.5f, 0.5f);
         pPoseStack.scale(0.5f, 0.5f, 0.5f);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(getRotation(pBlockEntity)));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(getRotation(pBlockEntity, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true))));
 
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, getLightLevel(pBlockEntity.getLevel(),
                 pBlockEntity.getBlockPos()), OverlayTexture.NO_OVERLAY, pPoseStack, pBufferSource, pBlockEntity.getLevel(), 1);
@@ -52,15 +54,7 @@ public class QuantumAnalyzerRenderer implements BlockEntityRenderer<QuantumAnaly
         return LightTexture.pack(bLight, sLight);
     }
 
-    private float getRotation(QuantumAnalyzerTile blockEntity) {
-        float deltaTime = Minecraft.getInstance().getFrameTimeNs();
-
-        rotation += (blockEntity.getRotationSpeed()  + ( blockEntity.getRotationSpeed() * ( (float) blockEntity.data.get(0) / blockEntity.data.get(1)))) * deltaTime;
-
-        if(rotation >= 360) {
-            rotation = rotation - 360;
-        }
-
-        return rotation;
+    private float getRotation(QuantumAnalyzerTile blockEntity, float partialTick) {
+        return Mth.lerp(partialTick, blockEntity.prevRotation, blockEntity.rotation);
     }
 }

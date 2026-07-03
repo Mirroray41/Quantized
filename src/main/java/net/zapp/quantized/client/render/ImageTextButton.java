@@ -18,6 +18,16 @@ public class ImageTextButton extends Button {
     private final int TEX_H;
 
     private boolean pressed;
+    private boolean shadow = true;
+
+    public ImageTextButton(ResourceLocation texture, ResourceLocation texturePressed, int x, int y, int width, int height, OnPress onPress, Component message, boolean shadow) {
+        super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
+        TEXTURE = texture;
+        TEXTURE_PRESSED = texturePressed;
+        TEX_W = width;
+        TEX_H = height;
+        this.shadow = shadow;
+    }
 
     public ImageTextButton(ResourceLocation texture, ResourceLocation texturePressed, int x, int y, int width, int height, OnPress onPress, Component message) {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
@@ -48,7 +58,15 @@ public class ImageTextButton extends Button {
 
         gfx.pose().pushPose();
         gfx.pose().translate(0, 0, 0);
-        gfx.drawCenteredString(font, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, color);
+
+        // 1. Calculate centered X position manually
+        int textWidth = font.width(getMessage());
+        int textX = getX() + this.width / 2 - textWidth / 2;
+        int textY = getY() + (this.height - 8) / 2;
+
+        // 2. Use drawString with your custom shadow boolean (e.g., this.renderTextShadow)
+        gfx.drawString(font, getMessage(), textX, textY, color, this.shadow);
+
         gfx.pose().popPose();
 
         RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);

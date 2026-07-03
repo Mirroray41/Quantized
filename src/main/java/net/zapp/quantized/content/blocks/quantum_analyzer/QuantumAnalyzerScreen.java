@@ -9,8 +9,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.zapp.quantized.Quantized;
+import net.zapp.quantized.client.render.ImageTextButton;
 import net.zapp.quantized.core.networking.messages.MenuFilterC2S;
 import net.zapp.quantized.core.networking.messages.MenuScrollC2S;
+import net.zapp.quantized.core.utils.screen.ScreenUtils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -24,6 +26,10 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private static final ResourceLocation ENERGY_BAR_TEXTURE = Quantized.id("textures/gui/energy_bar.png");
     private static final ResourceLocation SCROLL_TEXTURE = Quantized.id("textures/gui/scroll.png");
     private static final ResourceLocation DELETE = Quantized.id("textures/gui/quantum_analyzer/delete.png");
+
+    private static final ResourceLocation UPGRADE_BUTTON = Quantized.id("textures/gui/upgrade_button.png");
+    private static final ResourceLocation UPGRADE_BUTTON_PRESSED = Quantized.id("textures/gui/upgrade_button_pressed.png");
+
 
     protected int imageHeight = 180;
 
@@ -92,13 +98,11 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
         searchBox.setCanLoseFocus(true);
         addRenderableWidget(searchBox);
 
-        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(
-                        Component.translatable("gui.quantized.upgrades.open"),
-                        b -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
-                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos())))
-                .bounds(x + imageWidth + 4, y + 4, 18, 18)
-                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.quantized.upgrades")))
-                .build());
+        addRenderableWidget(new ImageTextButton(UPGRADE_BUTTON, UPGRADE_BUTTON_PRESSED, x + imageWidth + 4, y + 4, 18, 18,
+                        p -> net.zapp.quantized.core.networking.ModMessages.sendToServer(
+                                new net.zapp.quantized.core.networking.messages.OpenUpgradesC2S(menu.blockEntity.getBlockPos()))
+                )
+        );
     }
 
 
@@ -124,7 +128,7 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, title, (imageWidth / 2) - (getTextLen(title.getString()) / 2), titleLabelY - 7, 0xFF5e6469, false);
+        ScreenUtils.drawCenteredString(guiGraphics, font, title, 0xFF5e6469, imageWidth / 2, titleLabelY - 7, false);
         guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 7, 0xFF5e6469, false);
     }
 
@@ -232,19 +236,5 @@ public class QuantumAnalyzerScreen extends AbstractContainerScreen<QuantumAnalyz
     private void syncScrollOffset() {
         PacketDistributor.sendToServer(new MenuScrollC2S(menu.blockEntity.getBlockPos(), rowOffest));
         menu.setRowOffset(rowOffest);
-    }
-
-    protected int getTextLen(String text) {
-        int out = 0;
-        for (int i = 0 ; i < text.length() ; i++) {
-            switch (text.charAt(i)) {
-                case 'I', 'k', ' ', 'f': out+=5; break;
-                case 't': out+=4; break;
-                case 'l': out+=3; break;
-                case 'i': out+=2; break;
-                default: out+=6; break;
-            }
-        }
-        return out;
     }
 }

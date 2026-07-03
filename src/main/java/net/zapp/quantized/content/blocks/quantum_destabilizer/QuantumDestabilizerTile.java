@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -46,6 +47,12 @@ import java.util.List;
 public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider, HasEnergyModule, HasTankModule, HasItemModule, HasUpgradeModule {
     // ---- Rendering init ----
     private static final float ROTATION = 10f;
+
+    public float prevRotation;
+    public float rotation;
+
+    public float prevScale;
+    public float scale;
 
     // ---- Slots ----
     private static final int INPUT_SLOT = 0;
@@ -130,7 +137,9 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
 
     // --- Tick ---
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (level.isClientSide) return;
+        if (level.isClientSide) {
+            return;
+        };
 
         ItemStack in = itemM.getHandler().getStackInSlot(INPUT_SLOT);
         DataFluxPair df = FluxDataFixerUpper.getDataFluxFromStack(in);
@@ -162,8 +171,10 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         progress++;
         energyM.getHandler().extractEnergy(powerConsumption, false);
 
-            level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(),
-                    SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
+        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+
+        level.playSound(null, pos, ModSounds.QUANTUM_DESTABILIZER_WORK.value(),
+                SoundSource.BLOCKS, 1f, 1f + (float) progress / (float) maxProgress);
 
 
         if (progress >= maxProgress) {
@@ -276,8 +287,20 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
         return upgradeM;
     }
 
-    // ---- Rendering ----
-    public float getRotationSpeed() {
-        return ROTATION;
+    public static void clientTick(Level level, BlockPos pos, BlockState state, QuantumDestabilizerTile blockEntity) {
+        blockEntity.prevRotation = blockEntity.rotation;
+        blockEntity.prevScale = blockEntity.scale;
+
+        float speed = (float) (ROTATION +
+                (ROTATION * ((float) blockEntity.data.get(0) / blockEntity.data.get(1))));
+
+        blockEntity.rotation += speed;
+
+        blockEntity.scale = (float) (0.5 - (0.5 * ((double) blockEntity.data.get(0) / blockEntity.data.get(1))));
+
+        if (blockEntity.rotation >= 360) {
+            blockEntity.rotation -= 360;
+            blockEntity.prevRotation -= 360;
+        }
     }
 }

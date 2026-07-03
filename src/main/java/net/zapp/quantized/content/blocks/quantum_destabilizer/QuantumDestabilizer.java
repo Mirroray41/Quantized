@@ -25,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.zapp.quantized.content.blocks.quantum_stabilizer.QuantumStabilizerTile;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,6 +71,17 @@ public class QuantumDestabilizer extends BaseEntityBlock {
         return SHAPE;
     }
 
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof QuantumDestabilizerTile tile) {
+                tile.drops();
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    }
+
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos,
@@ -90,10 +102,17 @@ public class QuantumDestabilizer extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) {
-            return null;
+            return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(), (level1, blockPos, blockState, blockEntity) -> blockEntity.clientTick(level1, blockPos, blockState, blockEntity));
         }
 
         return createTickerHelper(blockEntityType, ModBlockEntities.QUANTUM_DESTABILIZER_TILE.get(),
                 (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos, blockState));
     }
+
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> actualType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == actualType ? (BlockEntityTicker<A>) ticker : null;
+    }
+
 }
