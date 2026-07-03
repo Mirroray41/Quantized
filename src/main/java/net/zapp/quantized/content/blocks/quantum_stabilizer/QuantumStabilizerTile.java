@@ -20,12 +20,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModItems;
 import net.zapp.quantized.core.init.ModSounds;
-import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.utils.module.EnergyModule;
 import net.zapp.quantized.core.utils.module.ItemModule;
 import net.zapp.quantized.core.utils.module.TankModule;
@@ -129,10 +128,11 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
 
         int powerCost = upgradeM.efficiencyCost(DEFAULT_POWER_CONSUME);
         int fluxCost = upgradeM.efficiencyCost(DEFAULT_FLUX_CONSUME);
-
+        int bitsOut = upgradeM.outputMultiplied(1);
+        int bytesOut = upgradeM.outputMultiplied(1);
         boolean canPay = energyM.canPay(powerCost) && tankM.canPay(fluxCost);
-        boolean canOut = itemM.canOutput(BIT_OUT_SLOT, 1, ModItems.Q_BIT.get())
-                && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get());
+        boolean canOut = itemM.canOutput(BIT_OUT_SLOT, bitsOut, ModItems.Q_BIT.get())
+                && itemM.canOutput(BYTE_OUT_SLOT, bytesOut, ModItems.Q_BYTE.get());
         boolean hasInput = tankM.getHandler().getFluidAmount() > fluxCost;
         boolean working = canPay && canOut && hasInput;
 
@@ -158,14 +158,14 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
         // This machine is not perfect, sometimes you get nothing, other times you get more than you asked for.
         if (progress >= maxProgress) {
             progress = 0;
-            if (RandomUtils.percentChance(75)) {
-                if (RandomUtils.percentChance(5) && itemM.canOutput(BYTE_OUT_SLOT, 1, ModItems.Q_BYTE.get())) {
-                    itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), 1), false);
-                    return;
-                }
-                int bits = upgradeM.outputMultiplied(1);
-                itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), bits), false);
-            }
+
+            boolean outputAnything = RandomUtils.percentChance(75);
+            if (!outputAnything) return;
+            itemM.getHandler().insertItem(BIT_OUT_SLOT, new ItemStack(ModItems.Q_BIT.get(), bitsOut), false);
+
+            boolean canOutBytes = RandomUtils.percentChance(5);
+            if (canOutBytes)
+                itemM.getHandler().insertItem(BYTE_OUT_SLOT, new ItemStack(ModItems.Q_BYTE.get(), bytesOut), false);
         }
     }
 
@@ -180,11 +180,7 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
 
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
-        for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
-            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
-        }
-        Containers.dropContents(level, worldPosition, inv);
+        itemM.dropAll(level, worldPosition);
         upgradeM.dropAll(level, worldPosition);
     }
 
@@ -206,12 +202,12 @@ public class QuantumStabilizerTile extends BlockEntity implements MenuProvider, 
     @Override
     protected void loadAdditional(CompoundTag in, HolderLookup.Provider registries) {
         super.loadAdditional(in, registries);
-        HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
+        //HolderLookup.Provider regs = level != null ? level.registryAccess() : null;
 
-        itemM.load(in, regs);
-        energyM.load(in, regs);
-        tankM.load(in, regs);
-        upgradeM.load(in, regs);
+        itemM.load(in, registries);
+        energyM.load(in, registries);
+        tankM.load(in, registries);
+        upgradeM.load(in, registries);
 
         progress = in.getInt("progress");
         maxProgress = in.getInt("maxProgress");

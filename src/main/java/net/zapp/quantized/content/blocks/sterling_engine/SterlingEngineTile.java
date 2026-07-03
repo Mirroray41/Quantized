@@ -156,7 +156,7 @@ public class SterlingEngineTile extends BlockEntity implements MenuProvider, Has
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.quantized.tile.coal_generator");
+        return Component.translatable("block.quantized.tile.sterling_engine");
     }
 
     @Override

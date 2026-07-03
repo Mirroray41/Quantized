@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
 import net.zapp.quantized.content.item.custom.drive_item.SingularityDriveItem;
 import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
@@ -153,7 +152,7 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
 
         maxProgress = upgradeM.speedTicks(ProcessingCurves.timeTicks(df.data()));
         int toConsume = upgradeM.efficiencyCost(ProcessingCurves.powerPerTick(df.flux()));
-        int fluxCost = upgradeM.efficiencyCost(df.flux());
+        int fluxCost = df.flux();
 
         boolean canPay = energyM.canPay(toConsume) && tankM.canPay(fluxCost);
         boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, target);
@@ -208,11 +207,7 @@ public class QuantumReplicatorTile extends BlockEntity implements MenuProvider, 
     // ---- Drop items when broken ----
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
-        for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
-            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
-        }
-        Containers.dropContents(level, worldPosition, inv);
+        itemM.dropAll(level, worldPosition);
         upgradeM.dropAll(level, worldPosition);
     }
 

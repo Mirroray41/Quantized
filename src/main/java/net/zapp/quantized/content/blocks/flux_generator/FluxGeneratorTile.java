@@ -153,7 +153,8 @@ public class FluxGeneratorTile extends BlockEntity implements MenuProvider, HasE
     }
 
     public void drops() {
-        if (level != null) upgradeM.dropAll(level, worldPosition);
+        if (level != null)
+            upgradeM.dropAll(level, worldPosition);
     }
 
     @Override

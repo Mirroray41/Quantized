@@ -207,11 +207,7 @@ public class QuantumDestabilizerTile extends BlockEntity implements MenuProvider
     // ---- Drop items when broken ----
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
-        for (int i = 0; i < itemM.getHandler().getSlots(); i++) {
-            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
-        }
-        Containers.dropContents(level, worldPosition, inv);
+        itemM.dropAll(level, worldPosition);
         upgradeM.dropAll(level, worldPosition);
     }
 

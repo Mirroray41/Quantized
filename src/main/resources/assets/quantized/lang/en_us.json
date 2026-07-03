@@ -98,7 +98,7 @@
   "tooltip.quantized.disk.item_more": "    §7And %1$s §7more...",
 
   "tooltip.quantized.disk.singular": "§dStores a single item of any size",
-  "tooltip.quantized.disk.singular_empty": "§7Empty — imprint it in a Quantum Item Generator",
+  "tooltip.quantized.disk.singular_empty": "§7Empty, imprint it in a Quantum Analyzer",
   "tooltip.quantized.disk.singular_stored": "§aImprinted: §f%1$s",
 
 

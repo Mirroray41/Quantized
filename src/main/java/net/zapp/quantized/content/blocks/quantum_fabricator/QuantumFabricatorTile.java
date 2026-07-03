@@ -22,25 +22,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.zapp.quantized.content.blocks.ProcessingCurves;
-import net.zapp.quantized.content.blocks.quantum_destabilizer.QuantumDestabilizerTile;
-import net.zapp.quantized.content.blocks.quantum_replicator.QuantumReplicatorTile;
 import net.zapp.quantized.content.item.custom.drive_item.DriveItem;
+import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
 import net.zapp.quantized.core.fluxdata.FluxDataFixerUpper;
 import net.zapp.quantized.core.init.ModBlockEntities;
 import net.zapp.quantized.core.init.ModFluids;
 import net.zapp.quantized.core.init.ModSounds;
 import net.zapp.quantized.core.utils.DataFluxPair;
-import net.zapp.quantized.content.item.custom.upgrade.UpgradeType;
-import net.zapp.quantized.core.utils.module.DriveInterfaceModule;
-import net.zapp.quantized.core.utils.module.EnergyModule;
-import net.zapp.quantized.core.utils.module.ItemModule;
-import net.zapp.quantized.core.utils.module.TankModule;
-import net.zapp.quantized.core.utils.module.UpgradeModule;
-import net.zapp.quantized.core.utils.module.identifiers.HasDriveInterfaceModule;
-import net.zapp.quantized.core.utils.module.identifiers.HasEnergyModule;
-import net.zapp.quantized.core.utils.module.identifiers.HasItemModule;
-import net.zapp.quantized.core.utils.module.identifiers.HasTankModule;
-import net.zapp.quantized.core.utils.module.identifiers.HasUpgradeModule;
+import net.zapp.quantized.core.utils.module.*;
+import net.zapp.quantized.core.utils.module.identifiers.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -201,7 +191,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
 
         maxProgress = upgradeM.speedTicks(ProcessingCurves.timeTicks(df.data()));
         int toConsume = upgradeM.efficiencyCost(ProcessingCurves.powerPerTick(df.flux()));
-        int fluxCost = upgradeM.efficiencyCost(df.flux());
+        int fluxCost = df.flux();
 
         boolean canPay = energyM.canPay(toConsume) && tankM.canPay(fluxCost);
         boolean canOut = itemM.canOutput(OUTPUT_SLOT, 1, selectedItem.getItem());
@@ -254,11 +244,7 @@ public class QuantumFabricatorTile extends BlockEntity implements MenuProvider, 
     // ---- Drop items when broken ----
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
-        for (int i = 0; i < itemM.getHandler().getSlots() - 27; i++) {
-            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
-        }
-        Containers.dropContents(level, worldPosition, inv);
+        itemM.dropAll(level, worldPosition);
         upgradeM.dropAll(level, worldPosition);
     }
 

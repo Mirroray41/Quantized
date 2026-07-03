@@ -195,11 +195,7 @@ public class QuantumAnalyzerTile extends BlockEntity implements MenuProvider, Ha
 
     public void drops() {
         if (level == null) return;
-        SimpleContainer inv = new SimpleContainer(itemM.getHandler().getSlots());
-        for (int i = 0; i < itemM.getHandler().getSlots() - 15; i++) {
-            inv.setItem(i, itemM.getHandler().getStackInSlot(i));
-        }
-        Containers.dropContents(level, worldPosition, inv);
+        itemM.dropAll(level, worldPosition);
         upgradeM.dropAll(level, worldPosition);
     }
 
