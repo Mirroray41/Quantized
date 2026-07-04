@@ -3,7 +3,8 @@
 	"render_type": "minecraft:translucent",
 	"texture_size": [48, 32],
 	"textures": {
-		"1": "quantized:block/quantum_replicator_on"
+		"1": "quantized:block/quantum_replicator_on",
+		"particle": "quantized:block/quantum_replicator_on"
 	},
 	"elements": [
 		{
